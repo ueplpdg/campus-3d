@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0a1a3a;font-family:'IBM Plex Sans',sans-serif;color:#0a1a3a}a{color:#2456b8}a:hover{color:#163a80}:root{color-scheme:light}input,select,textarea,button{font-family:inherit}input,select,textarea{background:#fff;color:#0a1a3a}@keyframes t3pulse{0%,100%{opacity:1}50%{opacity:.45}}@keyframes t3in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes t3flow{to{stroke-dashoffset:-20}}</style>
+<script src="./config.js"></script>
+<script src="./taller3d-datos.js"></script>
+<script src="./taller3d-extra.js"></script>
+<script src="./taller3d-campus.js"></script>
+<script src="./taller3d-escena.js"></script>
+</helmet>
+<div style="position:fixed;inset:0;overflow:hidden;background:#9fd3f2">
+
+<div ref="{{ ref3d }}" style="position:absolute;left:0;top:0;bottom:0;right:{{ v3dRight }};background:#9fd3f2"></div>
+
+<sc-if value="{{ cargando3d }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;top:0;bottom:0;right:{{ v3dRight }};display:flex;align-items:center;justify-content:center;background:#0a1a3a;color:#fff;font-weight:700;font-size:20px;flex-direction:column;gap:10px"><div style="animation:t3pulse 1.2s infinite">Cargando el campus 3D…</div><div style="font-size:14px;color:#b9c6e4;font-weight:500">{{ err3d }}</div></div>
+</sc-if>
+
+<sc-if value="{{ vWalk }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:14px;top:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none">
+<div style="display:flex;align-items:center;gap:12px;background:rgba(10,26,58,.9);color:#fff;padding:10px 16px 10px 10px;border-radius:12px;pointer-events:auto">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:44px;width:auto;background:#fff;border-radius:8px;padding:3px">
+<div style="display:flex;flex-direction:column;gap:2px"><div style="font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:.02em">TALLER 3D · SMART CAMPUS</div><div style="font-size:13px;color:#c9d6f2">{{ hud.pareja }}</div></div>
+</div>
+<div style="display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end">
+<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:92px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">PROYECTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px">{{ hud.completos }}</div></div>
+<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:80px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">NOTA</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px">{{ hud.nota }}</div></div>
+<button onClick="{{ hud.ayuda }}" style="background:{{ hud.ayudaBg }};color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer">{{ hud.ayudaTxt }}</button>
+<button onClick="{{ hud.cerrar }}" style="background:rgba(10,26,58,.9);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer">Cerrar sesión</button>
+</div>
+</div>
+<div style="position:absolute;left:14px;top:96px;width:270px;max-height:calc(100% - 200px);overflow-y:auto;overflow-x:hidden;background:rgba(255,255,255,.95);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 24px rgba(0,0,0,.2)">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">MISIONES DEL CAMPUS</div>
+<sc-for list="{{ hud.lista }}" as="m" hint-placeholder-count="6">
+<button onClick="{{ m.ir }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;border:none;text-align:left;cursor:pointer;color:#0a1a3a;background:{{ m.bg }};opacity:{{ m.op }}"><div style="font-size:18px;width:24px;text-align:center">{{ m.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ m.n }}</div><div style="font-size:12px;color:#4a5878">{{ m.lugar }} · {{ m.estado }}</div></div></button>
+</sc-for>
+</div>
+<div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none">
+<sc-if value="{{ hud.cerca }}" hint-placeholder-val="{{ false }}"><div style="background:#2456b8;color:#fff;font-weight:700;font-size:18px;padding:12px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:t3pulse 1.6s infinite">{{ hud.cercaTxt }}</div></sc-if>
+<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">W A S D o flechas: caminar · arrastrar el mouse: mirar · E o clic en el anillo: entrar a la misión</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vPanel }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:0;right:0;bottom:0;width:{{ panelW }};background:#f3f4f8;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.25)">
+<div style="background:#0a1a3a;color:#fff;padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="font-size:28px">{{ pz.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-size:12px;letter-spacing:.1em;color:#c9d6f2">{{ pz.lugar }}</div><div style="font-family:'Archivo Black',sans-serif;font-size:20px;line-height:1.1">{{ pz.n }}</div></div>
+<sc-if value="{{ pz.puedeSalir }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pz.salir }}" style="background:#fff;color:#0a1a3a;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;white-space:nowrap">← Campus</button></sc-if>
+</div>
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px">
+<sc-for list="{{ pz.pasos }}" as="s" hint-placeholder-count="10">
+<button onClick="{{ s.ir }}" style="border:none;border-radius:6px;padding:6px 2px;background:{{ s.bg }};color:{{ s.fg }};font-size:11px;font-weight:700;cursor:{{ s.cur }};display:flex;flex-direction:column;align-items:center;gap:1px"><span style="font-size:13px">{{ s.num }}</span><span>{{ s.n }}</span></button>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ pz.banner }}" hint-placeholder-val="{{ false }}"><div style="background:#f0a726;color:#1a1004;font-weight:700;padding:10px 16px;font-size:15px">{{ pz.bannerTxt }}</div></sc-if>
+<div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;animation:t3in .3s ease-out" key="{{ pz.key }}">
+
+<sc-if value="{{ ph.mision }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;border-left:6px solid #2456b8">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">LA MISIÓN</div>
+<div style="font-size:17px;line-height:1.5">{{ ph.historia }}</div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">OBJETIVO</div>
+<div style="font-size:16px;font-weight:600;line-height:1.45">{{ ph.objetivo }}</div>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8;margin-top:6px">FUNCIONA SI…</div>
+<sc-for list="{{ ph.criterios }}" as="c" hint-placeholder-count="3"><div style="display:flex;gap:8px;font-size:15px"><div style="color:#1f9d55;font-weight:800">✓</div><div>{{ c }}</div></div></sc-for>
+</div>
+<div style="background:#e8eefb;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.45">
+<div style="font-weight:700">Cómo se resuelve: 10 pasos, como un ingeniero real</div>
+<div>Elegir los componentes → ubicarlos en el lugar → conectarlos al Arduino → diagrama de flujo → bloques → ajustar y calibrar → código en Arduino IDE → probar y reparar fallas → ficha técnica. Cada fase vale 1 punto.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.elegir }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Toquen los componentes que necesita este sistema. <b>Cuidado:</b> hay algunos que no sirven. Pongan también cuántas resistencias hacen falta.</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+<sc-for list="{{ ph.items }}" as="it" hint-placeholder-count="6">
+<button onClick="{{ it.tog }}" disabled="{{ ro }}" style="text-align:left;border:2px solid {{ it.bd }};background:{{ it.bg }};border-radius:10px;padding:10px;cursor:pointer;display:flex;gap:8px;align-items:flex-start;color:#0a1a3a">
+<div style="flex:none;width:30px;height:30px;border-radius:8px;background:{{ it.col }};border:1px solid rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">{{ it.k }}</div>
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ it.n }}</div><div style="font-size:12px;color:#4a5878;line-height:1.3">{{ it.q }}</div></div>
+</button>
+</sc-for>
+</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">RESISTENCIAS</div>
+<sc-for list="{{ ph.resis }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;font-size:14px;font-weight:600">{{ r.n }}</div><button onClick="{{ r.menos }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">−</button><div style="font-family:'Archivo Black',sans-serif;font-size:20px;width:28px;text-align:center">{{ r.v }}</div><button onClick="{{ r.mas }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">+</button></div>
+</sc-for>
+<div style="font-size:12px;color:#4a5878;line-height:1.4">Pista de electrónica: cada LED necesita una de 220 Ω para no quemarse. Un pulsador o una LDR necesitan una de 10 kΩ.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.ubicar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Elijan un componente y luego toquen <b>la esfera verde</b> del escenario 3D (o un lugar de la lista) donde debe ir. La ubicación importa: si queda mal puesto, no funciona.</div>
+<sc-for list="{{ ph.inst }}" as="it" hint-placeholder-count="3">
+<div style="background:#fff;border-radius:12px;padding:10px 12px;border:2px solid {{ it.bd }};display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ it.sel }}" disabled="{{ ro }}" style="display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a"><div style="width:22px;height:22px;border-radius:6px;background:{{ it.col }};border:1px solid rgba(0,0,0,.25)"></div><div style="flex:1;display:flex;flex-direction:column"><div style="font-weight:700;font-size:15px">{{ it.lab }}</div><div style="font-size:13px;color:#4a5878">{{ it.donde }}</div></div><div style="font-size:12px;font-weight:700;color:#2456b8">{{ it.accion }}</div></button>
+<sc-if value="{{ it.abierto }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ it.spots }}" as="sp"><button onClick="{{ sp.go }}" style="border:1px solid #9aa6c4;background:{{ sp.bg }};border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer;color:#0a1a3a">{{ sp.lab }}</button></sc-for></div></sc-if>
+<sc-if value="{{ it.porVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px">{{ it.por }}</div></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ ph.conectar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Conecten cada pata al Arduino como en una protoboard real: <b>5V</b> (alimentación), <b>GND</b> (tierra), pines digitales <b>D2–D13</b> o analógicos <b>A0–A5</b>. Si una pata necesita resistencia, elíjanla.</div>
+<div style="background:#fff;border-radius:12px;padding:8px">{{ ph.esquema }}</div>
+<sc-for list="{{ ph.filas }}" as="c" hint-placeholder-count="3">
+<div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:5px;background:{{ c.col }};border:1px solid rgba(0,0,0,.25)"></div><div style="font-weight:700;font-size:15px">{{ c.lab }}</div></div>
+<sc-for list="{{ c.pins }}" as="pn">
+<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #e3e7f2;padding-top:6px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:110px;font-size:14px;font-weight:600">{{ pn.pl }}</div>
+<select value="{{ pn.to }}" onChange="{{ pn.setTo }}" disabled="{{ ro }}" style="padding:6px 8px;border-radius:8px;border:2px solid {{ pn.bd }};font-size:14px;background:#fff;min-width:96px"><sc-for list="{{ pn.dest }}" as="o"><option value="{{ o.v }}">{{ o.t }}</option></sc-for></select>
+<sc-if value="{{ pn.conR }}" hint-placeholder-val="{{ true }}"><select value="{{ pn.r }}" onChange="{{ pn.setR }}" disabled="{{ ro }}" style="padding:6px 8px;border-radius:8px;border:2px solid #9aa6c4;font-size:14px;background:#fff"><option value="">sin resistencia</option><option value="220">+ 220 Ω</option><option value="10k">+ 10 kΩ</option></select></sc-if>
+</div>
+<sc-if value="{{ pn.reglaVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#14306b;background:#e8eefb;border-radius:6px;padding:4px 8px">Regla: {{ pn.regla }}</div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<sc-if value="{{ ph.ohm }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border-radius:12px;padding:12px;font-size:14px;line-height:1.45"><b>Ley de Ohm (3ro BGU):</b> el Arduino da 5 V y un LED usa unos 2 V y 15 mA. La resistencia debe bajar 3 V: R = V ÷ I = 3 ÷ 0,015 = 200 Ω. Por eso se usa la comercial más cercana: <b>220 Ω</b>.</div></sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.diagrama }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Armen el algoritmo: en cada figura elijan el paso correcto. Fíjense en la forma: <b>paralelogramo</b> = leer un dato, <b>rombo</b> = pregunta (SÍ / NO), <b>rectángulo</b> = acción.</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:0">
+<div style="background:#0a1a3a;color:#fff;font-weight:700;border-radius:999px;padding:8px 26px">INICIO</div>
+<div style="width:2px;height:14px;background:#0a1a3a"></div>
+<sc-for list="{{ ph.pasos }}" as="st" hint-placeholder-count="5">
+<div style="width:100%;display:flex;flex-direction:column;align-items:center">
+<div style="position:relative;width:100%;max-width:400px;min-height:{{ st.h }};display:flex;align-items:center;justify-content:center;padding:{{ st.pad }};box-sizing:border-box">
+<svg viewBox="0 0 400 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polygon points="{{ st.poly }}" fill="{{ st.fill }}" stroke="{{ st.stroke }}" stroke-width="2.5" vector-effect="non-scaling-stroke"></polygon></svg>
+<div style="position:relative;display:flex;flex-direction:column;gap:4px;align-items:center;width:100%">
+<div style="font-size:10px;letter-spacing:.12em;font-weight:700;color:#4a5878">{{ st.tag }}</div>
+<select value="{{ st.val }}" onChange="{{ st.set }}" disabled="{{ ro }}" style="max-width:100%;width:{{ st.w }};padding:6px 8px;border-radius:8px;border:2px solid {{ st.bd }};font-size:13px;background:#fff;font-weight:600"><option value="">— elegir —</option><sc-for list="{{ st.opts }}" as="o"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+</div>
+</div>
+<div style="width:2px;height:14px;background:#0a1a3a"></div>
+</div>
+</sc-for>
+<div style="font-size:13px;font-weight:700;color:#0a1a3a">↺ el sistema funciona para siempre</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.bloques }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Completen los <b>bloques</b>, como en Tinkercad Circuitos. Los bloques siguen el mismo orden que su diagrama.</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px">
+<sc-for list="{{ ph.lineas }}" as="ln" hint-placeholder-count="6">
+<div style="margin-left:{{ ln.ml }};align-self:flex-start;max-width:calc(100% - {{ ln.ml }});background:{{ ln.bg }};color:#fff;border-radius:{{ ln.rad }};padding:7px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:700;font-size:14px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)">
+<sc-for list="{{ ln.parts }}" as="pt">
+<sc-if value="{{ pt.txt }}" hint-placeholder-val="{{ true }}"><span>{{ pt.t }}</span></sc-if>
+<sc-if value="{{ pt.slot }}" hint-placeholder-val="{{ false }}"><select value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" style="border:2px solid {{ pt.bd }};border-radius:999px;padding:3px 8px;font-weight:700;font-size:13px;background:#fff;color:#0a1a3a"><option value="">?</option><sc-for list="{{ pt.opts }}" as="o"><option value="{{ o.v }}">{{ o.t }}</option></sc-for></select></sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ ph.verCodigo }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">ASÍ SE VE EN ARDUINO IDE (C++)</div>
+<pre style="margin:0;background:#0f1720;color:#dfe8f5;border-radius:12px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.5;overflow:auto;white-space:pre">{{ ph.codigo }}</pre>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.ajustar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Un sistema real no funciona bien solo con conectarlo: hay que <b>ajustar</b> la mecánica y <b>calibrar</b> los sensores. Muevan cada control hasta el valor correcto y luego pulsen «Comprobar ajustes».</div>
+<sc-for list="{{ ph.ajs }}" as="a" hint-placeholder-count="3">
+<div style="flex:none;background:#fff;border-radius:12px;padding:12px;border:2px solid {{ a.bd }};display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:baseline;gap:8px"><div style="flex:1;min-width:0;font-weight:700;font-size:15px">{{ a.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:18px;color:#2456b8;white-space:nowrap">{{ a.vtxt }}</div></div>
+<div style="position:relative;height:10px;border-radius:5px;background:#e3e7f2"><div style="position:absolute;top:0;bottom:0;left:{{ a.zl }};width:{{ a.zw }};background:{{ a.zc }};border-radius:5px"></div></div>
+<input type="range" min="{{ a.min }}" max="{{ a.max }}" step="{{ a.step }}" value="{{ a.v }}" onChange="{{ a.set }}" disabled="{{ ro }}" style="width:100%">
+<div style="font-size:11px;color:#4a5878">Rango del control: {{ a.rango }}</div>
+<sc-if value="{{ a.exVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px;line-height:1.4">{{ a.ex }}</div></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ ph.codigoF }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Este es su programa en <b>Arduino IDE</b> (lenguaje C++), armado a partir de sus bloques y sus conexiones. Completen los huecos amarillos y pulsen <b>⚙ Compilar y subir</b>. {{ ph.cdAyuda }}</div>
+<div style="flex:none;background:#0f1720;border-radius:12px;padding:10px 0;overflow-x:auto;overflow-y:hidden">
+<sc-for list="{{ ph.cdLines }}" as="ln" hint-placeholder-count="14">
+<div style="display:flex;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;white-space:pre;color:#dfe8f5;align-items:center;min-height:22px"><div style="flex:none;width:36px;text-align:right;padding-right:10px;color:#5d6b7e">{{ ln.n }}</div>
+<sc-for list="{{ ln.parts }}" as="pt"><sc-if value="{{ pt.txt }}" hint-placeholder-val="{{ true }}"><span style="color:{{ pt.col }}">{{ pt.t }}</span></sc-if><sc-if value="{{ pt.sel }}" hint-placeholder-val="{{ false }}"><select value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 2px"><option value="">¿?</option><sc-for list="{{ pt.opts }}" as="o"><option value="{{ o }}">{{ o }}</option></sc-for></select></sc-if><sc-if value="{{ pt.inp }}" hint-placeholder-val="{{ false }}"><input value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" placeholder="?" spellcheck="false" style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 4px;width:{{ pt.w }}"></sc-if></sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;background:#000;color:{{ ph.conCol }};border-radius:12px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;display:flex;flex-direction:column;gap:2px"><div style="color:#8a98ab;letter-spacing:.08em">CONSOLA</div><sc-for list="{{ ph.consola }}" as="c" hint-placeholder-count="1"><div style="white-space:pre-wrap">{{ c }}</div></sc-for></div>
+</sc-if>
+
+<sc-if value="{{ ph.probar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Suban el programa y prueben el sistema con situaciones reales del colegio. Miren el escenario 3D mientras corre.</div>
+<button onClick="{{ ph.correr }}" disabled="{{ ph.corriendo }}" style="background:#2456b8;color:#fff;border:none;border-radius:10px;padding:14px;font-size:17px;font-weight:800;cursor:pointer">{{ ph.btnTxt }}</button>
+<div style="flex:none;background:#fff;border-radius:12px;overflow:hidden">
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;padding:8px 10px;background:#0a1a3a;color:#fff;font-size:12px;font-weight:700;letter-spacing:.05em"><div>SITUACIÓN</div><div>DEBE</div><div>HIZO</div><div></div></div>
+<sc-for list="{{ ph.tests }}" as="t" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;padding:8px 10px;border-top:1px solid #e3e7f2;font-size:13px;background:{{ t.bg }};align-items:center"><div style="font-weight:600">{{ t.txt }}</div><div>{{ t.esp }}</div><div>{{ t.obt }}</div><div style="font-size:16px;text-align:center">{{ t.ic }}</div></div>
+</sc-for>
+</div>
+<sc-if value="{{ ph.fallaVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff6e3;border:2px solid #f0a726;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:19px;color:#a8650a">⚠ FALLA SORPRESA EN LA INSTALACIÓN</div>
+<div style="font-size:15px;line-height:1.45">{{ ph.fSin }}</div>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">{{ ph.fPreg }}</div>
+<sc-for list="{{ ph.fOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="text-align:left;border:2px solid {{ o.bd }};background:{{ o.bg }};border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;cursor:pointer;color:#0a1a3a;line-height:1.35">{{ o.t }}</button></sc-for>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.ficha }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">La <b>ficha técnica</b> es la documentación del proyecto, como la que entregan los ingenieros. El sistema ya llenó la parte técnica con su trabajo; ustedes escriben lo que piensan.</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:5px"><div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">SE INCLUYE AUTOMÁTICAMENTE</div><sc-for list="{{ ph.secs }}" as="x" hint-placeholder-count="10"><div style="display:flex;gap:8px;font-size:14px"><div style="color:#1f9d55;font-weight:800">✓</div><div>{{ x }}</div></div></sc-for></div>
+<sc-for list="{{ ph.campos }}" as="c" hint-placeholder-count="4">
+<div style="flex:none;background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;border:2px solid {{ c.bd }}">
+<div style="font-size:14px;font-weight:700;line-height:1.35">{{ c.n }}</div><div style="font-size:12px;color:#4a5878">{{ c.ayuda }}</div>
+<textarea value="{{ c.v }}" onChange="{{ c.set }}" disabled="{{ ro }}" rows="3" placeholder="{{ c.ph }}" style="border:1px solid #9aa6c4;border-radius:8px;padding:8px;font-size:14px;resize:vertical;font-family:inherit"></textarea>
+<div style="font-size:12px;color:{{ c.cc }};text-align:right">{{ c.cnt }}</div>
+</div>
+</sc-for>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ ph.word }}" style="flex:1;min-width:140px;background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">⬇ Descargar Word</button><button onClick="{{ ph.pdf }}" style="flex:1;min-width:140px;background:#fff;color:#c8413a;border:2px solid #c8413a;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">⬇ Guardar PDF</button></div>
+<sc-if value="{{ ph.hecho }}" hint-placeholder-val="{{ false }}">
+<div style="background:#1f9d55;color:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:22px">¡PROYECTO COMPLETO!</div>
+<div style="font-size:16px">Nota del proyecto: <b>{{ ph.nota }}</b> / 10</div>
+<sc-for list="{{ ph.ins }}" as="x" hint-placeholder-count="2"><div style="font-size:14px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px">{{ x }}</div></sc-for>
+</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;border:2px solid #f0a726">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#a8650a">COEVALUACIÓN · EVALÚEN A OTRA PAREJA QUE YA TERMINÓ</div>
+<div style="display:flex;gap:8px"><input value="{{ co.cod }}" onChange="{{ co.setCod }}" placeholder="Código de la otra pareja" style="flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:2px solid #9aa6c4;font-size:15px;text-transform:uppercase"><button onClick="{{ co.buscar }}" style="background:#0a1a3a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Buscar</button></div>
+<sc-if value="{{ co.msgVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#a8650a;font-weight:600">{{ co.msg }}</div></sc-if>
+<sc-if value="{{ co.vis }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;font-weight:700">{{ co.info }}</div>
+<div style="font-size:13px;font-style:italic;color:#4a5878;line-height:1.4">{{ co.con }}</div>
+<sc-for list="{{ co.crit }}" as="c" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid #e3e7f2;padding-top:6px"><div style="flex:1;min-width:160px;font-size:14px">{{ c.n }}</div><div style="display:flex;gap:4px"><sc-for list="{{ c.st }}" as="b"><button onClick="{{ b.go }}" style="width:34px;height:34px;border-radius:8px;border:2px solid #f0a726;background:{{ b.bg }};cursor:pointer;font-weight:800;color:#1a1004">{{ b.t }}</button></sc-for></div></div></sc-for>
+<textarea value="{{ co.com }}" onChange="{{ co.setCom }}" rows="2" placeholder="Un consejo para mejorar su proyecto (mínimo 15 letras)" style="border:1px solid #9aa6c4;border-radius:8px;padding:8px;font-size:14px;font-family:inherit"></textarea>
+<button onClick="{{ co.enviar }}" disabled="{{ co.enviado }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">{{ co.btn }}</button>
+</sc-if>
+</div>
+</sc-if>
+</sc-if>
+
+</div>
+<div style="padding:12px 16px;background:#fff;border-top:1px solid #dde3f0;display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ fb.vis }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;padding:10px 12px;background:{{ fb.bg }};color:{{ fb.fg }};font-size:14px;line-height:1.45;display:flex;flex-direction:column;gap:4px"><div style="font-weight:800">{{ fb.tit }}</div><sc-for list="{{ fb.lista }}" as="l"><div>• {{ l }}</div></sc-for></div>
+</sc-if>
+<sc-if value="{{ pz.acciones }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px">
+<sc-if value="{{ pz.pistaVis }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pz.pista }}" style="background:#fff;color:#a8650a;border:2px solid #f0a726;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ pz.pistaTxt }}</button></sc-if>
+<button onClick="{{ pz.siguiente }}" style="flex:1;background:#0a1a3a;color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">{{ pz.sigTxt }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ pz.esDoc }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ pz.docAnt }}" style="background:#fff;color:#0a1a3a;border:2px solid #0a1a3a;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer">← Paso anterior</button>
+<button onClick="{{ pz.docSig }}" style="flex:1;background:#2456b8;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer">Paso siguiente →</button>
+<button onClick="{{ pz.docFin }}" style="background:#c8413a;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer">Terminar explicación</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vDoc }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#f3f4f8;overflow:auto">
+<div style="background:#0a1a3a;color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:46px;width:auto;background:#fff;border-radius:8px;padding:3px">
+<div style="flex:1;min-width:200px;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px">PANEL DOCENTE · TALLER 3D</div><div style="font-size:13px;color:#c9d6f2">{{ doc.estado }}</div></div>
+<button onClick="{{ doc.csv }}" style="background:#fff;color:#0a1a3a;border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">⬇ Descargar notas (CSV)</button>
+<button onClick="{{ doc.salir }}" style="background:transparent;color:#fff;border:1px solid #fff;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">Salir</button>
+</div>
+<div style="padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px">
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">1 · SESIÓN DE CLASE</div>
+<div style="display:flex;gap:8px;align-items:center"><input value="{{ doc.codigo }}" onChange="{{ doc.setCodigo }}" placeholder="código" style="flex:1;font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:.12em;padding:8px 10px;border:2px solid #0a1a3a;border-radius:8px;width:120px"><button onClick="{{ doc.nuevoCod }}" style="background:#e8eefb;border:none;border-radius:8px;padding:12px;font-weight:700;cursor:pointer">Nuevo</button></div>
+<button onClick="{{ doc.toggleSesion }}" style="background:{{ doc.sesBg }};color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">{{ doc.sesTxt }}</button>
+<div style="font-size:13px;color:#4a5878">Proyecte este código. Las parejas entran en: <b>{{ doc.url }}</b></div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">2 · MISIONES ABIERTAS</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ doc.proys }}" as="pp" hint-placeholder-count="10"><button onClick="{{ pp.tog }}" style="border:2px solid {{ pp.bd }};background:{{ pp.bg }};color:{{ pp.fg }};border-radius:999px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer">{{ pp.ico }} {{ pp.n }}</button></sc-for></div>
+<div style="display:flex;gap:8px"><button onClick="{{ doc.todos }}" style="flex:1;background:#e8eefb;border:none;border-radius:8px;padding:8px;font-weight:700;cursor:pointer">Abrir todas</button><button onClick="{{ doc.ninguno }}" style="flex:1;background:#e8eefb;border:none;border-radius:8px;padding:8px;font-weight:700;cursor:pointer">Cerrar todas</button></div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">3 · TOMAR EL CONTROL (MODO EXPLICACIÓN)</div>
+<div style="font-size:13px;color:#4a5878;line-height:1.4">Muestra el proyecto resuelto, paso a paso, en el proyector y en todas las computadoras. Mientras dure, los estudiantes no pueden mover nada.</div>
+<select value="{{ doc.expP }}" onChange="{{ doc.setExpP }}" style="padding:8px;border-radius:8px;border:2px solid #0a1a3a;font-size:15px"><sc-for list="{{ doc.proys }}" as="pp"><option value="{{ pp.id }}">{{ pp.ico }} {{ pp.n }}</option></sc-for></select>
+<button onClick="{{ doc.explicar }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">▶ Explicar en el proyector</button>
+</div>
+</div>
+<div style="padding:0 22px 22px">
+<div style="background:#fff;border-radius:12px;overflow:auto">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px;flex-wrap:wrap"><div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">4 · MONITOR EN VIVO · {{ doc.n }} PAREJAS</div><div style="display:flex;gap:8px;align-items:center"><select value="{{ doc.filtro }}" onChange="{{ doc.setFiltro }}" style="padding:6px;border-radius:8px"><sc-for list="{{ doc.filtros }}" as="fo"><option value="{{ fo }}">{{ fo }}</option></sc-for></select><div style="font-size:12px;color:#4a5878">se actualiza cada 10 s</div></div></div>
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:900px">
+<tr style="background:#0a1a3a;color:#fff;text-align:left"><th style="padding:8px">PC</th><th style="padding:8px">Pareja</th><th style="padding:8px">Curso</th><th style="padding:8px">Ahora</th><th style="padding:8px">Completos</th><th style="padding:8px">Nota</th><th style="padding:8px">Fallos</th><th style="padding:8px">Pistas</th><th style="padding:8px">Ayuda</th><th style="padding:8px">Apoyo</th><th style="padding:8px">Visto</th></tr>
+<sc-for list="{{ doc.rows }}" as="r" hint-placeholder-count="4">
+<tr style="border-top:1px solid #e3e7f2;background:{{ r.bg }}"><td style="padding:8px;font-weight:800">{{ r.pc }}</td><td style="padding:8px">{{ r.integrantes }}</td><td style="padding:8px">{{ r.curso }} {{ r.par }}</td><td style="padding:8px">{{ r.ahora }}</td><td style="padding:8px">{{ r.completos }}</td><td style="padding:8px;font-weight:800">{{ r.nota }}</td><td style="padding:8px">{{ r.fallos }}</td><td style="padding:8px">{{ r.pistas }}</td><td style="padding:8px"><button onClick="{{ r.atender }}" style="background:{{ r.ayBg }};color:#fff;border:none;border-radius:6px;padding:4px 8px;font-weight:700;cursor:pointer">{{ r.ayTxt }}</button></td><td style="padding:8px"><button onClick="{{ r.apoyo }}" style="background:{{ r.apBg }};color:{{ r.apFg }};border:1px solid #9aa6c4;border-radius:6px;padding:4px 8px;font-weight:700;cursor:pointer">{{ r.apTxt }}</button></td><td style="padding:8px;color:#4a5878">{{ r.visto }}</td></tr>
+</sc-for>
+</table>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vLogin }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a1a3a,#14306b);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto">
+<div style="margin:auto 0;background:#fff;border-radius:16px;width:100%;max-width:560px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+<div style="display:flex;align-items:center;gap:14px"><img src="./logo-providencia.png" alt="La Providencia" style="height:56px;width:auto"><div style="display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:24px;line-height:1.05">Campus 3D · La Providencia</div><div style="font-size:14px;color:#4a5878">Robótica · U. E. P. La Providencia</div></div></div>
+<div style="display:flex;gap:6px;background:#e8eefb;border-radius:10px;padding:4px"><sc-for list="{{ lg.tabs }}" as="tb"><button onClick="{{ tb.go }}" style="flex:1;border:none;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }}">{{ tb.n }}</button></sc-for></div>
+
+<sc-if value="{{ lg.nueva }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Curso<select value="{{ lg.curso }}" onChange="{{ lg.setCurso }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"><option value="">—</option><option value="8vo">8vo EGB</option><option value="9no">9no EGB</option><option value="10mo">10mo EGB</option><option value="3BGU">3ro BGU</option></select></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Paralelo<select value="{{ lg.par }}" onChange="{{ lg.setPar }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"><option value="">—</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">N.º de PC<input value="{{ lg.pc }}" onChange="{{ lg.setPc }}" inputmode="numeric" placeholder="1–20" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Integrante 1 (apellido y nombre)<input value="{{ lg.n1 }}" onChange="{{ lg.setN1 }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Integrante 2 (apellido y nombre)<input value="{{ lg.n2 }}" onChange="{{ lg.setN2 }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la clase (en el proyector)<input value="{{ lg.cod }}" onChange="{{ lg.setCod }}" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:20px;font-family:'Archivo Black',sans-serif;letter-spacing:.12em"></label>
+<div style="background:#e8eefb;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;display:flex;flex-direction:column;gap:2px"><b>Reglas del laboratorio</b><div>1. Sin comida ni bebida cerca de las computadoras.</div><div>2. Trabajamos en pareja: los dos deciden, uno maneja el mouse.</div><div>3. Al terminar, cerramos la sesión y dejamos el puesto ordenado.</div><div>4. Cualquier daño se informa de inmediato al docente.</div><label style="display:flex;gap:8px;align-items:center;margin-top:6px;font-weight:700"><input type="checkbox" checked="{{ lg.acepta }}" onChange="{{ lg.setAcepta }}"> Aceptamos las reglas</label></div>
+</sc-if>
+<sc-if value="{{ lg.seguir }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;color:#4a5878">Escriban el código de su pareja (aparece arriba en el juego) para seguir donde se quedaron.</div>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la pareja<input value="{{ lg.rid }}" onChange="{{ lg.setRid }}" placeholder="T3-XXXXX" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:20px;font-family:'Archivo Black',sans-serif;letter-spacing:.08em"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la clase<input value="{{ lg.cod }}" onChange="{{ lg.setCod }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:18px;font-family:'Archivo Black',sans-serif;letter-spacing:.12em"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">N.º de PC de hoy<input value="{{ lg.pc }}" onChange="{{ lg.setPc }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+</sc-if>
+<sc-if value="{{ lg.docente }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Clave del docente<input type="password" value="{{ lg.clave }}" onChange="{{ lg.setClave }}" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:18px"></label>
+</sc-if>
+<sc-if value="{{ lg.msgVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fde8e6;color:#8a1f17;border-radius:8px;padding:10px;font-size:14px;font-weight:600">{{ lg.msg }}</div></sc-if>
+<button onClick="{{ lg.entrar }}" style="background:#2456b8;color:#fff;border:none;border-radius:10px;padding:14px;font-size:18px;font-weight:800;cursor:pointer">{{ lg.btn }}</button>
+<sc-if value="{{ lg.demo }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#4a5878;text-align:center">Modo demostración: código de clase 1234 · clave docente 1234 · los datos quedan en esta computadora.</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LS = 'campus3d_v2', LSD = 'campus3d_demo_rows', LSC = 'campus3d_demo_ctl';
+const X = () => window.T3D_DATOS;
+const AJ_ = (D, p, n) => (D && D.ajustes ? D.ajustes(p, n) : []);
+const FL_ = (D, p) => (D && D.fallas ? D.fallas(p) : []);
+const URL_ = () => ((window.ARTICULO_CONFIG || {}).sheetsUrl || '').trim();
+const CLAVE_DEMO = '1234';
+const NF = ['Misión', 'Elegir', 'Ubicar', 'Conectar', 'Diagrama', 'Bloques', 'Ajustar', 'Código', 'Probar', 'Ficha'];
+const SALIDA_TXT = { rojo: 'prender la luz roja', verde: 'prender la luz verde', amarillo: 'prender la luz amarilla' };
+const hsh = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return h; };
+const mez = (a, seed) => { const h = hsh(seed); return a.map((v, i) => [v, Math.sin(h + i * 12.9898) * 43758.5453 % 1]).sort((x, y) => x[1] - y[1]).map(x => x[0]); };
+const nuevoId = () => 'T3-' + Array.from({ length: 5 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+const r2 = n => Math.round(n * 100) / 100;
+
+class Component extends DCLogic {
+  state = { vista: 'login', tab: 'nueva', lg: { curso: '', par: '', pc: '', n1: '', n2: '', cod: '', rid: '', clave: '', acepta: false }, lgMsg: '', st: null, cur: null, sel: null, fb: null, run: null, cerca: null, c3d: true, err3d: '', ctl: { on: false, p: '', f: 0 }, abiertos: null, doc: null, exp: null };
+  ref3d = React.createRef();
+
+  componentDidMount() {
+    if (!window.T3D_EXTRA) { let n = 0; this._wx = setInterval(() => { n++; if (window.T3D_EXTRA || n > 60) { clearInterval(this._wx); this.forceUpdate(); } }, 150); }
+    try { const s = JSON.parse(localStorage.getItem(LS) || 'null'); if (s && s.id && s.curso) this.setState({ st: s, vista: 'juego' }, () => this.iniciarPoll()); } catch (e) {}
+    this.crear3d();
+    this._rs = () => this.api && this.api.resize(); window.addEventListener('resize', this._rs);
+  }
+  componentWillUnmount() { clearInterval(this._poll); clearInterval(this._dpoll); clearTimeout(this._sv); window.removeEventListener('resize', this._rs); if (this.api) this.api.destruir(); }
+  async crear3d() {
+    let n = 0; while (!(window.T3D_ESCENA && window.T3D_DATOS) && n < 100) { await new Promise(r => setTimeout(r, 100)); n++; }
+    if (!window.T3D_ESCENA || !this.ref3d.current) { this.setState({ err3d: 'No se pudieron cargar los archivos taller3d-*.js' }); return; }
+    try {
+      this.api = await window.T3D_ESCENA.crear(this.ref3d.current, {
+        onStation: id => this.abrir(id),
+        onSpot: sp => this.ponerSpot(sp),
+        onCerca: id => { if (id !== this.state.cerca) this.setState({ cerca: id }); }
+      });
+      const nom = {}; X().P.forEach(p => { nom[p.id] = p.ico + ' ' + p.n; }); this.api.nombres(nom);
+      this.setState({ c3d: false }, () => this.sync3d(true));
+    } catch (e) { this.setState({ err3d: 'Este navegador no pudo abrir el 3D (' + e.message + ').' }); }
+  }
+  componentDidUpdate() { this.sync3d(false); }
+
+  // ---------- helpers ----------
+  P(id) { return X().P.find(p => p.id === id); }
+  curso() { const c = (this.state.st && this.state.st.curso) || '9no'; return X().CURSO[c] || X().CURSO['9no']; }
+  apoyo() { return !!(this.state.st && this.state.st.ad); }
+  pj(id) { const st = this.state.st; return (st && st.proj && st.proj[id]) || { f: 0, max: 0, done: false, nota: 0, fallos: 0, pistas: 0, sel: {}, res: { r220: 0, r10k: 0 }, ub: {}, con: {}, fl: {}, sl: {}, refl: '', pv: {}, aj: {}, cd: {}, fi: {}, pf: {} }; }
+  setPj(id, ch, cb) { this.setState(s => { const st = Object.assign({}, s.st), proj = Object.assign({}, st.proj); proj[id] = Object.assign({}, (s.st.proj || {})[id] || this.pj(id), ch); st.proj = proj; return { st }; }, () => { this.guardar(); cb && cb(); }); }
+  lim(opts, ok, seed) { let o = opts.map(String); if (this.curso().ops === 2 || this.apoyo()) { const w = o.filter(x => x !== String(ok)); o = [String(ok)].concat(w.slice(0, 1)); } return mez(o, seed); }
+  vista() { const s = this.state; if (s.vista === 'doc' && s.exp) return { modo: 'exp', p: s.exp.p, f: s.exp.f, ro: true }; if (s.vista === 'juego' && s.ctl && s.ctl.on && s.ctl.p) return { modo: 'ctl', p: s.ctl.p, f: s.ctl.f, ro: true }; if (s.vista === 'juego' && s.cur) return { modo: 'jug', p: s.cur, f: this.pj(s.cur).f, ro: false }; return null; }
+  solucion(p) {
+    const D = X(), sel = {}, res = { r220: (p.res && p.res.r220) || 0, r10k: (p.res && p.res.r10k) || 0 }, ub = {}, con = {}, fl = {};
+    p.inst.forEach(it => { sel[it.c] = true; ub[it.i] = it.spot; });
+    const usado = {}, libre = (lista) => lista.find(x => !usado[x]);
+    p.inst.forEach(it => D.COMP[it.c].pins.forEach(([pl, rol], k) => { let to = '', r = D.ROL[rol].r;
+      if (rol === 'vcc' || rol === 'p5') to = '5V'; else if (rol === 'gnd' || rol === 'catodo') to = 'GND'; else if (rol === 'pwm') to = libre(['D9', 'D10', 'D11', 'D6', 'D5', 'D3']); else if (rol === 'ana' || rol === 'div') to = libre(D.A); else to = libre(D.D.filter(x => !D.PWM.includes(x)).concat(D.PWM));
+      if (D.SEN(rol)) usado[to] = 1; con[it.i + '.' + k] = { to, r }; }));
+    p.flujo.forEach(([k, ok]) => { fl[k] = ok; });
+    const aj = {}; AJ_(D, p, 3).forEach(a => { aj[a.k] = a.ok[0] + a.step * Math.round((a.ok[1] - a.ok[0]) / 2 / a.step); });
+    const F0 = FL_(D, p)[0], ej = p.ejemplo || { imp: 'Este sistema resuelve un problema real del colegio: ' + p.historia, mej: 'Agregar una pantalla que muestre el valor del sensor y un registro de cuántas veces se activó.', con: 'Con un sensor, un actuador y un algoritmo con una pregunta, el sistema cumple el objetivo: ' + p.objetivo + ' Lo comprobamos con ' + p.tests.length + ' situaciones reales.' };
+    return { f: 9, max: 9, sel, res, ub, con, fl, sl: Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), pv: {}, refl: 'Ejemplo de respuesta: ' + (p.reflex || ''), aj, cd: {}, fi: ej, pf: {}, falla: F0 ? { t: F0.t } : null, fallaOk: true, fallaPaso: 1, done: true };
+  }
+  datos(v) { const p = this.P(v.p); return v.modo === 'jug' ? this.pj(v.p) : this.solucion(p); }
+  notaFinal(st) { const req = (X().CURSO[st.curso] || {}).req || 1, all = Object.values(st.proj || {}), ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; let s = 0; for (let i = 0; i < req; i++) s += ns[i] || 0; return r2(Math.min(10, s / req + Math.max(0, dn - req) * 0.5)); }
+  nAj() { return this.curso().ops === 2 || this.apoyo() ? 2 : 3; }
+  notaProy(pj) { const ap = this.apoyo(), reach = pj.done ? 10 : (pj.max || 0); let s = 0, b = 0; for (let k = 0; k < reach; k++) { s += (pj.pv && pj.pv[k] && !ap) ? 0.75 : 1; if (k >= 1 && !(pj.pf || {})[k]) b += 0.1; } if (pj.fallaOk && !pj.fallaErr) b += 0.2; return r2(Math.min(10, s + b)); }
+  insignias(pj) { const reach = pj.done ? 10 : (pj.max || 0), o = []; let n = 0; for (let k = 1; k < reach; k++) if (!(pj.pf || {})[k]) n++; if (n) o.push('🎯 Primer intento en ' + n + ' fase' + (n > 1 ? 's' : '') + ' (+' + (n * 0.1).toFixed(1) + ')'); if (pj.fallaOk && !pj.fallaErr) o.push('🕵 Detective: falla resuelta al primer intento (+0,2)'); if (pj.done && !pj.pistas) o.push('🧠 Sin pistas'); if (pj.done) o.push('📄 Documentador: ficha técnica entregada'); return o; }
+
+  // ---------- server ----------
+  post(body) { const u = URL_(); if (!u) return; fetch(u, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }).catch(() => {}); }
+  resumen(st) { const done = Object.entries(st.proj || {}).filter(([, v]) => v.done); const cur = this.state.cur; return { id: st.id, curso: st.curso, par: st.par, pc: st.pc, integrantes: st.integrantes, actual: cur ? this.P(cur).n : 'Campus', fase: cur ? NF[this.pj(cur).f] : '', completos: done.length, nota: this.notaFinal(st), detalle: done.map(([k, v]) => this.P(k).n + ' ' + v.nota).join('; '), fallos: Object.values(st.proj || {}).reduce((a, v) => a + (v.fallos || 0), 0), pistas: Object.values(st.proj || {}).reduce((a, v) => a + (v.pistas || 0), 0) }; }
+  guardar(extra) {
+    const st = this.state.st; if (!st) return; try { localStorage.setItem(LS, JSON.stringify(st)); } catch (e) {}
+    clearTimeout(this._sv); this._sv = setTimeout(() => { const st2 = this.state.st, r = this.resumen(st2);
+      if (!URL_()) { try { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), old = rows[st2.id] || {}; rows[st2.id] = Object.assign({}, r, { ts: Date.now(), visto: new Date().toLocaleTimeString().slice(0, 5), ayuda: extra && extra.pedirAyuda ? 'SÍ' : extra && extra.cancelarAyuda ? 'NO' : (old.ayuda || 'NO'), apoyo: old.apoyo || 'No' }); localStorage.setItem(LSD, JSON.stringify(rows)); } catch (e) {} return; }
+      this.post(Object.assign({ modo: 't3d', json: JSON.stringify(st2) }, r, extra || {})); }, extra ? 10 : 1200);
+  }
+  async getJ(q) { const u = URL_(); const r = await fetch(u + (u.includes('?') ? '&' : '?') + q + '&t=' + Date.now()); return JSON.parse(await r.text()); }
+  iniciarPoll() {
+    clearInterval(this._poll); const tick = async () => { const st = this.state.st; if (!st) return;
+      if (!URL_()) { let ctl = { on: false }; try { ctl = JSON.parse(localStorage.getItem(LSC) || '{"on":false}'); } catch (e) {} const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), me = rows[st.id] || {}; const ab = JSON.parse(localStorage.getItem('campus3d_demo_ab') || 'null'); this.aplicarPoll({ ctl, abiertos: ab, apoyo: me.apoyo, ayuda: me.ayuda }); return; }
+      try { this.aplicarPoll(await this.getJ('t3ds=' + encodeURIComponent(st.ses || '') + '&id=' + encodeURIComponent(st.id))); } catch (e) {} };
+    tick(); this._poll = setInterval(tick, 5000);
+  }
+  aplicarPoll(r) { const st = this.state.st, ch = {}; const ctl = r.ctl || { on: false }; if (JSON.stringify(ctl) !== JSON.stringify(this.state.ctl)) ch.ctl = ctl; if (JSON.stringify(r.abiertos || null) !== JSON.stringify(this.state.abiertos)) ch.abiertos = r.abiertos || null;
+    const ad = r.apoyo === 'Sí', ay = r.ayuda === 'SÍ'; if (st && (!!st.ad !== ad || (r.ayuda != null && !!st.ayuda !== ay))) ch.st = Object.assign({}, st, { ad, ayuda: r.ayuda != null ? ay : st.ayuda });
+    if (Object.keys(ch).length) this.setState(ch); }
+
+  // ---------- login ----------
+  async entrar() {
+    const s = this.state, f = s.lg, u = URL_(), err = m => this.setState({ lgMsg: m });
+    if (s.tab === 'docente') { if (!f.clave) return err('Escriba la clave.'); if (!u) { if (f.clave !== CLAVE_DEMO) return err('Clave incorrecta (demo: 1234).'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: [], ses: { codigo: localStorage.getItem('campus3d_demo_cod') || '1234', abierta: true, abiertos: JSON.parse(localStorage.getItem('campus3d_demo_ab') || 'null') } }, lgMsg: '' }, () => this.pollDoc()); return; }
+      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(f.clave)); if (r.error) return err('Clave incorrecta.'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: r.rows, ses: r.sesion }, lgMsg: '' }, () => this.pollDoc()); } catch (e) { err('No hay conexión con la hoja de Google.'); } return; }
+    if (!f.cod) return err('Escriban el código de la clase.');
+    if (!/^\d{1,2}$/.test(String(f.pc).trim()) || +f.pc < 1 || +f.pc > 30) return err('Escriban el número de su computadora (1 a 20).');
+    let ok = !u ? f.cod.trim() === (localStorage.getItem('campus3d_demo_cod') || '1234') : false, info = {};
+    if (u) { try { info = await this.getJ('t3ds=' + encodeURIComponent(f.cod.trim())); ok = info.ok; if (!info.abierta) return err('El docente todavía no abre la clase.'); } catch (e) { return err('No hay conexión con la hoja de Google. Revisen el internet.'); } }
+    if (!ok) return err('El código de la clase no es correcto.');
+    if (s.tab === 'seguir') {
+      const rid = String(f.rid || '').toUpperCase().replace(/\s+/g, '').replace(/^T3(?=[A-Z0-9]{5}$)/, 'T3-'); if (!rid) return err('Escriban el código de la pareja.');
+      let st = null; try { const L = JSON.parse(localStorage.getItem(LS) || 'null'); if (L && L.id === rid) st = L; } catch (e) {}
+      if (!st && u) { try { const r = await this.getJ('t3did=' + encodeURIComponent(rid)); if (r.data) st = Object.assign({}, r.data, { ad: r.apoyo === 'Sí' }); } catch (e) {} }
+      if (!st) return err('No se encontró el código ' + rid + '.');
+      st = Object.assign({}, st, { pc: String(f.pc).trim(), ses: f.cod.trim() }); this.setState({ st, vista: 'juego', lgMsg: '' }, () => { this.guardar(); this.iniciarPoll(); }); return;
+    }
+    if (!f.curso || !f.par) return err('Elijan el curso y el paralelo.'); if (f.n1.trim().length < 5 || f.n2.trim().length < 5) return err('Escriban el apellido y el nombre de los dos integrantes.'); if (!f.acepta) return err('Deben aceptar las reglas del laboratorio.');
+    const st = { id: nuevoId(), curso: f.curso, par: f.curso + ' ' + f.par, pc: String(f.pc).trim(), integrantes: f.n1.trim() + ' / ' + f.n2.trim(), ses: f.cod.trim(), proj: {}, ad: false, ayuda: false, t0: Date.now() };
+    this.setState({ st, vista: 'juego', lgMsg: '', abiertos: info.abiertos || null }, () => { this.guardar(); this.iniciarPoll(); });
+  }
+
+  // ---------- juego ----------
+  abierto(id) { const a = this.state.abiertos; return !a || a.includes(id); }
+  abrir(id) { const s = this.state; if (s.vista !== 'juego' || (s.ctl && s.ctl.on)) return; if (!this.abierto(id)) { this.setState({ fb: { ok: false, t: 'Esa misión está cerrada por el docente.' } }); return; } this.setState({ cur: id, fb: null, sel: null, run: null }, () => this.guardar()); }
+  salir() { this.setState({ cur: null, fb: null, sel: null, run: null }, () => this.guardar()); }
+  ponerSpot(sp) { const v = this.vista(); if (!v || v.ro || v.f !== 2) return; const it = this.state.sel; if (!it) { this.setState({ fb: { ok: false, t: 'Primero toquen un componente de la lista.' } }); return; } const pj = this.pj(v.p); this.setPj(v.p, { ub: Object.assign({}, pj.ub, { [it]: sp }) }); this.setState({ sel: null, fb: null }); }
+  fallo(id, tit, lista) { const pj = this.pj(id), pf = Object.assign({}, pj.pf || {}); pf[pj.f] = (pf[pj.f] || 0) + 1; this.setPj(id, { fallos: pj.fallos + 1, pf }); this.setState({ fb: { ok: false, t: tit, lista } }); }
+  avanzar(id, msg) { const pj = this.pj(id), f = Math.min(9, pj.f + 1); this.setPj(id, { f, max: Math.max(pj.max, f) }); this.setState({ fb: msg ? { ok: true, t: msg } : null, sel: null }); }
+  pista(id) { const pj = this.pj(id); if (pj.pv[pj.f]) return; this.setPj(id, { pistas: pj.pistas + (this.apoyo() ? 0 : 1), pv: Object.assign({}, pj.pv, { [pj.f]: true }) }); }
+  comprobar(id) {
+    const p = this.P(id), pj = this.pj(id), D = X();
+    if (pj.f === 0) return this.avanzar(id);
+    if (pj.f === 1) { const need = D.necesita(p), items = [...new Set(p.inst.map(i => i.c).concat(p.dist))], err = [];
+      items.forEach(c => { if (pj.sel[c] && !need[c]) err.push('«' + D.COMP[c].n + '» no hace falta aquí: ' + D.COMP[c].q.toLowerCase()); if (!pj.sel[c] && need[c]) err.push('Les falta un componente de ' + (D.COMP[c].k === 'E' ? 'ENTRADA (algo que lee un dato del entorno).' : 'SALIDA (algo que actúa: luz, sonido o movimiento).')); });
+      ['r220', 'r10k'].forEach(r => { if ((pj.res[r] || 0) !== (need[r] || 0)) err.push('Revisen las resistencias de ' + (r === 'r220' ? '220 Ω (una por cada LED).' : '10 kΩ (una por cada pulsador o LDR).')); });
+      return err.length ? this.fallo(id, 'La mochila todavía no está lista', err.slice(0, 3)) : this.avanzar(id, '¡Mochila correcta! Ahora ubiquen cada componente.'); }
+    if (pj.f === 2) { const err = []; p.inst.forEach(it => { const u = pj.ub[it.i]; if (!u) { err.push(it.lab + ': todavía no tiene lugar.'); return; } if (u !== it.spot) { const sp = p.spots.find(x => x.id === u); err.push(it.lab + ': ' + (sp && sp.mal ? sp.mal : 'ese no es el mejor lugar. ' + (this.curso().guia ? it.por : 'Piensen desde dónde funciona mejor.'))); } });
+      return err.length ? this.fallo(id, 'Hay componentes mal ubicados', err.slice(0, 3)) : this.avanzar(id, '¡Todo en su lugar! Ahora a conectar.'); }
+    if (pj.f === 3) { const err = D.revisarConex(p, pj.con); return err.length ? this.fallo(id, 'El circuito tiene ' + err.length + ' problema' + (err.length > 1 ? 's' : ''), err.slice(0, this.apoyo() ? 6 : 3).map(e => e.t)) : this.avanzar(id, '¡Circuito correcto! Nada se quema. Ahora el algoritmo.'); }
+    if (pj.f === 4) { const mal = p.flujo.filter(([k, ok]) => pj.fl[k] !== ok); return mal.length ? this.fallo(id, mal.length + ' paso' + (mal.length > 1 ? 's' : '') + ' del diagrama no ' + (mal.length > 1 ? 'son correctos' : 'es correcto'), ['Lean el diagrama en voz alta, de arriba hacia abajo, con una situación real.']) : this.avanzar(id, '¡Diagrama correcto! Pásenlo a bloques.'); }
+    if (pj.f === 5) { const falt = Object.keys(p.slots).filter(k => pj.sl[k] == null || pj.sl[k] === ''); return falt.length ? this.setState({ fb: { ok: false, t: 'Completen todos los huecos (?) de los bloques.' } }) : this.avanzar(id, 'Bloques completos. Ahora ajusten y calibren el sistema, como en la vida real.'); }
+    if (pj.f === 6) { const mal = AJ_(D, p, this.nAj()).filter(a => { const v = (pj.aj || {})[a.k] != null ? pj.aj[a.k] : a.def; return v < a.ok[0] || v > a.ok[1]; });
+      return mal.length ? this.fallo(id, mal.length + ' ajuste' + (mal.length > 1 ? 's' : '') + ' todavía no ' + (mal.length > 1 ? 'están bien' : 'está bien'), mal.map(a => a.n + ': ' + a.ex)) : this.avanzar(id, 'Sistema ajustado y calibrado. Ahora el código real en Arduino IDE.'); }
+    if (pj.f === 7) { const H = this.huecos(p, pj), errs = []; H.holes.forEach(x => { const v = String((pj.cd || {})[x.j] || '').trim(); if (v !== x.ans) errs.push(this.msgHueco(p, x, v)); });
+      if (errs.length) { this.setState({ cons: { id, ok: false, lines: ['Compilando sketch…'].concat(errs.slice(0, 4), ['✗ ' + errs.length + ' problema' + (errs.length > 1 ? 's' : '') + '. Corrijan y vuelvan a compilar.']) } }); return this.fallo(id, 'El programa todavía no está listo', errs.slice(0, 3)); }
+      this.setState({ cons: { id, ok: true, lines: ['Compilando sketch…', 'El Sketch usa ' + (1600 + H.code.length) + ' bytes (' + Math.round((1600 + H.code.length) / 322.56) + '%) del espacio de almacenamiento.', 'Subiendo… ✓ Subido al Arduino UNO.', 'Monitor serial (9600 baud): ' + p.tests.slice(0, 4).map(t => t.v != null ? t.v : t.b != null ? t.b : '…').join(' · ')] } });
+      return this.avanzar(id, '¡Compiló y se subió al Arduino! Ahora prueben el sistema completo.'); }
+    if (pj.f === 9) { const m = this.curso().minTxt || [30, 30, 60], fi = pj.fi || {}, err = [];
+      [['imp', '¿Por qué es importante?', m[0]], ['con', 'Conclusiones', m[2]], ['mej', 'Mejoras', m[1]]].forEach(([k, n, mn]) => { const l = String(fi[k] || '').trim().length; if (l < mn) err.push(n + ': escriban al menos ' + mn + ' letras (llevan ' + l + ').'); });
+      if (String(pj.refl || '').trim().length < 20) err.push('Reflexión: escriban al menos 20 letras.');
+      if (err.length) return this.setState({ fb: { ok: false, t: 'La ficha todavía no está completa', lista: err } });
+      const nota = this.notaProy(Object.assign({}, pj, { done: true })); this.setPj(id, { done: true, nota: Math.max(pj.done ? pj.nota || 0 : 0, nota), max: 9 }, () => this.guardar({}));
+      return this.setState({ fb: { ok: true, t: '¡Proyecto entregado! Nota: ' + nota.toFixed(2) + '. Descarguen la ficha y evalúen a otra pareja.' } }); }
+  }
+  inEstado(p, t, c) { if (p.tipo === 'contador') return { c }; if (p.tipo === 'dos') return { in: { a: t.a, b: t.b } }; return { in: { v: t.v } }; }
+  correr(id, sl, solo) {
+    const p = this.P(id), D = X(), res = D.probar(p, sl); clearInterval(this._rt); let i = 0; this.setState({ run: { id, res, i: 0, fin: false } });
+    const paso = () => { const r = res[i]; if (!r) { clearInterval(this._rt); this.setState({ run: { id, res, i, fin: true } }); if (!solo) this.terminarPrueba(id, res); return; }
+      if (p.tipo === 'contador') { const st = { c: Number(sl.ini) }; res.slice(0, i).forEach(x => x.seq.forEach(ev => D.correr(p, sl, ev, st))); r.seq.forEach((ev, k) => setTimeout(() => { if (this.api) this.api.evento(ev); }, k * 70)); }
+      if (this.api) this.api.sim(id, { in: p.tipo === 'contador' ? {} : (p.tipo === 'dos' ? { a: r.t.a, b: r.t.b } : { v: r.t.v }), out: p.salida[r.sal] || {}, c: r.c });
+      i++; this.setState({ run: { id, res, i, fin: false } }); };
+    paso(); this._rt = setInterval(paso, 1300);
+  }
+  terminarPrueba(id, res) { const mal = res.filter(r => !r.ok); if (mal.length) { this.fallo(id, 'El sistema falló en ' + mal.length + ' de ' + res.length + ' situaciones', mal.slice(0, 3).map(r => r.txt + ': debía ' + this.txtSal(r.esp) + ' y quedó en ' + this.txtSal(r.obt) + '.').concat(['Vuelvan a «Bloques», corrijan y prueben otra vez.'])); return; }
+    const pj = this.pj(id), p = this.P(id); if (pj.fallaOk) return this.avanzar(id, '¡Funciona en todas las situaciones! Último paso: la ficha técnica.');
+    const FL = FL_(X(), p); if (!FL.length) { this.setPj(id, { fallaOk: true }); return this.avanzar(id, '¡Funciona en todas las situaciones!'); } const f = FL[Math.abs(hsh(id + ((this.state.st || {}).id || ''))) % FL.length];
+    this.setPj(id, { falla: { t: f.t }, fallaPaso: 0 }); this.setState({ fb: { ok: false, t: '¡Pasó todas las pruebas! Pero al instalarlo en el lugar real apareció una falla. Diagnostíquenla abajo.' } }); }
+  txtSal(v) { const s = String(v), m = s.match(/^(\w+)( \(.*\))?$/); return m && SALIDA_TXT[m[1]] ? SALIDA_TXT[m[1]] + (m[2] || '') : s.toLowerCase(); }
+
+  // ---------- docente ----------
+  pollDoc() { clearInterval(this._dpoll); const t = async () => { const d = this.state.doc; if (!d) return;
+      if (!URL_()) { const rows = Object.values(JSON.parse(localStorage.getItem(LSD) || '{}')); this.setState({ doc: Object.assign({}, this.state.doc, { rows }) }); return; }
+      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(d.clave)); if (!r.error) this.setState({ doc: Object.assign({}, this.state.doc, { rows: r.rows, ses: Object.assign({}, this.state.doc.ses, r.sesion, this._ed ? { codigo: this.state.doc.ses.codigo } : {}) }) }); } catch (e) {} };
+    t(); this._dpoll = setInterval(t, 10000); }
+  adm(o) { const d = this.state.doc; if (!URL_()) { if (o.accion === 'sesion') localStorage.setItem('campus3d_demo_cod', o.codigo); if (o.accion === 'abiertos') localStorage.setItem('campus3d_demo_ab', JSON.stringify(o.lista)); if (o.accion === 'ctl') localStorage.setItem(LSC, JSON.stringify({ on: o.on, p: o.p, f: o.f })); if (o.accion === 'apoyo' || o.accion === 'ayuda') { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'); if (rows[o.id]) { if (o.accion === 'apoyo') rows[o.id].apoyo = o.on ? 'Sí' : 'No'; else rows[o.id].ayuda = 'NO'; localStorage.setItem(LSD, JSON.stringify(rows)); } } return; } this.post(Object.assign({ modo: 't3dadm', clave: d.clave }, o)); }
+  setSes(ch) { this.setState(s => ({ doc: Object.assign({}, s.doc, { ses: Object.assign({}, s.doc.ses, ch) }) })); }
+  docExp(p, f) { this.setState({ exp: p ? { p, f } : null, fb: null, run: null }); this.adm({ accion: 'ctl', on: !!p, p: p || '', f: f || 0 }); }
+  csv() { const rows = (this.state.doc.rows || []), H = ['Codigo', 'Curso', 'Paralelo', 'PC', 'Integrantes', 'Completos', 'Nota', 'Detalle', 'Fallos', 'Pistas', 'Apoyo', 'Visto'];
+    const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', txt = [H.join(';')].concat(rows.map(r => [r.id, r.curso, r.par, r.pc, r.integrantes, r.completos, String(r.nota).replace('.', ','), r.detalle, r.fallos, r.pistas, r.apoyo, r.visto].map(q).join(';'))).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + txt], { type: 'text/csv' })); a.download = 'Taller3D-notas.csv'; document.body.appendChild(a); a.click(); a.remove(); }
+
+  // ---------- v2: código, ficha, coevaluación ----------
+  huecos(p, pj, ro) {
+    const D = X(), cur = this.curso(), pins = {}; Object.keys(pj.con || {}).forEach(k => { pins[k] = (pj.con[k] || {}).to; });
+    const S = Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), sl = Object.assign({}, S, ro ? {} : pj.sl);
+    let code = ''; try { code = D.codigo(p, sl, pins, pj.aj || {}); } catch (e) { code = '// (no se pudo generar el código)'; }
+    const lines = code.split('\n'), RX = /\b(OUTPUT|INPUT|HIGH|LOW|digitalWrite|digitalRead|analogRead|pinMode|setup|loop)\b|(<=|>=|==|<|>)(?= \d)|(?<=[<>=] )\d+(?=\))/g, cands = [];
+    let fin = false; lines.forEach((l, i) => { if (/^long medir/.test(l)) fin = true; if (fin || /^\s*\/\//.test(l) || /^#|^Servo|^const|^int /.test(l)) return; RX.lastIndex = 0; let m; while ((m = RX.exec(l))) cands.push({ i, a: m.index, b: m.index + m[0].length, ans: m[0] }); });
+    const k = Math.min(cands.length, this.apoyo() ? 3 : (cur.huecos || 5)), pick = [];
+    for (let j = 0; j < k; j++) { const ix = k === 1 ? 0 : Math.round(j * (cands.length - 1) / (k - 1)); if (!pick.includes(cands[ix])) pick.push(cands[ix]); }
+    const OPT = { OUTPUT: ['OUTPUT', 'INPUT', 'HIGH'], INPUT: ['INPUT', 'OUTPUT', 'LOW'], HIGH: ['HIGH', 'LOW', 'OUTPUT'], LOW: ['LOW', 'HIGH', 'INPUT'], digitalWrite: ['digitalWrite', 'digitalRead', 'analogWrite'], digitalRead: ['digitalRead', 'digitalWrite', 'analogRead'], analogRead: ['analogRead', 'digitalRead', 'analogWrite'], pinMode: ['pinMode', 'digitalWrite', 'Serial'], setup: ['setup', 'loop', 'main'], loop: ['loop', 'setup', 'repeat'] };
+    const opts = a => OPT[a] || (/^\d+$/.test(a) ? [...new Set([a, String(Number(a) * 2), String(Math.max(1, Math.round(Number(a) / 2)))])] : ['<', '>', '==', '='].includes(a) || ['<=', '>='].includes(a) ? [...new Set([a, '<', '>', '=='])] : [a]);
+    const esc = this.apoyo() ? 0 : (cur.escribir || 0);
+    return { code, lines, holes: pick.map((c, j) => Object.assign({}, c, { j, typed: esc === 1 || (esc === 0.5 && j % 2 === 1), opts: mez(opts(c.ans), p.id + j) })) };
+  }
+  msgHueco(p, x, v) {
+    const ln = 'línea ' + (x.i + 1) + ': ', FN = ['digitalWrite', 'digitalRead', 'analogRead', 'analogWrite', 'pinMode', 'setup', 'loop', 'main', 'repeat', 'Serial'], nd = "error: '" + v + "' was not declared in this scope";
+    if (!v) return ln + 'falta completar un hueco.';
+    if (/^(OUTPUT|INPUT)$/.test(x.ans)) return ln + (['OUTPUT', 'INPUT'].includes(v) ? 'compila, pero el pin queda como ' + v + '. ' + (x.ans === 'OUTPUT' ? 'Un actuador (LED, buzzer, relé) usa OUTPUT: el Arduino manda la señal.' : 'Un sensor usa INPUT: el Arduino recibe la señal.') : nd);
+    if (/^(HIGH|LOW)$/.test(x.ans)) return ln + (['HIGH', 'LOW'].includes(v) ? 'compila, pero hace lo contrario. HIGH = encender (5 V) y LOW = apagar (0 V).' : nd);
+    if (/^[<>=]/.test(x.ans)) return ln + (v === '=' ? 'un solo = guarda un valor; para comparar se usa ==, < o >.' : /^(<|>|<=|>=|==)$/.test(v) ? 'compila, pero la comparación no cumple el objetivo: ' + p.objetivo : "error: expected primary-expression before '" + v + "'");
+    if (/^\d+$/.test(x.ans)) return ln + (/^\d+$/.test(v) ? 'compila, pero el límite ' + v + ' no es el de su diagrama.' : nd);
+    return ln + (FN.includes(v) ? 'compila, pero ' + v + '() no hace lo que se necesita en esta línea.' : nd + (v.toLowerCase() === x.ans.toLowerCase() ? ' · ¡mayúsculas! Arduino distingue: se escribe ' + x.ans : ''));
+  }
+  fichaHTML(p, pj0, st) {
+    const D = X(), ro = !pj0, d = ro ? this.solucion(p) : pj0, pins = {}; Object.keys(d.con || {}).forEach(k => { pins[k] = (d.con[k] || {}).to; });
+    const sl = Object.assign({}, Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), ro ? {} : d.sl), e = x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    let code = ''; try { code = D.codigo(p, sl, pins, d.aj || {}); } catch (x) {}
+    const cnt = {}; p.inst.forEach(it => { cnt[it.c] = (cnt[it.c] || 0) + 1; }); const mats = Object.keys(cnt).map(c => [D.COMP[c].n, cnt[c], (D.PRECIO || {})[c] || 2]);
+    Object.keys(p.res || {}).forEach(r => { if (p.res[r]) mats.push([D.RES[r], p.res[r], 0.05]); }); mats.push(['Arduino UNO', 1, 14], ['Protoboard', 1, 4], ['Cables de conexión (paquete)', 1, 3]);
+    const tot = mats.reduce((a, m) => a + m[1] * m[2], 0), $ = n => '$' + n.toFixed(2);
+    const tests = D.probar(p, sl), FD = d.falla ? FL_(D, p).find(x => x.t === d.falla.t) : FL_(D, p)[0], fi = d.fi || {};
+    const th = 'border:1px solid #999;padding:5px 7px;background:#e8eefb;text-align:left', td = 'border:1px solid #999;padding:5px 7px', tb = (H, R) => '<table style="border-collapse:collapse;width:100%;font-size:10.5pt;margin:6px 0">' + '<tr>' + H.map(x => '<th style="' + th + '">' + e(x) + '</th>').join('') + '</tr>' + R.map(r => '<tr>' + r.map(x => '<td style="' + td + '">' + e(x) + '</td>').join('') + '</tr>').join('') + '</table>';
+    const h2 = t => '<h2 style="font-size:13pt;color:#0a1a3a;border-bottom:2px solid #2456b8;padding-bottom:3px;margin:16px 0 6px">' + t + '</h2>', pp = t => '<p style="margin:4px 0;line-height:1.45">' + e(t) + '</p>';
+    const logo = new URL('logo-providencia.png', location.href).href, quien = st ? st.integrantes : 'Ejemplo resuelto (docente)', cur = st ? ((D.CURSO[st.curso] || {}).nombre || st.curso) + ' ' + (st.par || '') : '';
+    const conex = []; p.inst.forEach(it => D.COMP[it.c].pins.forEach(([pl], k) => { const c = (d.con || {})[it.i + '.' + k] || {}; conex.push([it.lab, pl, c.to || '—', c.r ? (c.r === '220' ? '220 Ω' : '10 kΩ') : '—']); }));
+    let body = '<div style="display:flex;align-items:center;gap:14px;border-bottom:3px solid #0a1a3a;padding-bottom:10px"><img src="' + logo + '" style="height:64px" alt=""><div><div style="font-size:10pt;letter-spacing:.08em">UNIDAD EDUCATIVA PARTICULAR «LA PROVIDENCIA» · ROBÓTICA</div><div style="font-size:18pt;font-weight:800">FICHA TÉCNICA DEL PROYECTO</div></div></div>';
+    body += tb(['Proyecto', 'Lugar', 'Integrantes', 'Curso', 'Fecha'], [[p.n, p.lugar, quien, cur, new Date().toLocaleDateString('es-EC')]]);
+    body += h2('1. Problema') + pp(p.historia) + h2('2. Objetivo') + pp(p.objetivo) + '<ul style="margin:4px 0 4px 18px">' + p.criterios.map(c => '<li>' + e(c) + '</li>').join('') + '</ul>' + h2('3. ¿Por qué es importante?') + pp(fi.imp || '');
+    body += h2('4. Materiales y presupuesto') + tb(['Componente', 'Cantidad', 'Precio unitario', 'Subtotal'], mats.map(m => [m[0], m[1], $(m[2]), $(m[1] * m[2])]).concat([['TOTAL APROXIMADO', '', '', $(tot)]]));
+    body += h2('5. Ubicación de los componentes') + tb(['Componente', 'Lugar', 'Por qué'], p.inst.map(it => { const sp = p.spots.find(x => x.id === ((d.ub || {})[it.i] || it.spot)); return [it.lab, sp ? sp.lab : '—', it.por]; }));
+    body += h2('6. Conexiones al Arduino') + tb(['Componente', 'Pata', 'Pin', 'Resistencia'], conex);
+    body += h2('7. Diagrama de flujo') + '<ol style="margin:4px 0 4px 18px;line-height:1.5"><li>INICIO</li>' + p.flujo.map(f => '<li>' + e(f[1]) + '</li>').join('') + '</ol>';
+    body += h2('8. Ajustes y calibración') + tb(['Ajuste', 'Valor elegido', 'Rango correcto'], AJ_(D, p, 3).map(a => [a.n, ((d.aj || {})[a.k] != null ? d.aj[a.k] : a.def) + ' ' + a.u, a.ok[0] + ' – ' + a.ok[1] + ' ' + a.u]));
+    body += h2('9. Código (Arduino IDE)') + '<pre style="font-family:Consolas,monospace;font-size:9pt;background:#f4f6fa;border:1px solid #ccc;padding:8px;white-space:pre-wrap">' + e(code) + '</pre>';
+    body += h2('10. Pruebas') + tb(['Situación', 'Debía', 'Resultado', '¿Funciona?'], tests.map(r => [r.txt, this.txtSal(r.esp), this.txtSal(r.obt), r.ok ? 'Sí' : 'No']));
+    if (FD) body += h2('11. Falla encontrada y reparación') + tb(['Síntoma', 'Causa', 'Reparación'], [[FD.sin, FD.causas[0], FD.arreglos[0]]]);
+    body += h2('12. Conclusiones') + pp(fi.con || '') + h2('13. Mejoras para una versión 2') + pp(fi.mej || '') + h2('14. Reflexión') + '<p style="margin:4px 0;font-weight:700">' + e(p.reflex) + '</p>' + pp(d.refl || '');
+    if (!ro) body += '<p style="margin-top:14px;font-size:10pt;color:#555">Nota del proyecto: ' + (d.nota || this.notaProy(d)).toFixed(2) + ' / 10 · ' + this.insignias(d).join(' · ') + '</p>';
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ficha técnica · ' + e(p.n) + '</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;max-width:760px;margin:20px auto">' + body + '</body></html>';
+  }
+  descargar(id, tipo) {
+    const p = this.P(id), v = this.vista(), html = this.fichaHTML(p, v && v.ro ? null : this.pj(id), v && v.ro ? null : this.state.st), nom = 'Ficha tecnica - ' + p.n;
+    if (tipo === 'doc') { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + html], { type: 'application/msword' })); a.download = nom + '.doc'; document.body.appendChild(a); a.click(); a.remove(); return; }
+    const w = window.open('', '_blank'); if (!w) { this.setState({ fb: { ok: false, t: 'El navegador bloqueó la ventana. Permitan las ventanas emergentes o usen «Word».' } }); return; }
+    w.document.write(html.replace('</body>', '<script>window.onload=function(){setTimeout(function(){window.print()},500)}<\/script></body>')); w.document.close();
+  }
+  async coBuscar() {
+    const co = this.state.co || {}, st = this.state.st || {}, c = String(co.cod || '').trim().toUpperCase(), set = ch => this.setState({ co: Object.assign({}, this.state.co, ch) });
+    if (!c) return set({ msg: 'Escriban el código de la otra pareja.' }); if (c === st.id) return set({ msg: 'Ese es su propio código: evalúen a otra pareja.' });
+    if (!URL_()) return set({ msg: 'En modo demostración no se puede buscar a otras parejas.' });
+    set({ msg: 'Buscando…' });
+    try { const r = await this.getJ('t3did=' + encodeURIComponent(c)), dd = r && r.data; const pr = dd && Object.entries(dd.proj || {}).find(([, x]) => x.done);
+      if (!dd) return set({ msg: 'No existe una pareja con ese código.' }); if (!pr) return set({ msg: 'Esa pareja todavía no entrega su ficha técnica.' });
+      set({ msg: '', vis: true, enviado: false, crit: [0, 0, 0, 0], com: '', otro: { id: c, integrantes: dd.integrantes || '', pid: pr[0], n: (this.P(pr[0]) || {}).n || pr[0], con: (pr[1].fi || {}).con || '' } });
+    } catch (e) { set({ msg: 'No se pudo conectar. Revisen el internet.' }); }
+  }
+  coEnviar() {
+    const co = this.state.co || {}, st = this.state.st || {}, set = ch => this.setState({ co: Object.assign({}, this.state.co, ch) });
+    if ((co.crit || []).some(x => !x)) return set({ msg: 'Califiquen los 4 criterios (1 a 4).' }); if (String(co.com || '').trim().length < 15) return set({ msg: 'Escriban un consejo de al menos 15 letras.' });
+    const c = co.crit, prom = r2(c.reduce((a, b) => a + b, 0) / 4 * 2.5);
+    this.post({ modo: 't3dco', evaluador: st.id, evaluadores: st.integrantes, curso: st.curso, par: st.par, evaluado: co.otro.id, evaluados: co.otro.integrantes, proyecto: co.otro.n, c1: c[0], c2: c[1], c3: c[2], c4: c[3], nota: prom, comentario: co.com });
+    set({ enviado: true, msg: '¡Coevaluación enviada! Nota que le dieron: ' + prom.toFixed(2) + ' / 10.' });
+  }
+
+  // ---------- 3D sync ----------
+  sync3d(force) {
+    const A = this.api; if (!A) return; const v = this.vista(), s = this.state, pid = v ? v.p : null;
+    const panel = !!v, sigP = pid + '|' + panel; if (force || this._sp !== sigP) { this._sp = sigP; A.proyecto(pid); this._sg = ''; setTimeout(() => A.resize(), 30); }
+    const ab = JSON.stringify(s.abiertos); if (force || this._sa !== ab) { this._sa = ab; A.abiertos(s.abiertos); }
+    if (!v) return; const p = this.P(pid), d = this.datos(v);
+    const col = it => X().COMP[it.c].col, placed = v.f >= 2 ? p.inst.filter(it => d.ub[it.i]).map(it => { const sp = p.spots.find(x => x.id === d.ub[it.i]); return { spot: sp.id, pos: sp.pos, col: col(it) }; }) : [];
+    const spotsOn = v.f === 2 && !v.ro, sig = JSON.stringify([placed, spotsOn, s.sel]);
+    if (this._sg !== sig) { this._sg = sig; A.spots(spotsOn ? p.spots : null, null); A.colocados(placed); if (!s.run) A.sim(pid, null); }
+  }
+
+  renderVals() {
+    const s = this.state, D = window.T3D_DATOS, v = D ? this.vista() : null, st = s.st;
+    const out = { ref3d: this.ref3d, cargando3d: s.c3d, err3d: s.err3d, vLogin: s.vista === 'login', vDoc: s.vista === 'doc' && !s.exp, vWalk: s.vista === 'juego' && !v && !s.c3d, vPanel: !!v, panelW: 'min(480px, 46vw)', v3dRight: v ? 'min(480px, 46vw)' : (s.vista === 'doc' && !s.exp ? '100%' : '0px'), ro: !!(v && v.ro) };
+    // login
+    const f = s.lg, setF = k => e => { const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value; this.setState(x => ({ lg: Object.assign({}, x.lg, { [k]: val }), lgMsg: '' })); };
+    out.lg = Object.assign({}, f, { tabs: [['nueva', 'Pareja nueva'], ['seguir', 'Continuar'], ['docente', 'Docente']].map(([k, n]) => ({ n, bg: s.tab === k ? '#0a1a3a' : 'transparent', fg: s.tab === k ? '#fff' : '#0a1a3a', go: () => this.setState({ tab: k, lgMsg: '' }) })), nueva: s.tab === 'nueva', seguir: s.tab === 'seguir', docente: s.tab === 'docente', msg: s.lgMsg, msgVis: !!s.lgMsg, btn: s.tab === 'docente' ? 'Entrar como docente' : 'Entrar al campus →', demo: !URL_(), entrar: () => this.entrar(),
+      setCurso: setF('curso'), setPar: setF('par'), setPc: setF('pc'), setN1: setF('n1'), setN2: setF('n2'), setCod: setF('cod'), setRid: setF('rid'), setClave: setF('clave'), setAcepta: setF('acepta') });
+    // feedback
+    const fb = s.fb; out.fb = { vis: !!fb, bg: fb && fb.ok ? '#e3f6ea' : '#fde8e6', fg: fb && fb.ok ? '#14532d' : '#8a1f17', tit: fb ? fb.t : '', lista: (fb && fb.lista) || [] };
+    // hud
+    if (st && D) { const req = (D.CURSO[st.curso] || {}).req || 3, done = Object.values(st.proj || {}).filter(x => x.done).length;
+      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, completos: done + ' / ' + req, nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
+        ayuda: () => { const on = !st.ayuda; this.setState({ st: Object.assign({}, st, { ayuda: on }) }, () => this.guardar(on ? { pedirAyuda: true } : { cancelarAyuda: true })); },
+        cerrar: () => { if (!window.confirm('Anoten su código para continuar la próxima clase:\n\n' + st.id + '\n\n¿Cerrar la sesión?')) return; this.guardar(); clearInterval(this._poll); try { localStorage.removeItem(LS); } catch (e) {} this.setState({ st: null, cur: null, vista: 'login', tab: 'seguir', lg: Object.assign({}, s.lg, { rid: '', cod: '' }) }); },
+        cerca: !!s.cerca, cercaTxt: s.cerca ? (this.abierto(s.cerca) ? 'Presiona E: ' + this.P(s.cerca).n : '🔒 ' + this.P(s.cerca).n + ' (cerrada)') : '',
+        lista: D.P.map(p => { const pj = (st.proj || {})[p.id], ab = this.abierto(p.id); return { ico: p.ico, n: p.n, lugar: p.lugar, estado: !ab ? 'cerrada' : pj && pj.done ? '✓ nota ' + pj.nota : pj ? 'en paso ' + (pj.f + 1) + ' de 10' : 'nueva', bg: pj && pj.done ? '#e3f6ea' : pj ? '#fff6e3' : '#f3f4f8', op: ab ? 1 : 0.5, ir: () => this.abrir(p.id) }; }) };
+    } else out.hud = { pareja: '', completos: '', nota: '', lista: [], cerca: false, cercaTxt: '', ayudaTxt: '', ayudaBg: '#2456b8', ayuda: () => {}, cerrar: () => {} };
+    // panel
+    out.pz = { pasos: [], ico: '', n: '', lugar: '', key: '', acciones: false, esDoc: false }; out.ph = {};
+    if (v) {
+      const p = this.P(v.p), d = this.datos(v), ro = v.ro, F = v.f, pj = d, cur = this.curso(), id = p.id, pv = (pj.pv || {})[F] || ro;
+      const upd = ch => this.setPj(id, ch);
+      out.pz = { ico: p.ico, n: p.n, lugar: p.lugar.toUpperCase() + ' · ' + (v.modo === 'jug' ? 'paso ' + (F + 1) + ' de 10' : 'modo explicación'), key: id + F, puedeSalir: v.modo === 'jug', salir: () => this.salir(),
+        banner: v.modo !== 'jug', bannerTxt: v.modo === 'ctl' ? '👀 El profesor está explicando. Miren el proyector.' : '📽 Proyectando a todas las computadoras · ' + NF[F],
+        pasos: NF.map((n, k) => { const done = v.modo === 'jug' ? k < pj.max || (k === 9 && pj.done) : false, now = k === F, puede = v.modo === 'exp' || (v.modo === 'jug' && k <= pj.max);
+          return { n, num: done ? '✓' : String(k + 1), bg: now ? '#f0a726' : done ? '#1f9d55' : puede ? '#2456b8' : 'rgba(255,255,255,.12)', fg: now ? '#1a1004' : '#fff', cur: puede ? 'pointer' : 'default', ir: () => { if (v.modo === 'exp') this.docExp(id, k); else if (puede && v.modo === 'jug') { this.setPj(id, { f: k }); this.setState({ fb: null, sel: null, run: null }); } } }; }),
+        acciones: v.modo === 'jug' && !(F === 8), pistaVis: F >= 1 && F <= 7 && !pv, pistaTxt: this.apoyo() ? 'Ver ayuda' : 'Pista (−1)', pista: () => this.pista(id),
+        sigTxt: ['Aceptar la misión →', 'Comprobar la mochila', 'Comprobar ubicación', 'Comprobar circuito', 'Comprobar diagrama', 'Comprobar bloques →', 'Comprobar ajustes', '⚙ Compilar y subir', '', pj.done ? 'Actualizar la ficha' : '📄 Entregar la ficha técnica'][F], siguiente: () => this.comprobar(id),
+        esDoc: v.modo === 'exp', docAnt: () => this.docExp(id, Math.max(0, F - 1)), docSig: () => this.docExp(id, Math.min(9, F + 1)), docFin: () => this.docExp(null) };
+      if (v.modo === 'jug' && F === 8) { out.pz.acciones = false; }
+      const ph = { mision: F === 0, elegir: F === 1, ubicar: F === 2, conectar: F === 3, diagrama: F === 4, bloques: F === 5, ajustar: F === 6, codigoF: F === 7, probar: F === 8, ficha: F === 9 };
+      if (F === 0) Object.assign(ph, { historia: p.historia, objetivo: p.objetivo, criterios: p.criterios });
+      if (F === 1) { const need = D.necesita(p), items = mez([...new Set(p.inst.map(i => i.c).concat(p.dist))], id + 'e');
+        ph.items = items.map(c => { const C = D.COMP[c], on = !!pj.sel[c], hint = pv && !ro, bad = hint && (on !== !!need[c]); return { n: C.n + (need[c] > 1 && (on || ro) ? ' ×' + need[c] : ''), q: C.q, col: C.col, k: C.k === 'E' ? 'ENT' : 'SAL', bg: on ? '#e8eefb' : '#fff', bd: bad ? '#c8413a' : on ? '#2456b8' : '#dde3f0', tog: () => upd({ sel: Object.assign({}, pj.sel, { [c]: !on }) }) }; });
+        ph.resis = [['r220', 'Resistencia 220 Ω'], ['r10k', 'Resistencia 10 kΩ']].map(([k, n]) => ({ n, v: pj.res[k] || 0, menos: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.max(0, (pj.res[k] || 0) - 1) }) }), mas: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.min(6, (pj.res[k] || 0) + 1) }) }) }));
+        if (pv && !ro) this._hintE = true; }
+      if (F === 2) ph.inst = p.inst.map(it => { const u = pj.ub[it.i], sp = p.spots.find(x => x.id === u), abierto = !ro && s.sel === it.i, ok = u === it.spot;
+        return { lab: it.lab, col: D.COMP[it.c].col, donde: sp ? '📍 ' + sp.lab : 'sin ubicar', accion: ro ? '' : abierto ? 'elijan el lugar ↓' : 'cambiar', abierto, bd: abierto ? '#f0a726' : pv && u ? (ok ? '#1f9d55' : '#c8413a') : '#dde3f0', sel: () => this.setState({ sel: abierto ? null : it.i, fb: null }),
+          spots: p.spots.map(x => ({ lab: x.lab, bg: x.id === u ? '#e8eefb' : '#fff', go: () => { upd({ ub: Object.assign({}, pj.ub, { [it.i]: x.id }) }); this.setState({ sel: null }); } })), porVis: pv || (cur.guia && !ro && !!u && !ok), por: it.por }; });
+      if (F === 3) { const dest = [{ v: '', t: '— pin —' }, { v: '5V', t: '5V' }, { v: 'GND', t: 'GND' }].concat(D.D.map(x => ({ v: x, t: x + (D.PWM.includes(x) ? ' ~' : '') }))).concat(D.A.map(x => ({ v: x, t: x })));
+        const errs = !ro && s.fb && !s.fb.ok ? D.revisarConex(p, pj.con).map(e => e.k) : [];
+        ph.filas = p.inst.map(it => ({ lab: it.lab, col: D.COMP[it.c].col, pins: D.COMP[it.c].pins.map(([pl, rol], k) => { const key = it.i + '.' + k, c = pj.con[key] || {}, R = D.ROL[rol];
+          return { pl, to: c.to || '', r: c.r || '', dest, conR: D.SEN(rol) || rol === 'catodo', bd: errs.includes(key) ? '#c8413a' : c.to ? '#2456b8' : '#9aa6c4', reglaVis: pv || cur.prefPin, regla: R.tx,
+            setTo: e => upd({ con: Object.assign({}, pj.con, { [key]: Object.assign({}, c, { to: e.target.value }) }) }), setR: e => upd({ con: Object.assign({}, pj.con, { [key]: Object.assign({}, c, { r: e.target.value }) }) }) }; }) }));
+        ph.ohm = cur.ohm; ph.esquema = this.esquema(p, pj.con, errs); }
+      if (F === 4) ph.pasos = p.flujo.map(([k, ok, wr]) => { const sh = k === 'leer' ? 'io' : /^(preg|e$|s$)/.test(k) ? 'rombo' : k === 'rep' ? 'loop' : 'rect', val = pj.fl[k] || '', mark = pv && !ro && val;
+        const poly = sh === 'rombo' ? '200,0 400,50 200,100 0,50' : sh === 'io' ? '30,0 400,0 370,100 0,100' : sh === 'loop' ? '0,0 400,0 400,100 0,100' : '0,0 400,0 400,100 0,100';
+        return { tag: sh === 'rombo' ? 'PREGUNTA' : sh === 'io' ? 'LEER DATO' : sh === 'loop' ? 'REPETIR' : /^si/.test(k) ? 'SI ES SÍ' : /^no/.test(k) ? 'SI ES NO' : 'ACCIÓN', poly, h: sh === 'rombo' ? '130px' : '84px', pad: sh === 'rombo' ? '20px 70px' : '10px 28px', w: sh === 'rombo' ? '230px' : '100%', fill: sh === 'rombo' ? '#fff6e3' : sh === 'io' ? '#efe8fb' : sh === 'loop' ? '#e8eefb' : '#fff', stroke: mark ? (val === ok ? '#1f9d55' : '#c8413a') : '#0a1a3a',
+          val: ro ? ok : val, bd: mark ? (val === ok ? '#1f9d55' : '#c8413a') : '#9aa6c4', opts: this.lim([ok].concat(wr), ok, id + k).length && (cur.ops === 2 || this.apoyo()) ? mez([ok, wr[0]], id + k) : mez([ok].concat(wr), id + k), set: e => upd({ fl: Object.assign({}, pj.fl, { [k]: e.target.value }) }) }; });
+      if (F === 5) { const S = D.sol(p); const slot = k => { const def = p.slots[k]; if (!def) return { t: '' , txt: true }; const okv = String(def[1]), val = pj.sl[k] != null ? String(pj.sl[k]) : ''; const lab = x => p.tipo === 'contador' && (k === 'e' || k === 's') ? x : SALIDA_TXT[x] || String(x);
+          return { slot: true, txt: false, val: ro ? okv : val, bd: pv && !ro && val ? (val === okv ? '#1f9d55' : '#c8413a') : '#fff', opts: this.lim(def[0], okv, id + k).map(x => ({ v: x, t: lab(x) })), set: e => upd({ sl: Object.assign({}, pj.sl, { [k]: e.target.value }) }) }; };
+        const T = t => ({ txt: true, slot: false, t }), L = (ind, bg, parts, rad) => ({ ml: ind * 22 + 'px', bg, parts, rad: rad || '8px' });
+        const C1 = '#e68a1c', C2 = '#cf6d0e', IN = '#8e5be0', OUT = '#2f8fd6', VAR = '#d14f8e'; const lines = [];
+        if (p.tipo === 'contador') { lines.push(L(0, C2, [T('al iniciar')], '14px 14px 8px 8px'), L(1, VAR, [T('fijar PERSONAS en'), slot('ini')]), L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, C1, [T('si'), T('IR de entrada detecta'), T('entonces')]), L(2, VAR, [T('cambiar PERSONAS en'), slot('e')]), L(1, C1, [T('si'), T('IR de salida detecta'), T('entonces')]), L(2, VAR, [T('cambiar PERSONAS en'), slot('s')]), L(1, C1, [T('si PERSONAS'), slot('op'), slot('n'), T('entonces')]), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'umbral') { const n = p.sen.n; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer ' + n)]), p.dig ? L(1, C1, [T('si ' + n + ' ='), slot('n'), T('entonces')]) : L(1, C1, [T('si ' + n), slot('op'), slot('n'), T((p.u || '') + ' entonces')]), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'dos') { const bpart = p.b.dig ? [T(p.b.n)] : [T(p.b.n), slot('op'), slot('n')]; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer: ' + p.a.n + ' · ' + p.b.n)]), L(1, C1, [T('si ' + p.a.n), slot('lg')].concat(bpart, [T('entonces')])), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'tramos') { const u = p.u; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer el valor (' + u + ')')]), L(1, C1, [T('si valor <'), slot('n1'), T(u + ' entonces')]), L(2, OUT, [slot('c1')]), L(1, C1, [T('si no, si valor <'), slot('n2'), T(u + ' entonces')]), L(2, OUT, [slot('c2')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('c3')])); }
+        ph.lineas = lines; ph.verCodigo = cur.codigo || ro; const pins = {}; Object.keys(pj.con || {}).forEach(k => { pins[k] = (pj.con[k] || {}).to; }); const sl = ro ? Object.fromEntries(Object.entries(S).map(([k, x]) => [k, String(x)])) : pj.sl; try { ph.codigo = D.codigo(p, Object.assign({}, S, sl), pins, pj.aj || {}); } catch (e) { ph.codigo = ''; } }
+      if (F === 8) { const run = s.run && s.run.id === id ? s.run : null, sl = ro ? Object.fromEntries(Object.entries(D.sol(p)).map(([k, x]) => [k, String(x)])) : pj.sl;
+        ph.tests = (run ? run.res : D.probar(p, Object.assign({}, D.sol(p)))).map((r, k) => { const vis = run && k < run.i; return { txt: r.txt, esp: this.txtSal(r.esp), obt: vis ? this.txtSal(r.obt) : '…', ic: vis ? (r.ok ? '✅' : '❌') : '', bg: vis ? (r.ok ? '#f1fbf4' : '#fdf1f0') : '#fff' }; });
+        ph.corriendo = !!(run && !run.fin); ph.btnTxt = run && !run.fin ? 'Probando…' : run ? '▶ Probar otra vez' : '▶ Subir y probar el sistema'; ph.correr = () => this.correr(id, sl, ro);
+        const FD = pj.falla ? FL_(D, p).find(x => x.t === pj.falla.t) : null; ph.fallaVis = !!FD && (ro || !pj.fallaOk);
+        if (FD) { const paso = ro ? 0 : (pj.fallaPaso || 0), lista = paso ? FD.arreglos : FD.causas, ok = lista[0], ops = this.apoyo() ? [ok, lista[1]] : lista;
+          ph.fSin = FD.sin; ph.fPreg = paso ? '2 · ¿CÓMO LO ARREGLAN?' : '1 · ¿CUÁL ES LA CAUSA?';
+          ph.fOpts = mez(ops, id + paso).map(t => ({ t, bd: ro && t === ok ? '#1f9d55' : '#c5ccdb', bg: ro && t === ok ? '#e3f6ea' : '#fff', go: () => { if (ro) return; if (t !== ok) { this.setPj(id, { fallaErr: (pj.fallaErr || 0) + 1 }); return this.fallo(id, 'Esa no es la respuesta', ['Lean otra vez el síntoma: ¿qué parte del sistema no está respondiendo como debería?']); }
+            if (!paso) { this.setPj(id, { fallaPaso: 1 }); return this.setState({ fb: { ok: true, t: 'Correcto: esa es la causa. Ahora, ¿cómo lo arreglan?' } }); }
+            this.setPj(id, { fallaOk: true, f: 9, max: Math.max(pj.max, 9) }); this.setState({ fb: { ok: true, t: '¡Falla reparada! El sistema funciona en el lugar real. Último paso: la ficha técnica.' }, sel: null }); } })); } }
+      if (F === 6) { const aj = pj.aj || {}, mk = !ro && (pv || (s.fb && !s.fb.ok)), zonas = pv || ro || this.apoyo();
+        ph.ajs = AJ_(D, p, ro ? 3 : this.nAj()).map(a => { const v = ro ? (pj.aj || {})[a.k] : (aj[a.k] != null ? aj[a.k] : a.def), bien = v >= a.ok[0] && v <= a.ok[1], sp = a.max - a.min;
+          return { n: a.n, v, vtxt: v + (a.u ? ' ' + a.u : ''), min: a.min, max: a.max, step: a.step, bd: mk ? (bien ? '#1f9d55' : '#c8413a') : '#dde3f0', zl: ((a.ok[0] - a.min) / sp * 100) + '%', zw: ((a.ok[1] - a.ok[0]) / sp * 100) + '%', zc: zonas ? 'rgba(31,157,85,.5)' : 'transparent', exVis: ro || pv || (mk && !bien), ex: a.ex, rango: a.min + ' – ' + a.max + (a.u ? ' ' + a.u : ''),
+            set: e => { const nv = Number(e.target.value); upd({ aj: Object.assign({}, pj.aj, { [a.k]: nv }) }); if (a.k === 'ang' && this.api) { const o = {}; p.inst.filter(x => x.c === 'servo').forEach(x => { o[x.i] = nv; }); this.api.sim(id, { in: {}, out: o }); } } }; }); }
+      if (F === 7) { const H = this.huecos(p, pj, ro), cd = pj.cd || {}, mk = !ro && (pv || (s.cons && s.cons.id === id && !s.cons.ok)), byL = {};
+        H.holes.forEach(x => { (byL[x.i] = byL[x.i] || []).push(x); });
+        ph.cdLines = H.lines.map((l, i) => { const parts = [], hs = (byL[i] || []).sort((a, b) => a.a - b.a), col = /^\s*\/\//.test(l) ? '#7fd18b' : /^#|^Servo/.test(l) ? '#c792ea' : '#dfe8f5'; let c = 0;
+          hs.forEach(x => { if (x.a > c) parts.push({ txt: true, sel: false, inp: false, t: l.slice(c, x.a), col }); const val = ro ? x.ans : String(cd[x.j] == null ? '' : cd[x.j]), bd = mk && val ? (val.trim() === x.ans ? '#1f9d55' : '#ff6b6b') : '#ffd166';
+            parts.push({ txt: false, sel: !x.typed, inp: x.typed, val, bd, w: (x.ans.length + 3) + 'ch', opts: x.opts, set: e => upd({ cd: Object.assign({}, pj.cd, { [x.j]: e.target.value }) }) }); c = x.b; });
+          parts.push({ txt: true, sel: false, inp: false, t: l.slice(c) || ' ', col }); return { n: String(i + 1), parts }; });
+        ph.cdAyuda = H.holes.some(x => x.typed) ? 'En los huecos para escribir, cuidado con las mayúsculas: Arduino las distingue.' : 'Elijan la palabra correcta en cada hueco amarillo.';
+        const cs = s.cons && s.cons.id === id ? s.cons : null; ph.consola = ro ? ['Compilando sketch…', 'Subiendo… ✓ Subido al Arduino UNO.'] : cs ? cs.lines : ['Pulsen «⚙ Compilar y subir» cuando completen los ' + H.holes.length + ' huecos.']; ph.conCol = ro || (cs && cs.ok) ? '#7fe0a0' : cs ? '#ff8a80' : '#c9d6f2'; }
+      if (F === 9) { const fi = pj.fi || {}, m = this.curso().minTxt || [30, 30, 60], st0 = s.st || {};
+        ph.secs = ['Portada: proyecto, lugar, integrantes, curso y fecha', 'Problema y objetivo', 'Lista de materiales con presupuesto en dólares', 'Ubicación de cada componente', 'Tabla de conexiones al Arduino', 'Diagrama de flujo', 'Ajustes y calibración', 'Código completo en Arduino IDE', 'Resultados de las pruebas', 'Falla encontrada y cómo la repararon'];
+        const campo = (k, n, ayuda, ph0, mn, val, setv) => { const l = String(val || '').trim().length; return { n, ayuda, ph: ph0, v: val || '', set: setv, cnt: l + ' / ' + mn + ' letras', cc: l >= mn ? '#1f9d55' : '#a8650a', bd: !ro && s.fb && !s.fb.ok && l < mn ? '#c8413a' : '#dde3f0' }; };
+        const setF = k => e => upd({ fi: Object.assign({}, pj.fi, { [k]: e.target.value }) });
+        ph.campos = [campo('imp', '1 · ¿Por qué es importante para el colegio?', 'Expliquen a quién ayuda y qué problema resuelve.', 'Este sistema ayuda a…', m[0], fi.imp, setF('imp')),
+          campo('con', '2 · Conclusiones', '¿Qué aprendieron? ¿Funcionó? ¿Qué fue lo más difícil y cómo lo resolvieron?', 'Concluimos que…', m[2], fi.con, setF('con')),
+          campo('mej', '3 · Mejoras para una versión 2', '¿Qué le agregarían o cambiarían?', 'Le agregaríamos…', m[1], fi.mej, setF('mej')),
+          campo('refl', '4 · Reflexión: ' + (p.reflex || ''), 'Respondan con sus palabras.', 'Pensamos que…', 20, pj.refl, e => upd({ refl: e.target.value }))];
+        ph.word = () => this.descargar(id, 'doc'); ph.pdf = () => this.descargar(id, 'pdf'); ph.hecho = !ro && !!pj.done; ph.nota = (pj.nota || 0).toFixed(2); ph.ins = this.insignias(pj); ph.insVis = ph.ins.length > 0; }
+      out.ph = ph;
+    }
+    // docente
+    if (s.vista === 'doc' && s.doc && D) { const d = s.doc, ses = d.ses || {}, ab = ses.abiertos, filtro = d.filtro || 'Todos';
+      const rows = (d.rows || []).filter(r => filtro === 'Todos' || (r.curso + ' ' + r.par).includes(filtro) || String(r.par) === filtro).sort((a, b) => (Number(a.pc) || 99) - (Number(b.pc) || 99));
+      const setAb = lista => { this.setSes({ abiertos: lista }); this.adm({ accion: 'abiertos', lista }); };
+      out.doc = { estado: (ses.abierta ? '🟢 Clase abierta' : '🔴 Clase cerrada') + ' · código ' + (ses.codigo || '—') + (URL_() ? '' : ' · modo demostración'), codigo: ses.codigo || '', url: location.href.replace(/[?#].*$/, ''),
+        setCodigo: e => { this._ed = true; this.setSes({ codigo: e.target.value.trim().toUpperCase() }); }, nuevoCod: () => { this._ed = true; this.setSes({ codigo: String(Math.floor(1000 + Math.random() * 9000)) }); },
+        sesTxt: ses.abierta ? 'Cerrar la clase' : 'Abrir la clase con este código', sesBg: ses.abierta ? '#c8413a' : '#1f9d55', toggleSesion: () => { const on = !ses.abierta; this._ed = false; this.setSes({ abierta: on }); this.adm({ accion: 'sesion', codigo: ses.codigo || '1234', abierta: on }); },
+        proys: D.P.map(p => { const on = !ab || ab.includes(p.id); return { id: p.id, ico: p.ico, n: p.n, bg: on ? '#e3f6ea' : '#fff', fg: on ? '#14532d' : '#4a5878', bd: on ? '#1f9d55' : '#c5ccdb', tog: () => { const cur = ab || D.P.map(x => x.id); setAb(on ? cur.filter(x => x !== p.id) : cur.concat([p.id])); } }; }),
+        todos: () => setAb(null), ninguno: () => setAb([]), expP: d.expP || 'solar', setExpP: e => this.setState({ doc: Object.assign({}, d, { expP: e.target.value }) }), explicar: () => this.docExp(d.expP || 'solar', 0),
+        filtro, filtros: ['Todos'].concat([...new Set((d.rows || []).map(r => String(r.par)))].sort()), setFiltro: e => this.setState({ doc: Object.assign({}, d, { filtro: e.target.value }) }), n: rows.length,
+        csv: () => this.csv(), salir: () => { clearInterval(this._dpoll); this.docExp(null); this.setState({ vista: 'login', doc: null }); },
+        rows: rows.map(r => { const ay = r.ayuda === 'SÍ', ap = r.apoyo === 'Sí'; return Object.assign({}, r, { ahora: r.actual + (r.fase ? ' · ' + r.fase : ''), bg: ay ? '#fff1e0' : '#fff', ayTxt: ay ? '✋ Atender' : '—', ayBg: ay ? '#c8413a' : '#c5ccdb', atender: () => { if (!ay) return; this.adm({ accion: 'ayuda', id: r.id }); this.setState({ doc: Object.assign({}, this.state.doc, { rows: this.state.doc.rows.map(x => x.id === r.id ? Object.assign({}, x, { ayuda: 'NO' }) : x) }) }); },
+          apTxt: ap ? 'Con apoyo' : 'Activar', apBg: ap ? '#2456b8' : '#fff', apFg: ap ? '#fff' : '#0a1a3a', apoyo: () => { this.adm({ accion: 'apoyo', id: r.id, on: !ap }); this.setState({ doc: Object.assign({}, this.state.doc, { rows: this.state.doc.rows.map(x => x.id === r.id ? Object.assign({}, x, { apoyo: ap ? 'No' : 'Sí' }) : x) }) }); } }); }) };
+    } else out.doc = { rows: [], proys: [], filtros: [] };
+    { const co = s.co || {}, setC = ch => this.setState({ co: Object.assign({}, this.state.co, ch) }), CR = ['Resuelve un problema real del colegio', 'El sistema funciona en todas las pruebas', 'La ficha está completa y clara', 'Las conclusiones muestran lo que aprendieron'];
+      out.co = { cod: co.cod || '', setCod: e => setC({ cod: e.target.value.toUpperCase() }), buscar: () => this.coBuscar(), msg: co.msg || '', msgVis: !!co.msg, vis: !!co.vis, info: co.otro ? co.otro.n + ' · ' + co.otro.integrantes : '', con: co.otro && co.otro.con ? '«' + co.otro.con + '»' : '', com: co.com || '', setCom: e => setC({ com: e.target.value }), enviado: !!co.enviado, btn: co.enviado ? '✓ Enviada' : 'Enviar coevaluación', enviar: () => this.coEnviar(),
+        crit: CR.map((n, k) => ({ n, st: [1, 2, 3, 4].map(v => ({ t: String(v), bg: (co.crit || [])[k] === v ? '#f0a726' : '#fff', go: () => { const c = (co.crit || [0, 0, 0, 0]).slice(); c[k] = v; setC({ crit: c }); } })) })) }; }
+    if (s.vista === 'doc' && s.exp) { out.vDoc = false; }
+    return out;
+  }
+
+  esquema(p, con, errs) {
+    const h = React.createElement, D = X(), comps = p.inst, W = 440, rowH = 74, H = Math.max(250, comps.length * rowH + 40);
+    const ax = 300, pinX = ax + 18, pins = ['5V', 'GND'].concat(D.D).concat(D.A), py = k => 30 + k * ((H - 50) / (pins.length - 1));
+    const el = [h('rect', { key: 'b', x: ax, y: 10, width: 130, height: H - 20, rx: 10, fill: '#0b5e8a' }), h('text', { key: 'bt', x: ax + 92, y: H / 2, fill: '#fff', fontSize: 15, fontWeight: 700, textAnchor: 'middle', transform: 'rotate(-90 ' + (ax + 92) + ' ' + H / 2 + ')' }, 'ARDUINO UNO')];
+    pins.forEach((pn, k) => { el.push(h('circle', { key: 'p' + k, cx: pinX, cy: py(k), r: 4, fill: pn === '5V' ? '#e23b3b' : pn === 'GND' ? '#111' : '#f2d36b' })); el.push(h('text', { key: 'pt' + k, x: pinX + 8, y: py(k) + 4, fill: '#fff', fontSize: 10, fontFamily: 'monospace' }, pn)); });
+    comps.forEach((it, i) => { const C = D.COMP[it.c], y0 = 20 + i * rowH; el.push(h('rect', { key: 'c' + i, x: 6, y: y0, width: 110, height: rowH - 14, rx: 8, fill: '#f3f4f8', stroke: C.col, strokeWidth: 3 })); el.push(h('text', { key: 'ct' + i, x: 61, y: y0 + 16, fontSize: 11, fontWeight: 700, textAnchor: 'middle', fill: '#0a1a3a' }, it.lab.slice(0, 18)));
+      C.pins.forEach(([pl, rol], k) => { const key = it.i + '.' + k, c = con[key] || {}, yy = y0 + 28 + k * 12, idx = pins.indexOf(c.to); el.push(h('circle', { key: 'cp' + key, cx: 116, cy: yy, r: 3.5, fill: '#555' })); el.push(h('text', { key: 'cl' + key, x: 112, y: yy + 3, fontSize: 8.5, textAnchor: 'end', fill: '#4a5878' }, pl.slice(0, 14)));
+        if (idx >= 0) { const ty = py(idx), bad = errs.includes(key), color = bad ? '#c8413a' : c.to === '5V' ? '#e23b3b' : c.to === 'GND' ? '#222' : ['#f2f2f2', '#f4f1e0', '#1d1d1d', '#2b2b2b', '#333', '#2f6fd0', '#0b5e8a'].includes(C.col) ? '#e08a00' : C.col;
+          el.push(h('path', { key: 'w' + key, d: 'M116 ' + yy + ' C 210 ' + yy + ', 210 ' + ty + ', ' + pinX + ' ' + ty, fill: 'none', stroke: color, strokeWidth: 2.5, strokeDasharray: bad ? '6 4' : 'none' }));
+          if (c.r) { const mx = 200, my = (yy + ty) / 2; el.push(h('g', { key: 'r' + key }, h('rect', { x: mx - 13, y: my - 5, width: 26, height: 10, rx: 4, fill: '#e9d7a8', stroke: '#7a5a1a' }), h('rect', { x: mx - 7, y: my - 5, width: 3, height: 10, fill: c.r === '220' ? '#d33' : '#7a3' }), h('rect', { x: mx + 1, y: my - 5, width: 3, height: 10, fill: c.r === '220' ? '#d33' : '#f80' }), h('text', { x: mx, y: my - 8, fontSize: 9, textAnchor: 'middle', fill: '#7a5a1a', fontWeight: 700 }, c.r === '220' ? '220Ω' : '10kΩ'))); } } }); });
+    return h('svg', { viewBox: '0 0 ' + W + ' ' + H, style: { width: '100%', height: 'auto', display: 'block' } }, el);
+  }
+}
+</script>
+</body>
+</html>

@@ -38,14 +38,15 @@ function hoja3d_() {
 }
 
 function t3dEstado_() {
-  var P = PropertiesService.getScriptProperties(), ctl = { on: false, p: '', f: 0 }, ab = null;
+  var P = PropertiesService.getScriptProperties(), ctl = { on: false, p: '', f: 0 }, ab = null, cfg = null;
+  try { cfg = JSON.parse(P.getProperty('t3d_cfg') || 'null'); } catch (x) {}
   try { ctl = JSON.parse(P.getProperty('t3d_ctl') || '{"on":false,"p":"","f":0}'); } catch (x) {}
   try { ab = JSON.parse(P.getProperty('t3d_ab') || 'null'); } catch (x) {}
-  return { abierta: P.getProperty('t3d_on') === '1', codigo: P.getProperty('t3d_cod') || '', ctl: ctl, abiertos: ab };
+  return { abierta: P.getProperty('t3d_on') === '1', codigo: P.getProperty('t3d_cod') || '', ctl: ctl, abiertos: ab, cfg: cfg };
 }
 
 function t3dSesion_(cod, id) {
-  var E = t3dEstado_(), r = { abierta: E.abierta, ok: E.abierta && String(cod || '').trim() === E.codigo, ctl: E.ctl, abiertos: E.abiertos };
+  var E = t3dEstado_(), r = { abierta: E.abierta, ok: E.abierta && String(cod || '').trim() === E.codigo, ctl: E.ctl, abiertos: E.abiertos, cfg: E.cfg };
   if (id) { var sh = hoja3d_(), f = buscar_(sh, String(id).toUpperCase()); if (f) { var v = sh.getRange(f, 14, 1, 2).getValues()[0]; r.ayuda = String(v[0] || 'NO'); r.apoyo = String(v[1] || 'No'); } }
   return json_(r);
 }
@@ -80,6 +81,7 @@ function t3dAdm_(d) {
   if (String(d.clave) !== String(CLAVE_DOCENTE)) return ContentService.createTextOutput('clave');
   var P = PropertiesService.getScriptProperties();
   if (d.accion === 'sesion') { if (d.codigo) P.setProperty('t3d_cod', String(d.codigo)); P.setProperty('t3d_on', d.abierta ? '1' : '0'); }
+  if (d.accion === 'cfg') P.setProperty('t3d_cfg', JSON.stringify(d.cfg || null));
   if (d.accion === 'abiertos') P.setProperty('t3d_ab', JSON.stringify(d.lista || null));
   if (d.accion === 'ctl') P.setProperty('t3d_ctl', JSON.stringify({ on: !!d.on, p: d.p || '', f: Number(d.f || 0) }));
   if (d.accion === 'apoyo' || d.accion === 'ayuda') { var sh = hoja3d_(), f = buscar_(sh, String(d.id).toUpperCase()); if (f) { if (d.accion === 'apoyo') sh.getRange(f, 15).setValue(d.on ? 'Sí' : 'No'); else sh.getRange(f, 14).setValue('NO'); } }

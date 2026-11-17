@@ -16,7 +16,17 @@
 <script src="./taller3d-datos.js"></script>
 <script src="./taller3d-extra.js"></script>
 <script src="./taller3d-campus.js"></script>
-<script src="./taller3d-escena.js"></script>
+<script src="./v4-escena.js"></script>
+<script src="./escape-flujo.js"></script>
+<script src="./escape-retos.js"></script>
+<script src="./escape-mente.js"></script>
+<script src="./escape-arcade.js"></script>
+<script src="./escape-mesa.js"></script>
+<script src="./escape-inventos.js"></script>
+<script src="./v3-gen.js"></script>
+<script src="./v3-retos.js"></script>
+<script src="./v3-mini.js"></script>
+<script src="./v4-aplicados.js"></script>
 </helmet>
 <div style="position:fixed;inset:0;overflow:hidden;background:#9fd3f2">
 
@@ -30,24 +40,26 @@
 <div style="position:absolute;left:14px;top:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none">
 <div style="display:flex;align-items:center;gap:12px;background:rgba(10,26,58,.9);color:#fff;padding:10px 16px 10px 10px;border-radius:12px;pointer-events:auto">
 <img src="./logo-providencia.png" alt="La Providencia" style="height:44px;width:auto;background:#fff;border-radius:8px;padding:3px">
-<div style="display:flex;flex-direction:column;gap:2px"><div style="font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:.02em">TALLER 3D · SMART CAMPUS</div><div style="font-size:13px;color:#c9d6f2">{{ hud.pareja }}</div></div>
+<div style="display:flex;flex-direction:column;gap:2px"><div style="font-family:'Archivo Black',sans-serif;font-size:16px;letter-spacing:.02em;white-space:nowrap">LA PROVIDENCIA · MISIÓN APAGÓN</div><div style="font-size:12.5px;color:#c9d6f2;max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hud.pareja }}</div></div>
 </div>
 <div style="display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end">
-<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:92px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">PROYECTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px">{{ hud.completos }}</div></div>
+<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:92px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">AVANCE</div><div style="font-family:'Archivo Black',sans-serif;font-size:15px;white-space:nowrap">{{ hud.completos }}</div></div>
 <div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:80px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">NOTA</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px">{{ hud.nota }}</div></div>
-<button onClick="{{ hud.ayuda }}" style="background:{{ hud.ayudaBg }};color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer">{{ hud.ayudaTxt }}</button>
-<button onClick="{{ hud.cerrar }}" style="background:rgba(10,26,58,.9);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer">Cerrar sesión</button>
+<button onClick="{{ hud.ayuda }}" style="background:{{ hud.ayudaBg }};color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap">{{ hud.ayudaTxt }}</button>
+<button onClick="{{ hud.cerrar }}" style="background:rgba(10,26,58,.9);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap">Cerrar sesión</button>
 </div>
 </div>
-<div style="position:absolute;left:14px;top:96px;width:270px;max-height:calc(100% - 200px);overflow-y:auto;overflow-x:hidden;background:rgba(255,255,255,.95);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 24px rgba(0,0,0,.2)">
-<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">MISIONES DEL CAMPUS</div>
+<div style="position:absolute;left:14px;top:124px;width:270px;max-height:calc(100% - 230px);overflow-y:auto;overflow-x:hidden;background:rgba(255,255,255,.95);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 24px rgba(0,0,0,.2)">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#0f7b6c">{{ hud.retosTit }}</div>
+<sc-for list="{{ hud.retosL }}" as="m" hint-placeholder-count="10"><button onClick="{{ m.ir }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;border:none;text-align:left;cursor:pointer;color:#0a1a3a;background:{{ m.bg }};opacity:{{ m.op }}"><div style="font-size:18px;width:24px;text-align:center">{{ m.ico }}</div><div style="flex:1;min-width:0;font-weight:700;font-size:13.5px;line-height:1.2">{{ m.n }}</div><div style="font-size:13px;color:#d98a0b;white-space:nowrap">{{ m.st }}</div></button></sc-for>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8;margin-top:6px">PROYECTOS DEL CAMPUS</div>
 <sc-for list="{{ hud.lista }}" as="m" hint-placeholder-count="6">
 <button onClick="{{ m.ir }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;border:none;text-align:left;cursor:pointer;color:#0a1a3a;background:{{ m.bg }};opacity:{{ m.op }}"><div style="font-size:18px;width:24px;text-align:center">{{ m.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ m.n }}</div><div style="font-size:12px;color:#4a5878">{{ m.lugar }} · {{ m.estado }}</div></div></button>
 </sc-for>
 </div>
 <div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none">
 <sc-if value="{{ hud.cerca }}" hint-placeholder-val="{{ false }}"><div style="background:#2456b8;color:#fff;font-weight:700;font-size:18px;padding:12px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:t3pulse 1.6s infinite">{{ hud.cercaTxt }}</div></sc-if>
-<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">W A S D o flechas: caminar · arrastrar el mouse: mirar · E o clic en el anillo: entrar a la misión</div>
+<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">J1: W A S D · J2: flechas · Entrar: J1 E o J2 ENTER · Ganen retos para jugar en la cancha 🎮</div>
 </div>
 </sc-if>
 
@@ -66,6 +78,20 @@
 <sc-if value="{{ pz.banner }}" hint-placeholder-val="{{ false }}"><div style="background:#f0a726;color:#1a1004;font-weight:700;padding:10px 16px;font-size:15px">{{ pz.bannerTxt }}</div></sc-if>
 <div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;animation:t3in .3s ease-out" key="{{ pz.key }}">
 
+<sc-if value="{{ ph.teoVis }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;background:#fffbea;border:2px solid #f0a726;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px">
+<button onClick="{{ ph.teoTog }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a;font-family:inherit"><span style="font-size:20px">📘</span><span style="flex:1;font-weight:800;font-size:15px">{{ ph.teoTit }}</span><span style="font-weight:700;color:#a8650a;font-size:13px;white-space:nowrap">{{ ph.teoBtn }}</span></button>
+<sc-if value="{{ ph.teoOpen }}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{ ph.teoItems }}" as="x" hint-placeholder-count="3"><div style="display:flex;gap:8px;font-size:14px;line-height:1.45;color:#0a1a3a"><div style="color:#a8650a;font-weight:800">›</div><div>{{ x }}</div></div></sc-for>
+<div style="background:#fff;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.45;color:#0a1a3a"><b>Ejemplo:</b> {{ ph.teoEj }}</div>
+<sc-if value="{{ ph.resVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border-radius:8px;overflow:hidden;font-size:13px;color:#0a1a3a"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) 70px minmax(0,2fr);gap:6px;padding:6px 8px;background:#0a1a3a;color:#fff;font-weight:700;font-size:12px"><div>COMPONENTE</div><div>RESISTENCIA</div><div>¿POR QUÉ?</div></div>
+<sc-for list="{{ ph.resTab }}" as="r" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) 70px minmax(0,2fr);gap:6px;padding:6px 8px;border-top:1px solid #eee;line-height:1.35"><div style="font-weight:700">{{ r.c }}</div><div style="font-weight:800;color:{{ r.col }}">{{ r.r }}</div><div>{{ r.y }}</div></div></sc-for>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</sc-if>
 <sc-if value="{{ ph.mision }}" hint-placeholder-val="{{ false }}">
 <div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;border-left:6px solid #2456b8">
 <div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">LA MISIÓN</div>
@@ -98,7 +124,7 @@
 <sc-for list="{{ ph.resis }}" as="r" hint-placeholder-count="2">
 <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;font-size:14px;font-weight:600">{{ r.n }}</div><button onClick="{{ r.menos }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">−</button><div style="font-family:'Archivo Black',sans-serif;font-size:20px;width:28px;text-align:center">{{ r.v }}</div><button onClick="{{ r.mas }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">+</button></div>
 </sc-for>
-<div style="font-size:12px;color:#4a5878;line-height:1.4">Pista de electrónica: cada LED necesita una de 220 Ω para no quemarse. Un pulsador o una LDR necesitan una de 10 kΩ.</div>
+<div style="font-size:12px;color:#4a5878;line-height:1.4">Pista de electrónica: cada LED necesita una de 220 Ω para no quemarse. Un pulsador o una LDR necesitan una de 10 kΩ. Miren la tabla «¿por qué?» en la teoría de arriba.</div><sc-if value="{{ ph.cuentaVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px;line-height:1.4">{{ ph.cuenta }}</div></sc-if>
 </div>
 </sc-if>
 
@@ -274,11 +300,20 @@
 <div style="position:absolute;inset:0;background:#f3f4f8;overflow:auto">
 <div style="background:#0a1a3a;color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
 <img src="./logo-providencia.png" alt="La Providencia" style="height:46px;width:auto;background:#fff;border-radius:8px;padding:3px">
-<div style="flex:1;min-width:200px;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px">PANEL DOCENTE · TALLER 3D</div><div style="font-size:13px;color:#c9d6f2">{{ doc.estado }}</div></div>
+<div style="flex:1;min-width:200px;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px">PANEL DOCENTE · MISIÓN</div><div style="font-size:13px;color:#c9d6f2">{{ doc.estado }}</div></div>
 <button onClick="{{ doc.csv }}" style="background:#fff;color:#0a1a3a;border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">⬇ Descargar notas (CSV)</button>
 <button onClick="{{ doc.salir }}" style="background:transparent;color:#fff;border:1px solid #fff;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">Salir</button>
 </div>
 <div style="padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px">
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;grid-column:1/-1;border:2px solid #f0a726;min-width:0;overflow:hidden">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1;font-size:12px;letter-spacing:.1em;font-weight:700;color:#a8650a">CONSOLA DE LA CLASE · RETOS Y MINIJUEGOS</div><button onClick="{{ dcf.togPausa }}" style="background:{{ dcf.pausaBg }};color:#fff;border:none;border-radius:8px;padding:9px 14px;font-weight:800;cursor:pointer">{{ dcf.pausaTxt }}</button></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Fase de la clase</div><sc-for list="{{ dcf.fases }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.go }}" style="background:{{ f.bg }};color:{{ f.fg }};border:2px solid #2456b8;border-radius:999px;padding:7px 12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ f.t }}</button></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Minijuegos</div><button onClick="{{ dcf.togMinis }}" style="background:{{ dcf.minisBg }};color:#fff;border:none;border-radius:999px;padding:7px 12px;font-weight:700;cursor:pointer">{{ dcf.minisTxt }}</button><sc-for list="{{ dcf.minis }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.go }}" style="background:{{ m.bg }};border:2px solid {{ m.bd }};border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ m.t }}</button></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Tiempo por reto</div><sc-for list="{{ dcf.segs }}" as="g" hint-placeholder-count="4"><button onClick="{{ g.go }}" style="background:{{ g.bg }};border:2px solid #f0a726;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer;color:#1a1004">{{ g.t }}</button></sc-for><div style="font-size:12px;color:#4a5878">de minijuegos que gana la pareja por cada reto superado</div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Retos abiertos</div><button onClick="{{ dcf.retosTodos }}" style="background:#0a1a3a;color:#fff;border:none;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer">Abrir todos</button><sc-for list="{{ dcf.retos }}" as="r" hint-placeholder-count="10"><button onClick="{{ r.go }}" style="background:{{ r.bg }};border:2px solid {{ r.bd }};border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ r.t }}</button></sc-for></div>
+<div style="font-size:12px;color:#4a5878;line-height:1.4">Nota final = 50 % retos (10 por nivel, cada uno vale 7 · 8,5 · 10 según el nivel alcanzado) + 50 % proyecto (10 fases). Los minijuegos no dan nota: se ganan con retos.</div>
+</div>
+
 <div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
 <div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">1 · SESIÓN DE CLASE</div>
 <div style="display:flex;gap:8px;align-items:center"><input value="{{ doc.codigo }}" onChange="{{ doc.setCodigo }}" placeholder="código" style="flex:1;font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:.12em;padding:8px 10px;border:2px solid #0a1a3a;border-radius:8px;width:120px"><button onClick="{{ doc.nuevoCod }}" style="background:#e8eefb;border:none;border-radius:8px;padding:12px;font-weight:700;cursor:pointer">Nuevo</button></div>
@@ -311,10 +346,84 @@
 </div>
 </sc-if>
 
+<sc-if value="{{ vReto }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30;background:rgba(4,10,16,.82);display:flex;justify-content:center;overflow:auto;padding:22px 14px">
+<div style="width:100%;max-width:1000px;background:#0a141d;border:1px solid rgba(95,208,232,.35);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;align-self:flex-start">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(232,244,248,.15)"><div style="font-size:30px">{{ rt.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:#e8f4f8">{{ rt.n }}</div><div style="font-size:12px;letter-spacing:.12em;color:#5fd0e8;font-weight:700">{{ rt.nivel }}</div></div><button onClick="{{ rt.salir }}" style="background:transparent;color:#e8f4f8;border:1px solid rgba(232,244,248,.4);border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap">✕ Salir</button></div>
+<sc-if value="{{ rt.ctxVis }}" hint-placeholder-val="{{ false }}"><div style="margin:14px 18px 0;background:linear-gradient(90deg,rgba(255,107,95,.16),rgba(95,232,255,.08));border:1px solid rgba(255,107,95,.45);border-radius:12px;padding:10px 14px;color:#e8f4f8;font-size:15px;line-height:1.45"><b style="color:#ffb3ab">{{ rt.ctxZ }}</b><br>{{ rt.ctx }}</div></sc-if>
+
+<div style="padding:18px">{{ rt.el }}</div>
+<sc-if value="{{ rt.fbVis }}" hint-placeholder-val="{{ false }}"><div style="margin:0 18px 12px;border-radius:10px;padding:12px 14px;background:{{ rt.fbBg }};color:#fff;font-weight:700;line-height:1.45">{{ rt.fbT }}</div></sc-if>
+<div style="display:flex;gap:10px;flex-wrap:wrap;padding:0 18px 18px">
+<sc-if value="{{ rt.subir }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.irSubir }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">{{ rt.subirTxt }}</button></sc-if>
+<sc-if value="{{ rt.perdio }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.otraVez }}" style="background:#5fd0e8;color:#06140b;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">↻ Intentar con otro ejercicio</button></sc-if>
+<sc-if value="{{ rt.gano }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.salir }}" style="background:#1f9d55;color:#fff;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">Volver al campus</button></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vMn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;top:12px;z-index:25;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 10px">
+<div style="display:flex;align-items:center;gap:16px;background:rgba(10,20,30,.92);color:#fff;border-radius:14px;padding:10px 18px;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)"><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#6fa8ff">J1 {{ mnh.a }}</div><div style="display:flex;flex-direction:column;align-items:center"><div style="font-size:13px;letter-spacing:.1em;font-weight:700;white-space:nowrap">{{ mnh.ico }} {{ mnh.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:#ffd166">⏱ {{ mnh.t }}</div></div><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#ff6b5f">{{ mnh.b }} J2</div><button onClick="{{ mnh.salir }}" style="background:#c8413a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer">Salir</button></div>
+<div style="background:rgba(10,20,30,.88);color:#fff;border-radius:10px;padding:7px 16px;font-weight:800;font-size:16px;text-align:center">{{ mnh.msg }}</div>
+<div style="background:rgba(10,20,30,.72);color:#dfe8f5;border-radius:10px;padding:6px 12px;font-size:12.5px;max-width:900px;text-align:center;line-height:1.4">{{ mnh.extra }}</div>
+</div>
+<div style="position:absolute;left:12px;bottom:12px;z-index:25;max-width:440px;background:rgba(10,20,30,.88);color:#dfe8f5;border-radius:10px;padding:9px 12px;font-size:13px;line-height:1.45">{{ mnh.ctrl }}</div>
+</sc-if>
+
+<sc-if value="{{ vMn2 }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30;background:rgba(4,10,16,.82);display:flex;justify-content:center;overflow:auto;padding:22px 14px">
+<div style="width:100%;max-width:1000px;background:#0a141d;border:1px solid rgba(255,143,208,.4);border-radius:16px;display:flex;flex-direction:column;align-self:flex-start">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(232,244,248,.15)"><div style="font-size:28px">{{ mnh.ico }}</div><div style="flex:1;font-family:'Archivo Black',sans-serif;font-size:22px;color:#e8f4f8">{{ mnh.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:#ffd166">⏱ {{ mnh.t }}</div><button onClick="{{ mnh.salir }}" style="background:#c8413a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer">Salir</button></div>
+<div style="padding:18px">{{ mnh.el }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vPausaDoc }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:45;background:rgba(10,26,58,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:center;padding:20px"><div style="font-size:60px">⏸</div><div style="font-family:'Archivo Black',sans-serif;font-size:34px">EL DOCENTE PAUSÓ LA CLASE</div><div style="font-size:18px">Manos fuera del teclado y miren al frente.</div></div></sc-if>
+<sc-if value="{{ tstVis }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;bottom:96px;transform:translateX(-50%);z-index:40;background:#0a1a3a;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;max-width:80%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3)">{{ tst }}</div></sc-if>
+<sc-if value="{{ vMis }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:50%;top:78px;transform:translateX(-50%);z-index:12;width:min(560px,calc(100% - 620px));min-width:300px;background:rgba(6,18,30,.93);color:#fff;border:2px solid #5fe8ff;border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 24px rgba(95,232,255,.35)">
+<div style="display:flex;align-items:center;gap:10px"><div style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#5fe8ff;white-space:nowrap">{{ mis.n }}</div><div style="flex:1;height:1px;background:rgba(95,232,255,.35)"></div><div style="font-size:11px;letter-spacing:.12em;font-weight:800;color:#ffd166;white-space:nowrap">{{ mis.zona }}</div></div>
+<div style="font-size:16px;font-weight:800;line-height:1.3">{{ mis.txt }}</div>
+<div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ mis.dots }}" as="d" hint-placeholder-count="14"><div style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.bg }}"></div></sc-for></div>
+</div>
+</sc-if>
+<sc-if value="{{ vHint }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:16px;bottom:90px;z-index:42;max-width:360px;background:#fff6d6;color:#3a2a00;border:2px solid #f0a726;border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.45;font-weight:600;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.3)"><div>{{ hint }}</div><button onClick="{{ cerrarHint }}" style="align-self:flex-end;background:#f0a726;color:#1a1004;border:none;border-radius:8px;padding:6px 12px;font-weight:800;cursor:pointer">Entendido</button></div></sc-if>
+<sc-if value="{{ vSep }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:20;background:rgba(200,65,58,.92);color:#fff;font-family:'Archivo Black',sans-serif;font-size:24px;padding:14px 24px;border-radius:14px;pointer-events:none">👫 ¡Esperen a su compañero!</div></sc-if>
+<sc-if value="{{ vZr }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:44;background:rgba(6,18,30,.95);border:3px solid #7fe0a0;border-radius:18px;padding:22px 30px;display:flex;flex-direction:column;align-items:center;gap:8px;color:#fff;text-align:center;box-shadow:0 0 50px rgba(127,224,160,.45);pointer-events:none"><div style="font-size:48px">⚡</div><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#7fe0a0">ZONA RESTAURADA</div><div style="font-size:20px;font-weight:800">{{ zr.z }}</div><div style="font-size:16px">{{ zr.abre }}</div><div style="font-size:15px;color:#ffd166">{{ zr.seg }}</div></div></sc-if>
+<sc-if value="{{ vIntro }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:46;background:radial-gradient(circle at 50% 40%,rgba(120,10,10,.55),rgba(3,6,10,.96));display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto">
+<div style="max-width:720px;color:#fff;display:flex;flex-direction:column;gap:14px;text-align:center;align-items:center">
+<div style="font-size:54px">⚡</div><div style="font-family:'Archivo Black',sans-serif;font-size:clamp(28px,4vw,44px);line-height:1.05;color:#ff6b5f">APAGÓN EN LA PROVIDENCIA</div>
+<div style="font-size:18px;line-height:1.55">Un apagón dejó al colegio sin sistemas y ustedes quedaron <b>encerrados en el laboratorio</b>. Son el equipo técnico: restauren las <b>5 zonas</b> en orden (Laboratorio → Pasillo → Aula → Bar → Patio) resolviendo sus desafíos, construyan <b>2 proyectos inteligentes</b> y reactiven el <b>sistema principal</b> en la cancha.</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%;text-align:left">
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>🎮 Controles</b><br>J1: W A S D · J2: flechas<br>Entrar: J1 E · J2 ENTER<br>Mouse: arrastrar para girar la cámara, rueda para acercar</div>
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>🧭 Orientación</b><br>Sigan la línea brillante del piso.<br>Arriba siempre está su misión actual.<br>Trabajen juntos: no se separen.</div>
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>⭐ Nota</b><br>Desafíos 50 % + proyectos 50 %.<br>Cada zona restaurada da 1 minuto de juego en la cancha.<br>Su código guarda el avance para la próxima clase.</div>
+</div>
+<button onClick="{{ empezar }}" style="background:#ff6b5f;color:#fff;border:none;border-radius:14px;padding:16px 34px;font-family:'Archivo Black',sans-serif;font-size:22px;cursor:pointer;box-shadow:0 0 30px rgba(255,107,95,.5)">¡Comenzar la misión!</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ vFin }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:47;background:rgba(3,10,16,.92);display:flex;align-items:center;justify-content:center;padding:20px">
+<div style="background:#fffdf5;color:#0a1a3a;border:6px double #c9a22a;border-radius:16px;padding:28px 34px;max-width:620px;width:100%;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:70px;width:auto">
+<div style="font-size:13px;letter-spacing:.14em;font-weight:700">U. E. P. «LA PROVIDENCIA» · ROBÓTICA</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1.1">EQUIPO TÉCNICO CERTIFICADO</div>
+<div style="font-size:17px">Por restaurar todos los sistemas del colegio:</div>
+<div style="font-size:20px;font-weight:800">{{ fin.quien }}</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">DESAFÍOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.r }}</div></div><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">PROYECTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.p }}</div></div><div style="background:#0a1a3a;color:#fff;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.nota }}</div></div></div>
+<button onClick="{{ fin.ok }}" style="background:#1f9d55;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:17px;cursor:pointer">¡Ir a la cancha a jugar! 🎮</button>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{ vLogin }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a1a3a,#14306b);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto">
 <div style="margin:auto 0;background:#fff;border-radius:16px;width:100%;max-width:560px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 60px rgba(0,0,0,.4)">
-<div style="display:flex;align-items:center;gap:14px"><img src="./logo-providencia.png" alt="La Providencia" style="height:56px;width:auto"><div style="display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:24px;line-height:1.05">Campus 3D · La Providencia</div><div style="font-size:14px;color:#4a5878">Robótica · U. E. P. La Providencia</div></div></div>
+<div style="display:flex;align-items:center;gap:14px"><img src="./logo-providencia.png" alt="La Providencia" style="height:56px;width:auto"><div style="display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:clamp(17px,2.4vw,24px);line-height:1.2">La Providencia · Misión Apagón</div><div style="font-size:14px;color:#4a5878">Robótica · U. E. P. La Providencia</div></div></div>
 <div style="display:flex;gap:6px;background:#e8eefb;border-radius:10px;padding:4px"><sc-for list="{{ lg.tabs }}" as="tb"><button onClick="{{ tb.go }}" style="flex:1;border:none;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }}">{{ tb.n }}</button></sc-for></div>
 
 <sc-if value="{{ lg.nueva }}" hint-placeholder-val="{{ true }}">
@@ -347,13 +456,42 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-const LS = 'campus3d_v2', LSD = 'campus3d_demo_rows', LSC = 'campus3d_demo_ctl';
+const LS = 'campusmision', LSD = 'campusmision_demo_rows', LSC = 'campusmision_demo_ctl';
 const X = () => window.T3D_DATOS;
 const AJ_ = (D, p, n) => (D && D.ajustes ? D.ajustes(p, n) : []);
 const FL_ = (D, p) => (D && D.fallas ? D.fallas(p) : []);
 const URL_ = () => ((window.ARTICULO_CONFIG || {}).sheetsUrl || '').trim();
 const CLAVE_DEMO = '1234';
 const NF = ['Misión', 'Elegir', 'Ubicar', 'Conectar', 'Diagrama', 'Bloques', 'Ajustar', 'Código', 'Probar', 'Ficha'];
+const TEORIA = [
+  ['Antes de empezar: ¿qué es un sistema automático?', ['Todo sistema automático tiene 3 partes: ENTRADA (un sensor que mide algo), PROCESO (el Arduino que decide) y SALIDA (un actuador que hace algo: luz, sonido o movimiento).', 'El Arduino es una pequeña computadora: lee los sensores por sus pines, sigue el programa y manda órdenes a los actuadores.', 'Los ingenieros siguen siempre los mismos pasos: entender el problema → elegir piezas → ubicarlas → conectarlas → hacer el algoritmo → programar → ajustar → probar → documentar.'], 'En el dispensador de gel: el sensor IR (entrada) detecta la mano, el Arduino (proceso) decide «hay mano», y la bomba (salida) suelta el gel.'],
+  ['Cómo elegir los componentes y las resistencias', ['Lean el objetivo y pregúntense: ¿QUÉ hay que medir? → ese es el sensor (ENT). ¿QUÉ hay que hacer? → ese es el actuador (SAL).', 'Cuidado con los distractores: hay piezas que parecen útiles pero no hacen falta.', 'La RESISTENCIA limita la corriente eléctrica, como una llave que deja pasar menos agua. Algunas piezas se queman o leen mal sin ella.', 'Cuenten cuántos LED, pulsadores y LDR tiene SU proyecto: cada uno necesita su propia resistencia (miren la tabla).'], 'El semáforo solar tiene 3 LED (verde, amarillo y rojo) → necesita 3 resistencias de 220 Ω. Su sensor UV es un módulo → no necesita resistencia.'],
+  ['Por qué importa la ubicación', ['Un sensor solo mide lo que tiene cerca o «ve» de frente: si está mal puesto, el sistema decide mal aunque el programa esté perfecto.', 'Sensores de luz y temperatura: lejos del sol directo, de lámparas y de aparatos que calientan.', 'Sensores de movimiento (PIR): altos, en una esquina, mirando hacia donde pasan las personas.', 'Actuadores: donde se necesita la acción (la luz donde se ve, la alarma donde se escucha, el servo en la bisagra).'], 'Si el LDR de la lámpara queda junto a la lámpara, al prenderse la lámpara la luz lo «engaña» y se apaga sola: prende y apaga sin parar.'],
+  ['Cómo se conecta al Arduino', ['5V = alimentación (el «+» de la pila). GND = tierra (el «−»). Todo componente necesita los dos para funcionar.', 'Pines DIGITALES (D2 a D13): solo dos estados, 1 o 0 (prendido/apagado, sí/no). Para LED, buzzer, relé, PIR, pulsador.', 'Pines ANALÓGICOS (A0 a A5): leen muchos valores (de 0 a 1023). Para sensores de luz, temperatura, humedad o sonido.', 'Pines con ~ (PWM: D3, D5, D6, D9, D10, D11): pueden dar «medio» voltaje. El servomotor los necesita.', 'LED: la pata LARGA (+) va al pin pasando por la resistencia de 220 Ω; la pata CORTA (−) va a GND. Al revés no prende.'], 'Ley de Ohm: el Arduino da 5 V y el LED usa unos 2 V con 15 mA. R = (5 − 2) / 0,015 = 200 Ω → se usa la de 220 Ω, la más cercana.'],
+  ['Diagrama de flujo: el plan antes de programar', ['Óvalo = INICIO o FIN. Paralelogramo = LEER un dato. Rombo = PREGUNTA (SÍ / NO). Rectángulo = ACCIÓN.', 'Se lee de arriba hacia abajo, siguiendo las flechas.', 'Un sistema automático nunca termina: al final siempre VUELVE a leer el sensor (por eso no lleva FIN).', 'Truco: lean el diagrama en voz alta con una situación real («llega una mano… ¿hay mano? SÍ… suelta gel»).'], '¿Humedad < 30 %? → SÍ: encender la bomba · NO: apagar la bomba → volver a leer.'],
+  ['Programar con bloques', ['Los bloques son el mismo algoritmo del diagrama, pero en el idioma del Arduino.', '«para siempre» = el loop(): todo lo que está adentro se repite sin parar.', '«si … entonces … si no» = el rombo del diagrama: elige un camino según la pregunta.', 'Los huecos tienen que coincidir con su diagrama: el mismo límite, la misma comparación y las mismas acciones.'], 'si distancia < 30 entonces → abrir la tapa · si no → cerrar la tapa.'],
+  ['Ajustes y calibración', ['Un sistema real necesita ajustes: el ángulo del servo, la sensibilidad del sensor, cuánto tiempo actúa…', 'Calibrar = comprobar que el sensor mide bien en el lugar real y elegir valores que no fallen.', 'Muevan cada control y lean la explicación: siempre hay una zona correcta, ni muy poco ni demasiado.'], 'Si el PIR queda con 200 segundos de retardo, la luz queda prendida más de 3 minutos después de que la persona se fue.'],
+  ['El código en Arduino IDE', ['void setup() { } se ejecuta UNA vez al encender: ahí se configuran los pines (pinMode).', 'void loop() { } se repite para siempre: ahí se leen los sensores y se decide.', 'pinMode(pin, OUTPUT) = el pin manda señal (actuador). pinMode(pin, INPUT) = el pin recibe señal (sensor).', 'digitalWrite(pin, HIGH) = prender (5 V). LOW = apagar (0 V). analogRead(pin) = leer un valor de 0 a 1023.', 'Cada instrucción termina en ; y Arduino distingue mayúsculas: digitalWrite no es lo mismo que digitalwrite.'], 'if (dato < 30) { digitalWrite(BOMBA, HIGH); } else { digitalWrite(BOMBA, LOW); }'],
+  ['Probar y reparar fallas', ['Probar con situaciones reales, incluso las del límite (justo 30, justo 300…): ahí aparecen los errores.', 'Cuando algo falla, piensen como detectives: ¿la entrada lee bien? ¿el programa decide bien? ¿la salida recibe energía?', 'El monitor serial muestra lo que lee el sensor: es la mejor herramienta para encontrar fallas.'], 'Si el LED nunca prende pero el programa sí manda la orden, el problema está en la conexión del LED, no en el código.'],
+  ['La ficha técnica', ['Es el documento que permite que OTRA persona construya o repare su proyecto.', 'La parte técnica ya está lista con su trabajo. Ustedes explican el PORQUÉ: la importancia, lo que aprendieron y cómo lo mejorarían.', 'Escriban con oraciones completas y ejemplos del colegio.'], 'Conclusión de ejemplo: «Aprendimos que la ubicación del sensor cambia todo: al sol medía 40 °C y en la sombra 26 °C».']
+];
+const RESIS = [['LED (cualquier color)', '220 Ω', 'Limita la corriente para que el LED no se queme. Una por cada LED.'], ['Pulsador', '10 kΩ', 'Resistencia «pull-down»: hace que el pin lea 0 cuando nadie presiona (si no, lee valores al azar).'], ['Fotorresistencia LDR', '10 kΩ', 'Forma un «divisor de voltaje» para que el Arduino pueda medir cuánta luz hay.'], ['Módulos (PIR, ultrasónico, IR, humedad, LM35, UV, sonido, gas)', 'ninguna', 'Ya traen su propio circuito dentro de la placa del módulo.'], ['Servo, buzzer y relé', 'ninguna', 'Se conectan directo; el relé ya trae su circuito.']];
+const RETOS_N = { '8vo': ['orden', 'armar', 'decision', 'sigue', 'aparato', 'simon', 'laberinto', 'tangram', 'robots2', 'error'], '9no': ['vars', 'calculo', 'decision', 'master', 'reglas', 'interrog', 'sokoban', 'pacman', 'compuertas', 'balanza'], '10mo': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'], '3BGU': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'] };
+const RINFO = { orden: ['🔢', 'Ordenar los pasos', 'SECUENCIAS'], armar: ['🧱', 'Armar el diagrama', 'DIAGRAMAS DE FLUJO'], decision: ['🔷', 'Decisiones (rombo)', 'CONDICIONES'], sigue: ['👉', 'Seguir el diagrama', 'LECTURA DE ALGORITMOS'], aparato: ['🔌', 'Del diagrama al aparato', 'ENTRADAS Y SALIDAS'], error: ['🐞', 'Encontrar el error', 'DEPURACIÓN'], simon: ['🎵', 'Simón dice', 'MEMORIA'], laberinto: ['🌀', 'Laberinto', 'COORDINACIÓN'], tangram: ['🔺', 'Tangram', 'GEOMETRÍA'], robots2: ['🤖', 'Robot programable', 'PENSAMIENTO COMPUTACIONAL'], vars: ['📦', 'Variables y operadores', 'PROGRAMACIÓN'], calculo: ['⚡', 'Cálculo relámpago', 'CÁLCULO MENTAL'], master: ['🎯', 'Mastermind', 'PROBAR HIPÓTESIS'], reglas: ['🔐', 'Cerradura de reglas', 'RAZONAMIENTO INDUCTIVO'], interrog: ['🕵', 'Sala de interrogatorio', 'DEDUCCIÓN LÓGICA'], sokoban: ['📦', 'Sokoban (cajas)', 'PLANIFICACIÓN'], pacman: ['👾', 'Pac-Man programable', 'ALGORITMOS'], compuertas: ['🔀', 'Compuertas lógicas', 'LÓGICA DIGITAL'], balanza: ['⚖', 'Balanza', 'ECUACIONES'], sistema: ['🧭', 'Planificar el sistema', 'DISEÑO DE SISTEMAS'], tuberias: ['🚰', 'Tuberías', 'RAZONAMIENTO ESPACIAL'], einstein: ['🧠', 'Rejilla de Einstein', 'DEDUCCIÓN CON PISTAS'], raven: ['🔳', 'Matriz de Raven', 'RAZONAMIENTO ABSTRACTO'], wcst: ['🃏', 'La regla cambió', 'FLEXIBILIDAD MENTAL'], rutas: ['🗺', 'Rutas de la ciudad', 'GRAFOS'], tetris: ['🧩', 'Tetris en equipo', 'VISIÓN ESPACIAL'], crucigrama: ['✏', 'Crucigrama', 'VOCABULARIO TÉCNICO'], galleta: ['🥠', 'Galleta (adivinanzas)', 'PENSAMIENTO LATERAL'] };
+const RPOS = [[-18.6, -6], [-18.6, -1.2], [-18.6, 4], [18, -6], [18, -1.2], [18, 4], [-15.5, 7.6], [-5.5, 7.6], [5.5, 7.6], [15.5, 7.6]];
+const MPOS = { futbol: [-7, -4.5], tenis: [-7, 3.5], basket: [7, -4.5], penales: [7, 3.5], paintball: [0, -5.5], esfero: [0, 3.8] };
+const MINFO_ = () => Object.assign({}, (window.V3_MINI || {}).MINI || {}, { esfero: { n: 'Carrera del esfero', ico: '🖊', ctrl: 'Por turnos, lancen el esfero por la pista: elijan dirección y fuerza. Gana quien llega primero a la meta.' } });
+const RNG = s => () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+const HH = r => ({ int: (a, b) => a + Math.floor(r() * (b - a + 1)), pick: a => a[Math.floor(r() * a.length)], shuffle: a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; } });
+const mmss = n => Math.floor(n / 60) + ':' + String(Math.floor(n % 60)).padStart(2, '0');
+const ZONAS = ['lab', 'pasillo', 'aula', 'bar', 'patio', 'final'];
+const ZN = { lab: 'Laboratorio', pasillo: 'Pasillo', aula: 'Aula', bar: 'Bar', patio: 'Patio', final: 'Cancha · sistema principal' };
+const ZK = { lab: 'lab', labb: 'lab', pasillo: 'pasillo', aula: 'aula', bar: 'bar', bano: 'bar', patio: 'patio' };
+const RZ = { lab: [[-16.7, -14.4], [-10.3, -14.4]], pasillo: [[21.4, -6.6], [21.4, -0.6]], aula: [[10.3, -14.4], [16.7, -14.4]], bar: [[-23.2, -12.6], [-23.2, -6.6]], patio: [[-8, 6.2], [8, 6.2]], final: [[-3, -0.3], [3, -0.3]] };
+const ROOM = { lab: 'lab', pasillo: 'pasillo', aula: 'aula', bar: 'bar', patio: null, final: null };
+const ZCTX = { lab: '🔒 LABORATORIO · El apagón dejó la puerta bloqueada y las luces en rojo.', pasillo: '🚨 PASILLO · Las luces de emergencia parpadean y nadie puede pasar.', aula: '🌑 AULA · El aula quedó a oscuras y sin ventilación.', bar: '🧃 BAR · Las máquinas del bar no responden.', patio: '☀ PATIO · Los sistemas del patio están caídos.', final: '⚡ CANCHA · Último paso: reactivar el sistema principal del colegio.' };
+const RCTX = { orden: 'El robot de mantenimiento perdió el orden de sus instrucciones: ayúdenlo a reordenarlas.', armar: 'El plano del sistema se borró: reconstruyan su diagrama de flujo.', decision: 'El sensor mide bien pero decide mal: programen la pregunta correcta.', sigue: 'Antes de encender la máquina, comprueben qué hará en cada situación.', aparato: 'Conecten las piezas reales que corresponden a cada bloque del diagrama.', error: 'Un técnico dejó un error en el programa: encuéntrenlo antes de que falle.', simon: 'La alarma pide repetir la secuencia de luces del panel.', laberinto: 'Guíen la corriente por el laberinto de cables del tablero.', tangram: 'Reparen la pieza rota del panel armando su forma exacta.', robots2: 'Programen al robot de limpieza para que llegue a su destino.', vars: 'El controlador guarda los datos en variables: calculen sus valores.', calculo: 'El panel de energía pide cálculos rápidos para reiniciarse.', master: 'La cerradura electrónica tiene un código: dedúzcanlo con las pistas.', reglas: 'El teclado de seguridad sigue una secuencia numérica secreta.', interrog: 'Alguien saboteó el sistema: descubran quién dice la verdad.', sokoban: 'Reacomoden las cajas de la bodega sin bloquear el paso.', pacman: 'Programen el recorrido del robot que recoge la basura.', compuertas: 'El circuito de la alarma usa compuertas lógicas: complétenlo.', balanza: 'Equilibren la balanza del laboratorio para calibrarla.', sistema: 'Planifiquen el sistema que resolverá el problema de esta zona.', tuberias: 'El agua no llega a los baños: conecten bien las tuberías.', einstein: 'Los registros se mezclaron: deduzcan quién hizo cada proyecto.', raven: 'Al panel de seguridad le falta una pieza del patrón.', wcst: 'El sistema cambia sus reglas sin avisar: adáptense.', rutas: 'El robot de reparto debe llegar por la ruta más corta.', tetris: 'Acomoden las piezas del almacén sin dejar huecos.', crucigrama: 'Completen el manual técnico con las palabras correctas.', galleta: 'El acertijo del vigilante abre la última puerta.', ohm: 'El indicador de la puerta principal se quemó: calculen la resistencia exacta.', energia: 'El colegio necesita ahorrar energía: calculen el consumo y propongan un plan.' };
+Object.assign(RINFO, { ohm: ['🔌', 'Circuito de la puerta (Ley de Ohm)', 'ELECTRÓNICA APLICADA'], energia: ['⚡', 'Energía del laboratorio', 'MATEMÁTICA APLICADA'] });
 const SALIDA_TXT = { rojo: 'prender la luz roja', verde: 'prender la luz verde', amarillo: 'prender la luz amarilla' };
 const hsh = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return h; };
 const mez = (a, seed) => { const h = hsh(seed); return a.map((v, i) => [v, Math.sin(h + i * 12.9898) * 43758.5453 % 1]).sort((x, y) => x[1] - y[1]).map(x => x[0]); };
@@ -376,7 +514,8 @@ class Component extends DCLogic {
     if (!window.T3D_ESCENA || !this.ref3d.current) { this.setState({ err3d: 'No se pudieron cargar los archivos taller3d-*.js' }); return; }
     try {
       this.api = await window.T3D_ESCENA.crear(this.ref3d.current, {
-        onStation: id => this.abrir(id),
+        onStation: id => this.estacion(id),
+        onSep: v => this.setState({ sep: v }),
         onSpot: sp => this.ponerSpot(sp),
         onCerca: id => { if (id !== this.state.cerca) this.setState({ cerca: id }); }
       });
@@ -414,32 +553,32 @@ class Component extends DCLogic {
 
   // ---------- server ----------
   post(body) { const u = URL_(); if (!u) return; fetch(u, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }).catch(() => {}); }
-  resumen(st) { const done = Object.entries(st.proj || {}).filter(([, v]) => v.done); const cur = this.state.cur; return { id: st.id, curso: st.curso, par: st.par, pc: st.pc, integrantes: st.integrantes, actual: cur ? this.P(cur).n : 'Campus', fase: cur ? NF[this.pj(cur).f] : '', completos: done.length, nota: this.notaFinal(st), detalle: done.map(([k, v]) => this.P(k).n + ' ' + v.nota).join('; '), fallos: Object.values(st.proj || {}).reduce((a, v) => a + (v.fallos || 0), 0), pistas: Object.values(st.proj || {}).reduce((a, v) => a + (v.pistas || 0), 0) }; }
+  resumen(st) { const done = Object.entries(st.proj || {}).filter(([, v]) => v.done); const cur = this.state.cur; return { id: st.id, curso: st.curso, par: st.par, pc: st.pc, integrantes: st.integrantes, actual: cur ? this.P(cur).n : 'Campus', fase: cur ? NF[this.pj(cur).f] : '', completos: done.length, nota: this.notaFinal(st), detalle: 'Retos ' + this.notaRetos(st) + ' · Proyecto ' + this.notaProyecto(st) + ' · ' + done.map(([k, v]) => this.P(k).n + ' ' + v.nota).join('; '), fallos: Object.values(st.proj || {}).reduce((a, v) => a + (v.fallos || 0), 0), pistas: Object.values(st.proj || {}).reduce((a, v) => a + (v.pistas || 0), 0) }; }
   guardar(extra) {
     const st = this.state.st; if (!st) return; try { localStorage.setItem(LS, JSON.stringify(st)); } catch (e) {}
     clearTimeout(this._sv); this._sv = setTimeout(() => { const st2 = this.state.st, r = this.resumen(st2);
       if (!URL_()) { try { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), old = rows[st2.id] || {}; rows[st2.id] = Object.assign({}, r, { ts: Date.now(), visto: new Date().toLocaleTimeString().slice(0, 5), ayuda: extra && extra.pedirAyuda ? 'SÍ' : extra && extra.cancelarAyuda ? 'NO' : (old.ayuda || 'NO'), apoyo: old.apoyo || 'No' }); localStorage.setItem(LSD, JSON.stringify(rows)); } catch (e) {} return; }
       this.post(Object.assign({ modo: 't3d', json: JSON.stringify(st2) }, r, extra || {})); }, extra ? 10 : 1200);
   }
-  async getJ(q) { const u = URL_(); const r = await fetch(u + (u.includes('?') ? '&' : '?') + q + '&t=' + Date.now()); return JSON.parse(await r.text()); }
+  async getJ(q) { const u = URL_(); if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(u)) throw new Error('la URL de config.js debe terminar en /exec'); const r = await fetch(u + '?' + q + '&t=' + Date.now()); const t = await r.text(); try { return JSON.parse(t); } catch (e) { throw new Error('Unexpected token: ' + t.slice(0, 40)); } }
   iniciarPoll() {
     clearInterval(this._poll); const tick = async () => { const st = this.state.st; if (!st) return;
-      if (!URL_()) { let ctl = { on: false }; try { ctl = JSON.parse(localStorage.getItem(LSC) || '{"on":false}'); } catch (e) {} const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), me = rows[st.id] || {}; const ab = JSON.parse(localStorage.getItem('campus3d_demo_ab') || 'null'); this.aplicarPoll({ ctl, abiertos: ab, apoyo: me.apoyo, ayuda: me.ayuda }); return; }
+      if (!URL_()) { let ctl = { on: false }; try { ctl = JSON.parse(localStorage.getItem(LSC) || '{"on":false}'); } catch (e) {} const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), me = rows[st.id] || {}; const ab = JSON.parse(localStorage.getItem('campusmision_demo_ab') || 'null'); this.aplicarPoll({ ctl, abiertos: ab, apoyo: me.apoyo, ayuda: me.ayuda }); return; }
       try { this.aplicarPoll(await this.getJ('t3ds=' + encodeURIComponent(st.ses || '') + '&id=' + encodeURIComponent(st.id))); } catch (e) {} };
     tick(); this._poll = setInterval(tick, 5000);
   }
-  aplicarPoll(r) { const st = this.state.st, ch = {}; const ctl = r.ctl || { on: false }; if (JSON.stringify(ctl) !== JSON.stringify(this.state.ctl)) ch.ctl = ctl; if (JSON.stringify(r.abiertos || null) !== JSON.stringify(this.state.abiertos)) ch.abiertos = r.abiertos || null;
+  aplicarPoll(r) { const st = this.state.st, ch = {}; if (r.cfg && JSON.stringify(r.cfg) !== JSON.stringify(this.state.cfg)) ch.cfg = r.cfg; const ctl = r.ctl || { on: false }; if (JSON.stringify(ctl) !== JSON.stringify(this.state.ctl)) ch.ctl = ctl; if (JSON.stringify(r.abiertos || null) !== JSON.stringify(this.state.abiertos)) ch.abiertos = r.abiertos || null;
     const ad = r.apoyo === 'Sí', ay = r.ayuda === 'SÍ'; if (st && (!!st.ad !== ad || (r.ayuda != null && !!st.ayuda !== ay))) ch.st = Object.assign({}, st, { ad, ayuda: r.ayuda != null ? ay : st.ayuda });
     if (Object.keys(ch).length) this.setState(ch); }
 
   // ---------- login ----------
   async entrar() {
     const s = this.state, f = s.lg, u = URL_(), err = m => this.setState({ lgMsg: m });
-    if (s.tab === 'docente') { if (!f.clave) return err('Escriba la clave.'); if (!u) { if (f.clave !== CLAVE_DEMO) return err('Clave incorrecta (demo: 1234).'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: [], ses: { codigo: localStorage.getItem('campus3d_demo_cod') || '1234', abierta: true, abiertos: JSON.parse(localStorage.getItem('campus3d_demo_ab') || 'null') } }, lgMsg: '' }, () => this.pollDoc()); return; }
-      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(f.clave)); if (r.error) return err('Clave incorrecta.'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: r.rows, ses: r.sesion }, lgMsg: '' }, () => this.pollDoc()); } catch (e) { err('No hay conexión con la hoja de Google.'); } return; }
+    if (s.tab === 'docente') { if (!f.clave) return err('Escriba la clave.'); if (!u) { if (f.clave !== CLAVE_DEMO) return err('Clave incorrecta (demo: 1234).'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: [], ses: { codigo: localStorage.getItem('campusmision_demo_cod') || '1234', abierta: true, abiertos: JSON.parse(localStorage.getItem('campusmision_demo_ab') || 'null') } }, lgMsg: '' }, () => this.pollDoc()); return; }
+      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(f.clave)); if (r.error) return err('Clave incorrecta.'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: r.rows, ses: r.sesion }, lgMsg: '' }, () => this.pollDoc()); } catch (e) { const m = String((e && e.message) || e); err(/JSON|Unexpected token|<!DOCTYPE|<html/i.test(m) ? 'Google respondió con una página y no con datos: la implementación no está en «Cualquier usuario» o la URL no es la de /exec.' : 'No hay conexión con la hoja de Google (' + m + '). Revisen la URL de config.js.'); } return; }
     if (!f.cod) return err('Escriban el código de la clase.');
     if (!/^\d{1,2}$/.test(String(f.pc).trim()) || +f.pc < 1 || +f.pc > 30) return err('Escriban el número de su computadora (1 a 20).');
-    let ok = !u ? f.cod.trim() === (localStorage.getItem('campus3d_demo_cod') || '1234') : false, info = {};
+    let ok = !u ? f.cod.trim() === (localStorage.getItem('campusmision_demo_cod') || '1234') : false, info = {};
     if (u) { try { info = await this.getJ('t3ds=' + encodeURIComponent(f.cod.trim())); ok = info.ok; if (!info.abierta) return err('El docente todavía no abre la clase.'); } catch (e) { return err('No hay conexión con la hoja de Google. Revisen el internet.'); } }
     if (!ok) return err('El código de la clase no es correcto.');
     if (s.tab === 'seguir') {
@@ -507,7 +646,7 @@ class Component extends DCLogic {
       if (!URL_()) { const rows = Object.values(JSON.parse(localStorage.getItem(LSD) || '{}')); this.setState({ doc: Object.assign({}, this.state.doc, { rows }) }); return; }
       try { const r = await this.getJ('t3dlista=' + encodeURIComponent(d.clave)); if (!r.error) this.setState({ doc: Object.assign({}, this.state.doc, { rows: r.rows, ses: Object.assign({}, this.state.doc.ses, r.sesion, this._ed ? { codigo: this.state.doc.ses.codigo } : {}) }) }); } catch (e) {} };
     t(); this._dpoll = setInterval(t, 10000); }
-  adm(o) { const d = this.state.doc; if (!URL_()) { if (o.accion === 'sesion') localStorage.setItem('campus3d_demo_cod', o.codigo); if (o.accion === 'abiertos') localStorage.setItem('campus3d_demo_ab', JSON.stringify(o.lista)); if (o.accion === 'ctl') localStorage.setItem(LSC, JSON.stringify({ on: o.on, p: o.p, f: o.f })); if (o.accion === 'apoyo' || o.accion === 'ayuda') { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'); if (rows[o.id]) { if (o.accion === 'apoyo') rows[o.id].apoyo = o.on ? 'Sí' : 'No'; else rows[o.id].ayuda = 'NO'; localStorage.setItem(LSD, JSON.stringify(rows)); } } return; } this.post(Object.assign({ modo: 't3dadm', clave: d.clave }, o)); }
+  adm(o) { const d = this.state.doc; if (!URL_()) { if (o.accion === 'sesion') localStorage.setItem('campusmision_demo_cod', o.codigo); if (o.accion === 'abiertos') localStorage.setItem('campusmision_demo_ab', JSON.stringify(o.lista)); if (o.accion === 'ctl') localStorage.setItem(LSC, JSON.stringify({ on: o.on, p: o.p, f: o.f })); if (o.accion === 'apoyo' || o.accion === 'ayuda') { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'); if (rows[o.id]) { if (o.accion === 'apoyo') rows[o.id].apoyo = o.on ? 'Sí' : 'No'; else rows[o.id].ayuda = 'NO'; localStorage.setItem(LSD, JSON.stringify(rows)); } } return; } this.post(Object.assign({ modo: 't3dadm', clave: d.clave }, o)); }
   setSes(ch) { this.setState(s => ({ doc: Object.assign({}, s.doc, { ses: Object.assign({}, s.doc.ses, ch) }) })); }
   docExp(p, f) { this.setState({ exp: p ? { p, f } : null, fb: null, run: null }); this.adm({ accion: 'ctl', on: !!p, p: p || '', f: f || 0 }); }
   csv() { const rows = (this.state.doc.rows || []), H = ['Codigo', 'Curso', 'Paralelo', 'PC', 'Integrantes', 'Completos', 'Nota', 'Detalle', 'Fallos', 'Pistas', 'Apoyo', 'Visto'];
@@ -588,9 +727,100 @@ class Component extends DCLogic {
     set({ enviado: true, msg: '¡Coevaluación enviada! Nota que le dieron: ' + prom.toFixed(2) + ' / 10.' });
   }
 
+  // ---------- v3: retos, minijuegos y consola ----------
+  cfg() { const d = { fase: 'ambas', minisOn: true, minis: {}, seg: 60, retosAb: null, pausa: false }; let c = this.state.cfg || (this.state.doc && this.state.doc.ses && this.state.doc.ses.cfg); if (!URL_() && !c) { try { c = JSON.parse(localStorage.getItem('campusmision_demo_cfg') || 'null'); } catch (e) {} } return Object.assign(d, c || {}); }
+  setCfg(ch) { const c = Object.assign({}, this.cfg(), ch); this.setState({ cfg: c }); if (!URL_()) { try { localStorage.setItem('campusmision_demo_cfg', JSON.stringify(c)); } catch (e) {} return; } this.adm({ accion: 'cfg', cfg: c }); }
+  retosCurso() { const c = (this.state.st && this.state.st.curso) || '9no'; return RETOS_N[c] || RETOS_N['9no']; }
+  rInfo(id) { const r = RINFO[id] || ['🧩', id, '']; return { ico: r[0], n: r[1], hab: r[2] }; }
+  notaRetos(st) { const L = RETOS_N[st.curso] || RETOS_N['9no'], R = st.retos || {}; return r2(L.reduce((a, id) => a + [0, 7, 8.5, 10][(R[id] || {}).best || 0], 0) / L.length); }
+  notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; return r2(Math.min(10, ns[0] + Math.max(0, dn - 1) * 0.5)); }
+  notaFinal(st) { return r2(Math.min(10, this.notaRetos(st) * 0.5 + this.notaProyecto(st) * 0.5)); }
+  toast(t) { this.setState({ tst: t }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ tst: '' }), 3800); }
+  snd(t) { try { const A = this._ac || (this._ac = new (window.AudioContext || window.webkitAudioContext)()), o = A.createOscillator(), g = A.createGain(), n = A.currentTime; o.type = 'triangle'; o.frequency.setValueAtTime(t === 'err' ? 220 : t === 'ok' ? 880 : 520, n); g.gain.setValueAtTime(0.05, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.2); o.connect(g); g.connect(A.destination); o.start(n); o.stop(n + 0.22); } catch (e) {} }
+  estacion(id) { if (/^r:/.test(id)) return this.abrirReto(id.slice(2)); if (/^m:/.test(id)) return this.abrirMini(id.slice(2)); if (this.cfg().fase === 'retos') return this.toast('El docente todavía no abre los proyectos: primero resuelvan los retos.'); this.abrir(id); }
+  abrirReto(id) { const c = this.cfg(), st = this.state.st; if (c.fase === 'proyecto') return this.toast('El docente cerró los retos: ahora toca el proyecto.'); if (c.retosAb && !c.retosAb.includes(id)) return this.toast('Ese reto está cerrado por el docente.');
+    const b = ((st.retos || {})[id] || {}).best || 0, ini = st.curso === '3BGU' ? 2 : 1; this.setState({ rt: { id, tier: b ? Math.min(3, b + 1) : ini, nonce: 0, estado: 'jugando', fb: null } }); }
+  retoFin(ok, eff, txt) { const s = this.state, rt = s.rt; if (!rt || rt.estado !== 'jugando') return; if (!ok) { this.snd('err'); return this.setState({ rt: Object.assign({}, rt, { estado: 'perdio', fb: { ok: false, t: txt || 'Esta vez no salió.' } }) }); }
+    this.snd('ok'); const st = Object.assign({}, s.st), R = Object.assign({}, st.retos || {}), cur = R[rt.id] || { best: 0, n: 0 }, gana = this.cfg().seg || 60; R[rt.id] = { best: Math.max(cur.best || 0, rt.tier), n: (cur.n || 0) + 1 }; st.retos = R; st.mt = Math.min(900, (st.mt || 0) + gana);
+    this.setState({ st, rt: Object.assign({}, rt, { estado: 'gano', fb: { ok: true, t: (txt || '¡Reto superado!') + '  +' + gana + ' s de minijuegos 🎮' } }) }, () => this.guardar()); }
+  retoErr(t) { const rt = this.state.rt; if (rt) this.setState({ rt: Object.assign({}, rt, { fb: { ok: false, t } }) }); }
+  abrirMini(id) { const c = this.cfg(), st = this.state.st; if (!c.minisOn || c.minis[id] === false) return this.toast('El docente tiene cerrado este minijuego por ahora.'); if ((st.mt || 0) < 20) return this.toast('Necesitan al menos 20 s de minijuegos. Ganen retos para conseguir tiempo 🎮');
+    if (id === 'esfero') return this.setState({ mn: { id, d2: true, nonce: 0 } }, () => this.relojMini());
+    const ctrl = window.V3_MINI && window.V3_MINI.crear(id, { onHud: h => this.setState({ mnHud: h }), onEnd: r => this.finMini(r) }); if (!ctrl || !this.api) return; this.api.mini(ctrl); this.setState({ mn: { id }, mnHud: null }, () => this.relojMini()); }
+  relojMini() { clearInterval(this._mr); this._mr = setInterval(() => { const s = this.state; if (!s.mn || !s.st) return clearInterval(this._mr); if (this.cfg().pausa) return; const mt = Math.max(0, (s.st.mt || 0) - 1); this.setState({ st: Object.assign({}, s.st, { mt }) }); if (mt <= 0) this.finMini({ msg: 'Se acabó su tiempo de minijuegos. ¡Ganen más retos!' }); }, 1000); }
+  finMini(r) { clearInterval(this._mr); if (this.api) this.api.mini(null); const s = this.state; if (!s.st) return; const st = Object.assign({}, s.st), MJ = Object.assign({}, st.mj || {}); if (s.mn) MJ[s.mn.id] = (MJ[s.mn.id] || 0) + 1; st.mj = MJ; this.setState({ mn: null, mnHud: null, st }, () => { this.guardar(); if (r && r.msg) this.toast(r.msg); }); }
+  marcas() { const st = this.state.st; if (!st) return []; const R = st.retos || {}, c = this.cfg(), M = MINFO_();
+    const out = this.retosCurso().map((id, i) => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { id: 'r:' + id, x: RPOS[i][0], z: RPOS[i][1], c: !ab ? '#7a7a7a' : b >= 3 ? '#ffd23f' : b ? '#21d07a' : '#5fd0e8', lab: (ab ? '' : '🔒 ') + I.ico + ' ' + I.n + (b ? ' ' + '★'.repeat(b) : ''), done: b >= 3 }; });
+    Object.keys(MPOS).forEach(id => { const on = c.minisOn && c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; out.push({ id: 'm:' + id, x: MPOS[id][0], z: MPOS[id][1], c: on ? '#ff8fd0' : '#7a7a7a', lab: (on ? '' : '🔒 ') + I.ico + ' ' + I.n, bg: 'rgba(60,10,40,.88)' }); }); return out; }
+  vistaV3(out) { const s = this.state, c = this.cfg(), st = s.st, MC = window.ESC_MENTE && window.ESC_MENTE.make(React), V = window.V3_RETOS && window.V3_RETOS.make(React), M = MINFO_();
+    out.tstVis = !!s.tst; out.tst = s.tst || '';
+    if (out.hud) { if (st) { const R = st.retos || {}; out.hud.retosTit = 'RETOS DE ' + (((X().CURSO[st.curso] || {}).nombre) || st.curso).toUpperCase() + ' · ' + this.retosCurso().filter(id => (R[id] || {}).best).length + '/' + this.retosCurso().length; out.hud.retosL = this.retosCurso().map(id => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { ico: ab ? I.ico : '🔒', n: I.n, st: b ? '★'.repeat(b) : '—', bg: b >= 3 ? '#fff6d6' : b ? '#e3f6ea' : '#f3f6fb', op: ab ? 1 : 0.5, ir: () => this.abrirReto(id) }; }); } else { out.hud.retosTit = ''; out.hud.retosL = []; } }
+    out.vPausaDoc = s.vista === 'juego' && !!c.pausa;
+    out.vReto = !!s.rt && s.vista === 'juego';
+    if (s.rt && st) { const rt = s.rt, I = this.rInfo(rt.id), key = rt.id + '|' + rt.tier + '|' + rt.nonce; if (this._rk !== key) { this._rk = key; this._rh = HH(RNG((Math.abs(hsh(key + st.id)) % 2147483646) + 1)); }
+      const props = { key, id: rt.id, tier: rt.tier, fin: rt.estado !== 'jugando', h: this._rh, snd: t => this.snd(t), onFin: (ok, e, t) => this.retoFin(ok, e, t), onErr: t => this.retoErr(t) }, Cmp = (window.V4_APL && window.V4_APL.make(React)[rt.id]) || (V && V[rt.id]) || MC;
+      out.rt = { el: Cmp ? React.createElement(Cmp, props) : null, n: I.n, ico: I.ico, nivel: I.hab + ' · NIVEL ' + rt.tier + ' DE 3' + ' · ' + '★'.repeat(((st.retos || {})[rt.id] || {}).best || 0), fbVis: !!rt.fb, fbT: rt.fb ? rt.fb.t : '', fbBg: rt.fb && rt.fb.ok ? '#1f9d55' : '#c8413a',
+        gano: rt.estado === 'gano', perdio: rt.estado === 'perdio', subir: rt.estado === 'gano' && rt.tier < 3, subirTxt: 'Subir al nivel ' + (rt.tier + 1) + ' →', irSubir: () => this.setState({ rt: { id: rt.id, tier: rt.tier + 1, nonce: rt.nonce + 1, estado: 'jugando', fb: null } }), otraVez: () => this.setState({ rt: Object.assign({}, rt, { nonce: rt.nonce + 1, estado: 'jugando', fb: null }) }), salir: () => this.setState({ rt: null }) };
+    } else out.rt = { fbVis: false, gano: false, perdio: false, subir: false };
+    const mn = s.mn, MI = mn ? (M[mn.id] || { n: mn.id, ico: '🎮', ctrl: '' }) : null, hd = s.mnHud || {};
+    out.vMn = !!mn && !mn.d2; out.vMn2 = !!mn && !!mn.d2;
+    out.mnh = { n: MI ? MI.n : '', ico: MI ? MI.ico : '', a: hd.a || 0, b: hd.b || 0, msg: hd.msg || 'Cargando…', extra: hd.extra || '', ctrl: MI ? MI.ctrl : '', t: mmss((st && st.mt) || 0), salir: () => this.finMini({}), el: null };
+    if (mn && mn.d2 && MC) { const key = 'esf' + mn.nonce; if (this._ek !== key) { this._ek = key; this._eh = HH(RNG(Date.now() % 100000 + 7)); } out.mnh.el = React.createElement(MC, { key, id: 'esferos', tier: 2, fin: false, h: this._eh, snd: t => this.snd(t), onFin: (ok, e, t) => { this.toast(t || '¡Fin de la carrera!'); this.setState({ mn: Object.assign({}, this.state.mn, { nonce: mn.nonce + 1 }) }); }, onErr: t => this.toast(t) }); }
+    if (s.vista === 'doc' && s.doc) { const T = (k, v) => () => this.setCfg({ [k]: v }), all = [...new Set([].concat(...Object.values(RETOS_N)))];
+      out.dcf = { fases: [['retos', 'Solo retos (clase 1)'], ['proyecto', 'Solo proyecto (clase 2)'], ['ambas', 'Retos y proyecto']].map(([k, t]) => ({ t, bg: c.fase === k ? '#2456b8' : '#fff', fg: c.fase === k ? '#fff' : '#0a1a3a', go: T('fase', k) })),
+        minisTxt: c.minisOn ? '🟢 Minijuegos abiertos' : '🔴 Minijuegos cerrados', minisBg: c.minisOn ? '#1f9d55' : '#c8413a', togMinis: T('minisOn', !c.minisOn),
+        minis: Object.keys(MPOS).map(id => { const on = c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; return { t: I.ico + ' ' + I.n, bg: on ? '#e3f6ea' : '#fff', bd: on ? '#1f9d55' : '#c5ccdb', go: () => this.setCfg({ minis: Object.assign({}, c.minis, { [id]: !on }) }) }; }),
+        segs: [30, 60, 90, 120].map(n => ({ t: n + ' s', bg: c.seg === n ? '#f0a726' : '#fff', go: T('seg', n) })),
+        retos: all.map(id => { const on = !c.retosAb || c.retosAb.includes(id), I = this.rInfo(id); return { t: I.ico + ' ' + I.n, bg: on ? '#e8eefb' : '#fff', bd: on ? '#2456b8' : '#c5ccdb', go: () => { const cur = c.retosAb || all; this.setCfg({ retosAb: on ? cur.filter(x => x !== id) : cur.concat([id]) }); } }; }),
+        retosTodos: T('retosAb', null), pausaTxt: c.pausa ? '▶ Reanudar a todos' : '⏸ Pausar a todos', pausaBg: c.pausa ? '#1f9d55' : '#c8413a', togPausa: T('pausa', !c.pausa) };
+    } else out.dcf = { fases: [], minis: [], segs: [], retos: [] };
+  }
+  // ---------- Modo Misión ----------
+  misiones(st) { const L = (RETOS_N[(st && st.curso) || '9no'] || RETOS_N['9no']), m = []; ['lab', 'pasillo', 'aula', 'bar', 'patio'].forEach((z, i) => { m.push({ t: 'reto', id: L[i * 2], z, k: 0 }, { t: 'reto', id: L[i * 2 + 1], z, k: 1 }); if (z === 'pasillo') m.push({ t: 'proy', n: 1, z }); if (z === 'bar') m.push({ t: 'proy', n: 2, z }); }); m.push({ t: 'reto', id: 'ohm', z: 'final', k: 0 }, { t: 'reto', id: 'energia', z: 'final', k: 1 }); return m; }
+  retosCurso() { return this.misiones(this.state.st).filter(M => M.t === 'reto').map(M => M.id); }
+  nProy(st) { return Object.values(st.proj || {}).filter(x => x.done).length; }
+  hecho(st, M) { return M.t === 'reto' ? !!(((st.retos || {})[M.id] || {}).best) : this.nProy(st) >= M.n; }
+  actual(st) { const ms = this.misiones(st), i = ms.findIndex(M => !this.hecho(st, M)); return { ms, i, M: i < 0 ? null : ms[i] }; }
+  zonaHecha(st, z) { return this.misiones(st).filter(M => M.z === z && M.t === 'reto').every(M => this.hecho(st, M)); }
+  zonaAbierta(st, z) { const zi = ZONAS.indexOf(z); for (let k = 0; k < zi; k++) if (!this.zonaHecha(st, ZONAS[k])) return false; return z !== 'final' || this.nProy(st) >= 2; }
+  zonaDe(id) { const M = this.misiones(this.state.st).find(x => x.id === id); return M ? M.z : 'patio'; }
+  anclas() { if (!this._anc && this.api && this.api.anclas) this._anc = this.api.anclas(); return this._anc || {}; }
+  abierto(id) { const a = this.state.abiertos; if (a && !a.includes(id)) return false; const st = this.state.st, an = this.anclas()[id]; return !(st && an) || this.zonaAbierta(st, ZK[an.e] || 'patio'); }
+  notaRetos(st) { const L = this.misiones(st).filter(M => M.t === 'reto'), R = st.retos || {}; return r2(L.reduce((a, M) => a + [0, 7, 8.5, 10][(R[M.id] || {}).best || 0], 0) / L.length); }
+  notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = this.nProy(st); return r2(Math.min(10, ((ns[0] || 0) + (ns[1] || 0)) / 2 + Math.max(0, dn - 2) * 0.5)); }
+  abrirReto(id) { const st = this.state.st, z = this.zonaDe(id); if (!this.zonaAbierta(st, z)) return this.toast('Esa zona todavía está bloqueada. Sigan la misión de la barra de arriba.'); const c = this.cfg(); if (c.retosAb && !c.retosAb.includes(id)) return this.toast('Ese reto está cerrado por el docente.');
+    const b = ((st.retos || {})[id] || {}).best || 0, ini = st.curso === '3BGU' ? 2 : 1; this._prog = Date.now(); this.setState({ rt: { id, tier: b ? Math.min(3, b + 1) : ini, nonce: 0, estado: 'jugando', fb: null }, hint: '' }); }
+  retoFin(ok, eff, txt) { const s = this.state, rt = s.rt; if (!rt || rt.estado !== 'jugando') return; if (!ok) { this.snd('err'); return this.setState({ rt: Object.assign({}, rt, { estado: 'perdio', fb: { ok: false, t: txt || 'Esta vez no salió.' } }) }); }
+    this.snd('ok'); const z = this.zonaDe(rt.id), antes = this.zonaHecha(s.st, z), st = Object.assign({}, s.st), R = Object.assign({}, st.retos || {}), cur = R[rt.id] || { best: 0, n: 0 }; R[rt.id] = { best: Math.max(cur.best || 0, rt.tier), n: (cur.n || 0) + 1 }; st.retos = R;
+    const ahora = this.zonaHecha(st, z), extra = {}; let msg = txt || '¡Reto superado!';
+    if (!antes && ahora) { const gana = this.cfg().seg || 60; st.mt = Math.min(900, (st.mt || 0) + gana); const nz = ZONAS[ZONAS.indexOf(z) + 1]; extra.zr = { z, abre: nz && this.zonaAbierta(st, nz) ? ZN[nz] : nz === 'final' ? 'Cancha (cuando terminen 2 proyectos)' : '', seg: gana }; msg += '  ⚡ ¡Zona restaurada!'; setTimeout(() => this.setState({ zr: null }), 5200); }
+    if (!this.actual(st).M) { st.mt = Math.max(st.mt || 0, 900); extra.finOn = true; }
+    this._prog = Date.now(); this.setState(Object.assign({ st, rt: Object.assign({}, rt, { estado: 'gano', fb: { ok: true, t: msg } }) }, extra), () => this.guardar()); }
+  marcas() { const st = this.state.st; if (!st) return []; const R = st.retos || {}, A = this.actual(st), M = MINFO_(), c = this.cfg(), out = [];
+    A.ms.forEach(m => { if (m.t !== 'reto' || !this.zonaAbierta(st, m.z)) return; const I = this.rInfo(m.id), b = (R[m.id] || {}).best || 0, cur = A.M && A.M.id === m.id, p = RZ[m.z][m.k];
+      out.push({ id: 'r:' + m.id, x: p[0], z: p[1], c: cur ? '#5fe8ff' : b >= 3 ? '#ffd23f' : b ? '#21d07a' : '#9fd8ff', lab: (cur ? '▶ ' : '') + I.ico + ' ' + I.n + (b ? ' ' + '★'.repeat(b) : ''), bg: cur ? 'rgba(0,70,110,.92)' : undefined, done: b >= 3 }); });
+    Object.keys(MPOS).forEach(id => { const on = c.minisOn && c.minis[id] !== false && (st.mt || 0) >= 20, I = M[id] || { n: id, ico: '🎮' }; out.push({ id: 'm:' + id, x: MPOS[id][0], z: MPOS[id][1], c: on ? '#ff8fd0' : '#7a7a7a', lab: (on ? '' : '🔒 ') + I.ico + ' ' + I.n, bg: 'rgba(60,10,40,.88)' }); }); return out; }
+  objetivo(st) { const A = this.actual(st), M = A.M; if (!M) return null; if (M.t === 'reto') { const p = RZ[M.z][M.k]; return { x: p[0], z: p[1], room: ROOM[M.z] }; }
+    const an = this.anclas(), ref = RZ[M.z][0]; let best = null; Object.keys(an).forEach(id => { const pj = (st.proj || {})[id]; if (pj && pj.done) return; if (!this.abierto(id)) return; const a = an[id], d = Math.hypot(a.x - ref[0], a.z - ref[1]) - (pj ? 30 : 0); if (!best || d < best.d) best = { d, x: a.x, z: a.z, room: a.e === 'patio' ? null : a.e }; }); return best; }
+  hintTxt() { const s = this.state; return s.rt ? '💡 Lean otra vez «Cómo se juega» y prueben con un caso pequeño. Si se traban, pulsen «Salir» y vuelvan: el ejercicio cambia.' : this.vista() ? '💡 Abran «📘 Aprende» de esta fase: ahí está la explicación con un ejemplo.' : '💡 Sigan la línea brillante del piso hasta el anillo de su misión y presionen E (J1) o ENTER (J2).'; }
+  vistaMision(out) { const s = this.state, st = s.st; out.vIntro = false; out.vMis = false; out.vZr = !!s.zr && s.vista === 'juego'; out.zr = s.zr ? { z: ZN[s.zr.z], abre: s.zr.abre ? '🔓 Se abrió: ' + s.zr.abre : '', seg: '🎮 +' + s.zr.seg + ' s de juego en la cancha' } : { z: '', abre: '', seg: '' };
+    out.vSep = !!s.sep && s.vista === 'juego' && !s.rt && !this.vista(); out.vHint = !!s.hint && s.vista === 'juego'; out.hint = s.hint || ''; out.cerrarHint = () => { this._prog = Date.now(); this.setState({ hint: '' }); };
+    out.vFin = false; out.fin = {};
+    if (!st || s.vista !== 'juego') return; const A = this.actual(st), M = A.M;
+    const sig = A.i + '|' + Object.values(st.proj || {}).map(x => x.max || 0).join(','); if (this._psig !== sig) { this._psig = sig; this._prog = Date.now(); if (s.hint) setTimeout(() => this.setState({ hint: '' }), 0); }
+    if (!this._hintT) this._hintT = setInterval(() => { const S = this.state; if (!S.st || S.vista !== 'juego' || S.hint || this.cfg().pausa) return; if (Date.now() - (this._prog || Date.now()) > 120000) this.setState({ hint: this.hintTxt() }); }, 5000);
+    out.vIntro = !st.intro; out.empezar = () => this.setState({ st: Object.assign({}, st, { intro: true }) }, () => { this._prog = Date.now(); this.guardar(); });
+    out.vMis = !!st.intro && !s.rt && !s.mn;
+    out.mis = { n: M ? 'MISIÓN ' + (A.i + 1) + ' DE ' + A.ms.length : 'MISIÓN CUMPLIDA', zona: M ? ZN[M.z].toUpperCase() : 'COLEGIO RESTAURADO', txt: !M ? 'Restauraron todo el colegio. ¡La cancha es libre! 🎮' : M.t === 'reto' ? (M.z === 'final' ? 'Reactiven el sistema principal: ' : 'Descifren: ') + this.rInfo(M.id).ico + ' ' + this.rInfo(M.id).n : 'Proyecto ' + M.n + ' de 2: elijan un proyecto en cualquier zona abierta y completen sus 10 fases',
+      dots: A.ms.map((m, i) => ({ bg: this.hecho(st, m) ? '#21d07a' : i === A.i ? '#5fe8ff' : 'rgba(255,255,255,.22)', w: m.t === 'proy' ? '22px' : '12px' })) };
+    out.vFin = !M && !st.finVisto; out.fin = { nota: this.notaFinal(st).toFixed(2), r: this.notaRetos(st).toFixed(2), p: this.notaProyecto(st).toFixed(2), quien: st.integrantes, ok: () => this.setState({ st: Object.assign({}, st, { finVisto: true }) }, () => this.guardar()) }; }
   // ---------- 3D sync ----------
   sync3d(force) {
     const A = this.api; if (!A) return; const v = this.vista(), s = this.state, pid = v ? v.p : null;
+    if (s.vista === 'juego' && s.st && A.zona) { const st = s.st, zs = {}; Object.keys(ZK).forEach(k => { if (k === 'patio') return; const z = ZK[k]; zs[k] = !this.zonaAbierta(st, z) || (z === 'lab' && !this.zonaHecha(st, 'lab')) ? 'cerrada' : this.zonaHecha(st, z) ? 'restaurada' : 'abierta'; }); const zk = JSON.stringify(zs); if (this._zk !== zk) { this._zk = zk; Object.keys(zs).forEach(k => A.zona(k, zs[k])); if (A.abiertos) A.abiertos(Object.keys(this.anclas()).filter(id => this.abierto(id))); }
+      if (!this._spw) { this._spw = true; if (!this.zonaHecha(st, 'lab') && A.spawn) A.spawn(-13.5, -13.9, Math.PI); }
+      const ob = !this.vista() && !s.rt && !s.mn && st.intro ? this.objetivo(st) : null, gk = JSON.stringify(ob); if (this._gk !== gk) { this._gk = gk; A.guia(ob); } }
+    if (A.marcadores && s.vista === 'juego') { const mk = JSON.stringify(this.marcas()); if (this._mk !== mk) { this._mk = mk; A.marcadores(this.marcas()); } } if (A.pausa) A.pausa(!!(s.rt || (s.mn && s.mn.d2) || v || this.cfg().pausa));
     const panel = !!v, sigP = pid + '|' + panel; if (force || this._sp !== sigP) { this._sp = sigP; A.proyecto(pid); this._sg = ''; setTimeout(() => A.resize(), 30); }
     const ab = JSON.stringify(s.abiertos); if (force || this._sa !== ab) { this._sa = ab; A.abiertos(s.abiertos); }
     if (!v) return; const p = this.P(pid), d = this.datos(v);
@@ -610,10 +840,10 @@ class Component extends DCLogic {
     const fb = s.fb; out.fb = { vis: !!fb, bg: fb && fb.ok ? '#e3f6ea' : '#fde8e6', fg: fb && fb.ok ? '#14532d' : '#8a1f17', tit: fb ? fb.t : '', lista: (fb && fb.lista) || [] };
     // hud
     if (st && D) { const req = (D.CURSO[st.curso] || {}).req || 3, done = Object.values(st.proj || {}).filter(x => x.done).length;
-      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, completos: done + ' / ' + req, nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
+      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, completos: 'Retos ' + this.retosCurso().filter(id => ((st.retos || {})[id] || {}).best).length + '/' + this.retosCurso().length + ' · Proy. ' + Math.min(2, this.nProy(st)) + '/2 · 🎮 ' + mmss(st.mt || 0), nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
         ayuda: () => { const on = !st.ayuda; this.setState({ st: Object.assign({}, st, { ayuda: on }) }, () => this.guardar(on ? { pedirAyuda: true } : { cancelarAyuda: true })); },
         cerrar: () => { if (!window.confirm('Anoten su código para continuar la próxima clase:\n\n' + st.id + '\n\n¿Cerrar la sesión?')) return; this.guardar(); clearInterval(this._poll); try { localStorage.removeItem(LS); } catch (e) {} this.setState({ st: null, cur: null, vista: 'login', tab: 'seguir', lg: Object.assign({}, s.lg, { rid: '', cod: '' }) }); },
-        cerca: !!s.cerca, cercaTxt: s.cerca ? (this.abierto(s.cerca) ? 'Presiona E: ' + this.P(s.cerca).n : '🔒 ' + this.P(s.cerca).n + ' (cerrada)') : '',
+        cerca: !!s.cerca, cercaTxt: s.cerca ? (/^r:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + this.rInfo(s.cerca.slice(2)).ico + ' ' + this.rInfo(s.cerca.slice(2)).n : /^m:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + ((MINFO_()[s.cerca.slice(2)] || {}).n || 'Minijuego') + ' (🎮 ' + mmss(st.mt || 0) + ')' : this.abierto(s.cerca) ? 'J1 E · J2 ENTER → ' + this.P(s.cerca).n : '🔒 ' + this.P(s.cerca).n + ' (cerrada)') : '',
         lista: D.P.map(p => { const pj = (st.proj || {})[p.id], ab = this.abierto(p.id); return { ico: p.ico, n: p.n, lugar: p.lugar, estado: !ab ? 'cerrada' : pj && pj.done ? '✓ nota ' + pj.nota : pj ? 'en paso ' + (pj.f + 1) + ' de 10' : 'nueva', bg: pj && pj.done ? '#e3f6ea' : pj ? '#fff6e3' : '#f3f4f8', op: ab ? 1 : 0.5, ir: () => this.abrir(p.id) }; }) };
     } else out.hud = { pareja: '', completos: '', nota: '', lista: [], cerca: false, cercaTxt: '', ayudaTxt: '', ayudaBg: '#2456b8', ayuda: () => {}, cerrar: () => {} };
     // panel
@@ -629,11 +859,13 @@ class Component extends DCLogic {
         sigTxt: ['Aceptar la misión →', 'Comprobar la mochila', 'Comprobar ubicación', 'Comprobar circuito', 'Comprobar diagrama', 'Comprobar bloques →', 'Comprobar ajustes', '⚙ Compilar y subir', '', pj.done ? 'Actualizar la ficha' : '📄 Entregar la ficha técnica'][F], siguiente: () => this.comprobar(id),
         esDoc: v.modo === 'exp', docAnt: () => this.docExp(id, Math.max(0, F - 1)), docSig: () => this.docExp(id, Math.min(9, F + 1)), docFin: () => this.docExp(null) };
       if (v.modo === 'jug' && F === 8) { out.pz.acciones = false; }
-      const ph = { mision: F === 0, elegir: F === 1, ubicar: F === 2, conectar: F === 3, diagrama: F === 4, bloques: F === 5, ajustar: F === 6, codigoF: F === 7, probar: F === 8, ficha: F === 9 };
+      const teoK = id + ':' + F, teoOpen = ro || ((s.teo || {})[teoK] != null ? s.teo[teoK] : !!(cur.guia || this.apoyo() || F === 0)), TE = TEORIA[F] || TEORIA[0];
+      const ph = { teoVis: true, teoOpen, teoTit: 'Aprende · ' + TE[0], teoItems: TE[1], teoEj: TE[2], teoBtn: teoOpen ? 'Ocultar ▲' : 'Ver la teoría ▼', teoTog: () => this.setState({ teo: Object.assign({}, s.teo, { [teoK]: !teoOpen }) }), resVis: F === 1 || F === 3, resTab: RESIS.map(x => ({ c: x[0], r: x[1], y: x[2], col: x[1] === 'ninguna' ? '#4a5878' : '#c8413a' })), mision: F === 0, elegir: F === 1, ubicar: F === 2, conectar: F === 3, diagrama: F === 4, bloques: F === 5, ajustar: F === 6, codigoF: F === 7, probar: F === 8, ficha: F === 9 };
       if (F === 0) Object.assign(ph, { historia: p.historia, objetivo: p.objetivo, criterios: p.criterios });
       if (F === 1) { const need = D.necesita(p), items = mez([...new Set(p.inst.map(i => i.c).concat(p.dist))], id + 'e');
         ph.items = items.map(c => { const C = D.COMP[c], on = !!pj.sel[c], hint = pv && !ro, bad = hint && (on !== !!need[c]); return { n: C.n + (need[c] > 1 && (on || ro) ? ' ×' + need[c] : ''), q: C.q, col: C.col, k: C.k === 'E' ? 'ENT' : 'SAL', bg: on ? '#e8eefb' : '#fff', bd: bad ? '#c8413a' : on ? '#2456b8' : '#dde3f0', tog: () => upd({ sel: Object.assign({}, pj.sel, { [c]: !on }) }) }; });
         ph.resis = [['r220', 'Resistencia 220 Ω'], ['r10k', 'Resistencia 10 kΩ']].map(([k, n]) => ({ n, v: pj.res[k] || 0, menos: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.max(0, (pj.res[k] || 0) - 1) }) }), mas: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.min(6, (pj.res[k] || 0) + 1) }) }) }));
+        { const n = c => p.inst.filter(i => i.c === c || (c === 'led' && /^led/.test(i.c))).length, L = n('led'), Bt = n('btn'), Ld = n('ldr'); ph.cuentaVis = !!(cur.guia || this.apoyo() || pv) && !ro; ph.cuenta = 'Cuenten en su proyecto: ' + L + ' LED' + (L === 1 ? '' : 's') + ', ' + Bt + ' pulsador' + (Bt === 1 ? '' : 'es') + ' y ' + Ld + ' LDR. Ahora piensen cuántas resistencias de cada tipo hacen falta.'; }
         if (pv && !ro) this._hintE = true; }
       if (F === 2) ph.inst = p.inst.map(it => { const u = pj.ub[it.i], sp = p.spots.find(x => x.id === u), abierto = !ro && s.sel === it.i, ok = u === it.spot;
         return { lab: it.lab, col: D.COMP[it.c].col, donde: sp ? '📍 ' + sp.lab : 'sin ubicar', accion: ro ? '' : abierto ? 'elijan el lugar ↓' : 'cambiar', abierto, bd: abierto ? '#f0a726' : pv && u ? (ok ? '#1f9d55' : '#c8413a') : '#dde3f0', sel: () => this.setState({ sel: abierto ? null : it.i, fb: null }),
@@ -706,6 +938,8 @@ class Component extends DCLogic {
     { const co = s.co || {}, setC = ch => this.setState({ co: Object.assign({}, this.state.co, ch) }), CR = ['Resuelve un problema real del colegio', 'El sistema funciona en todas las pruebas', 'La ficha está completa y clara', 'Las conclusiones muestran lo que aprendieron'];
       out.co = { cod: co.cod || '', setCod: e => setC({ cod: e.target.value.toUpperCase() }), buscar: () => this.coBuscar(), msg: co.msg || '', msgVis: !!co.msg, vis: !!co.vis, info: co.otro ? co.otro.n + ' · ' + co.otro.integrantes : '', con: co.otro && co.otro.con ? '«' + co.otro.con + '»' : '', com: co.com || '', setCom: e => setC({ com: e.target.value }), enviado: !!co.enviado, btn: co.enviado ? '✓ Enviada' : 'Enviar coevaluación', enviar: () => this.coEnviar(),
         crit: CR.map((n, k) => ({ n, st: [1, 2, 3, 4].map(v => ({ t: String(v), bg: (co.crit || [])[k] === v ? '#f0a726' : '#fff', go: () => { const c = (co.crit || [0, 0, 0, 0]).slice(); c[k] = v; setC({ crit: c }); } })) })) }; }
+    this.vistaV3(out); this.vistaMision(out);
+    if (s.rt && out.rt) { const z = this.zonaDe(s.rt.id); out.rt.ctxVis = true; out.rt.ctxZ = ZCTX[z] || ''; out.rt.ctx = RCTX[s.rt.id] || ''; }
     if (s.vista === 'doc' && s.exp) { out.vDoc = false; }
     return out;
   }

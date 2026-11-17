@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0a1a3a;font-family:'IBM Plex Sans',sans-serif;color:#0a1a3a}a{color:#2456b8}a:hover{color:#163a80}:root{color-scheme:light}input,select,textarea,button{font-family:inherit}input,select,textarea{background:#fff;color:#0a1a3a}@keyframes t3pulse{0%,100%{opacity:1}50%{opacity:.45}}@keyframes t3in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes t3flow{to{stroke-dashoffset:-20}}</style>
+<script src="./config.js"></script>
+<script src="./taller3d-datos.js"></script>
+<script src="./taller3d-extra.js"></script>
+<script src="./taller3d-campus.js"></script>
+<script src="./v4-escena.js"></script>
+<script src="./escape-flujo.js"></script>
+<script src="./escape-retos.js"></script>
+<script src="./escape-mente.js"></script>
+<script src="./escape-arcade.js"></script>
+<script src="./escape-mesa.js"></script>
+<script src="./escape-inventos.js"></script>
+<script src="./v3-gen.js"></script>
+<script src="./v3-retos.js"></script>
+<script src="./v3-mini.js"></script>
+<script src="./v4-aplicados.js"></script>
+</helmet>
+<div style="position:fixed;inset:0;overflow:hidden;background:#9fd3f2">
+
+<div ref="{{ ref3d }}" style="position:absolute;left:0;top:0;bottom:0;right:{{ v3dRight }};background:#9fd3f2"></div>
+
+<sc-if value="{{ cargando3d }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;top:0;bottom:0;right:{{ v3dRight }};display:flex;align-items:center;justify-content:center;background:#0a1a3a;color:#fff;font-weight:700;font-size:20px;flex-direction:column;gap:10px"><div style="animation:t3pulse 1.2s infinite">Cargando el campus 3D…</div><div style="font-size:14px;color:#b9c6e4;font-weight:500">{{ err3d }}</div></div>
+</sc-if>
+
+<sc-if value="{{ vWalk }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:14px;top:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none">
+<div style="display:flex;align-items:center;gap:12px;background:rgba(10,26,58,.9);color:#fff;padding:10px 16px 10px 10px;border-radius:12px;pointer-events:auto">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:44px;width:auto;background:#fff;border-radius:8px;padding:3px">
+<div style="display:flex;flex-direction:column;gap:2px"><div style="font-family:'Archivo Black',sans-serif;font-size:16px;letter-spacing:.02em;white-space:nowrap">LA PROVIDENCIA · MISIÓN APAGÓN</div><div style="font-size:12.5px;color:#c9d6f2;max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hud.pareja }}</div></div>
+</div>
+<div style="display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end">
+<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:92px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">AVANCE</div><div style="font-family:'Archivo Black',sans-serif;font-size:15px;white-space:nowrap">{{ hud.completos }}</div></div>
+<div style="background:rgba(10,26,58,.9);color:#fff;padding:10px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;min-width:80px"><div style="font-size:11px;letter-spacing:.1em;color:#c9d6f2">NOTA</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px">{{ hud.nota }}</div></div>
+<button onClick="{{ hud.ayuda }}" style="background:{{ hud.ayudaBg }};color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap">{{ hud.ayudaTxt }}</button>
+<button onClick="{{ hud.cerrar }}" style="background:rgba(10,26,58,.9);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap">Cerrar sesión</button>
+</div>
+</div>
+<div style="position:absolute;left:14px;top:124px;width:270px;max-height:calc(100% - 230px);overflow-y:auto;overflow-x:hidden;background:rgba(255,255,255,.95);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 24px rgba(0,0,0,.2)">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#0f7b6c">{{ hud.retosTit }}</div>
+<sc-for list="{{ hud.retosL }}" as="m" hint-placeholder-count="10"><button onClick="{{ m.ir }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;border:none;text-align:left;cursor:pointer;color:#0a1a3a;background:{{ m.bg }};opacity:{{ m.op }}"><div style="font-size:18px;width:24px;text-align:center">{{ m.ico }}</div><div style="flex:1;min-width:0;font-weight:700;font-size:13.5px;line-height:1.2">{{ m.n }}</div><div style="font-size:13px;color:#d98a0b;white-space:nowrap">{{ m.st }}</div></button></sc-for>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8;margin-top:6px">PROYECTOS DEL CAMPUS</div>
+<sc-for list="{{ hud.lista }}" as="m" hint-placeholder-count="6">
+<button onClick="{{ m.ir }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;border:none;text-align:left;cursor:pointer;color:#0a1a3a;background:{{ m.bg }};opacity:{{ m.op }}"><div style="font-size:18px;width:24px;text-align:center">{{ m.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ m.n }}</div><div style="font-size:12px;color:#4a5878">{{ m.lugar }} · {{ m.estado }}</div></div></button>
+</sc-for>
+</div>
+<div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none">
+<sc-if value="{{ hud.cerca }}" hint-placeholder-val="{{ false }}"><div style="background:#2456b8;color:#fff;font-weight:700;font-size:18px;padding:12px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:t3pulse 1.6s infinite">{{ hud.cercaTxt }}</div></sc-if>
+<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">J1: W A S D · J2: flechas · Entrar: J1 E o J2 ENTER · Ganen retos para jugar en la cancha 🎮</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vPanel }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:0;right:0;bottom:0;width:{{ panelW }};background:#f3f4f8;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.25)">
+<div style="background:#0a1a3a;color:#fff;padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="font-size:28px">{{ pz.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-size:12px;letter-spacing:.1em;color:#c9d6f2">{{ pz.lugar }}</div><div style="font-family:'Archivo Black',sans-serif;font-size:20px;line-height:1.1">{{ pz.n }}</div></div>
+<sc-if value="{{ pz.puedeSalir }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pz.salir }}" style="background:#fff;color:#0a1a3a;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;white-space:nowrap">← Campus</button></sc-if>
+</div>
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px">
+<sc-for list="{{ pz.pasos }}" as="s" hint-placeholder-count="10">
+<button onClick="{{ s.ir }}" style="border:none;border-radius:6px;padding:6px 2px;background:{{ s.bg }};color:{{ s.fg }};font-size:11px;font-weight:700;cursor:{{ s.cur }};display:flex;flex-direction:column;align-items:center;gap:1px"><span style="font-size:13px">{{ s.num }}</span><span>{{ s.n }}</span></button>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ pz.banner }}" hint-placeholder-val="{{ false }}"><div style="background:#f0a726;color:#1a1004;font-weight:700;padding:10px 16px;font-size:15px">{{ pz.bannerTxt }}</div></sc-if>
+<div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;animation:t3in .3s ease-out" key="{{ pz.key }}">
+
+<sc-if value="{{ ph.teoVis }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;background:#fffbea;border:2px solid #f0a726;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px">
+<button onClick="{{ ph.teoTog }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a;font-family:inherit"><span style="font-size:20px">📘</span><span style="flex:1;font-weight:800;font-size:15px">{{ ph.teoTit }}</span><span style="font-weight:700;color:#a8650a;font-size:13px;white-space:nowrap">{{ ph.teoBtn }}</span></button>
+<sc-if value="{{ ph.teoOpen }}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{ ph.teoItems }}" as="x" hint-placeholder-count="3"><div style="display:flex;gap:8px;font-size:14px;line-height:1.45;color:#0a1a3a"><div style="color:#a8650a;font-weight:800">›</div><div>{{ x }}</div></div></sc-for>
+<div style="background:#fff;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.45;color:#0a1a3a"><b>Ejemplo:</b> {{ ph.teoEj }}</div>
+<sc-if value="{{ ph.resVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border-radius:8px;overflow:hidden;font-size:13px;color:#0a1a3a"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) 70px minmax(0,2fr);gap:6px;padding:6px 8px;background:#0a1a3a;color:#fff;font-weight:700;font-size:12px"><div>COMPONENTE</div><div>RESISTENCIA</div><div>¿POR QUÉ?</div></div>
+<sc-for list="{{ ph.resTab }}" as="r" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) 70px minmax(0,2fr);gap:6px;padding:6px 8px;border-top:1px solid #eee;line-height:1.35"><div style="font-weight:700">{{ r.c }}</div><div style="font-weight:800;color:{{ r.col }}">{{ r.r }}</div><div>{{ r.y }}</div></div></sc-for>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ ph.mision }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;border-left:6px solid #2456b8">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">LA MISIÓN</div>
+<div style="font-size:17px;line-height:1.5">{{ ph.historia }}</div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">OBJETIVO</div>
+<div style="font-size:16px;font-weight:600;line-height:1.45">{{ ph.objetivo }}</div>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8;margin-top:6px">FUNCIONA SI…</div>
+<sc-for list="{{ ph.criterios }}" as="c" hint-placeholder-count="3"><div style="display:flex;gap:8px;font-size:15px"><div style="color:#1f9d55;font-weight:800">✓</div><div>{{ c }}</div></div></sc-for>
+</div>
+<div style="background:#e8eefb;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.45">
+<div style="font-weight:700">Cómo se resuelve: 10 pasos, como un ingeniero real</div>
+<div>Elegir los componentes → ubicarlos en el lugar → conectarlos al Arduino → diagrama de flujo → bloques → ajustar y calibrar → código en Arduino IDE → probar y reparar fallas → ficha técnica. Cada fase vale 1 punto.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.elegir }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Toquen los componentes que necesita este sistema. <b>Cuidado:</b> hay algunos que no sirven. Pongan también cuántas resistencias hacen falta.</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+<sc-for list="{{ ph.items }}" as="it" hint-placeholder-count="6">
+<button onClick="{{ it.tog }}" disabled="{{ ro }}" style="text-align:left;border:2px solid {{ it.bd }};background:{{ it.bg }};border-radius:10px;padding:10px;cursor:pointer;display:flex;gap:8px;align-items:flex-start;color:#0a1a3a">
+<div style="flex:none;width:30px;height:30px;border-radius:8px;background:{{ it.col }};border:1px solid rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">{{ it.k }}</div>
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0"><div style="font-weight:700;font-size:14px;line-height:1.2">{{ it.n }}</div><div style="font-size:12px;color:#4a5878;line-height:1.3">{{ it.q }}</div></div>
+</button>
+</sc-for>
+</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">RESISTENCIAS</div>
+<sc-for list="{{ ph.resis }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;font-size:14px;font-weight:600">{{ r.n }}</div><button onClick="{{ r.menos }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">−</button><div style="font-family:'Archivo Black',sans-serif;font-size:20px;width:28px;text-align:center">{{ r.v }}</div><button onClick="{{ r.mas }}" disabled="{{ ro }}" style="width:34px;height:34px;border-radius:8px;border:1px solid #9aa6c4;background:#fff;font-size:18px;cursor:pointer">+</button></div>
+</sc-for>
+<div style="font-size:12px;color:#4a5878;line-height:1.4">Pista de electrónica: cada LED necesita una de 220 Ω para no quemarse. Un pulsador o una LDR necesitan una de 10 kΩ. Miren la tabla «¿por qué?» en la teoría de arriba.</div><sc-if value="{{ ph.cuentaVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px;line-height:1.4">{{ ph.cuenta }}</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.ubicar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Elijan un componente y luego toquen <b>la esfera verde</b> del escenario 3D (o un lugar de la lista) donde debe ir. La ubicación importa: si queda mal puesto, no funciona.</div>
+<sc-for list="{{ ph.inst }}" as="it" hint-placeholder-count="3">
+<div style="background:#fff;border-radius:12px;padding:10px 12px;border:2px solid {{ it.bd }};display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ it.sel }}" disabled="{{ ro }}" style="display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a"><div style="width:22px;height:22px;border-radius:6px;background:{{ it.col }};border:1px solid rgba(0,0,0,.25)"></div><div style="flex:1;display:flex;flex-direction:column"><div style="font-weight:700;font-size:15px">{{ it.lab }}</div><div style="font-size:13px;color:#4a5878">{{ it.donde }}</div></div><div style="font-size:12px;font-weight:700;color:#2456b8">{{ it.accion }}</div></button>
+<sc-if value="{{ it.abierto }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ it.spots }}" as="sp"><button onClick="{{ sp.go }}" style="border:1px solid #9aa6c4;background:{{ sp.bg }};border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer;color:#0a1a3a">{{ sp.lab }}</button></sc-for></div></sc-if>
+<sc-if value="{{ it.porVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px">{{ it.por }}</div></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ ph.conectar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Conecten cada pata al Arduino como en una protoboard real: <b>5V</b> (alimentación), <b>GND</b> (tierra), pines digitales <b>D2–D13</b> o analógicos <b>A0–A5</b>. Si una pata necesita resistencia, elíjanla.</div>
+<div style="background:#fff;border-radius:12px;padding:8px">{{ ph.esquema }}</div>
+<sc-for list="{{ ph.filas }}" as="c" hint-placeholder-count="3">
+<div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;border-radius:5px;background:{{ c.col }};border:1px solid rgba(0,0,0,.25)"></div><div style="font-weight:700;font-size:15px">{{ c.lab }}</div></div>
+<sc-for list="{{ c.pins }}" as="pn">
+<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #e3e7f2;padding-top:6px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><div style="flex:1;min-width:110px;font-size:14px;font-weight:600">{{ pn.pl }}</div>
+<select value="{{ pn.to }}" onChange="{{ pn.setTo }}" disabled="{{ ro }}" style="padding:6px 8px;border-radius:8px;border:2px solid {{ pn.bd }};font-size:14px;background:#fff;min-width:96px"><sc-for list="{{ pn.dest }}" as="o"><option value="{{ o.v }}">{{ o.t }}</option></sc-for></select>
+<sc-if value="{{ pn.conR }}" hint-placeholder-val="{{ true }}"><select value="{{ pn.r }}" onChange="{{ pn.setR }}" disabled="{{ ro }}" style="padding:6px 8px;border-radius:8px;border:2px solid #9aa6c4;font-size:14px;background:#fff"><option value="">sin resistencia</option><option value="220">+ 220 Ω</option><option value="10k">+ 10 kΩ</option></select></sc-if>
+</div>
+<sc-if value="{{ pn.reglaVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#14306b;background:#e8eefb;border-radius:6px;padding:4px 8px">Regla: {{ pn.regla }}</div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<sc-if value="{{ ph.ohm }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border-radius:12px;padding:12px;font-size:14px;line-height:1.45"><b>Ley de Ohm (3ro BGU):</b> el Arduino da 5 V y un LED usa unos 2 V y 15 mA. La resistencia debe bajar 3 V: R = V ÷ I = 3 ÷ 0,015 = 200 Ω. Por eso se usa la comercial más cercana: <b>220 Ω</b>.</div></sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.diagrama }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Armen el algoritmo: en cada figura elijan el paso correcto. Fíjense en la forma: <b>paralelogramo</b> = leer un dato, <b>rombo</b> = pregunta (SÍ / NO), <b>rectángulo</b> = acción.</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:0">
+<div style="background:#0a1a3a;color:#fff;font-weight:700;border-radius:999px;padding:8px 26px">INICIO</div>
+<div style="width:2px;height:14px;background:#0a1a3a"></div>
+<sc-for list="{{ ph.pasos }}" as="st" hint-placeholder-count="5">
+<div style="width:100%;display:flex;flex-direction:column;align-items:center">
+<div style="position:relative;width:100%;max-width:400px;min-height:{{ st.h }};display:flex;align-items:center;justify-content:center;padding:{{ st.pad }};box-sizing:border-box">
+<svg viewBox="0 0 400 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polygon points="{{ st.poly }}" fill="{{ st.fill }}" stroke="{{ st.stroke }}" stroke-width="2.5" vector-effect="non-scaling-stroke"></polygon></svg>
+<div style="position:relative;display:flex;flex-direction:column;gap:4px;align-items:center;width:100%">
+<div style="font-size:10px;letter-spacing:.12em;font-weight:700;color:#4a5878">{{ st.tag }}</div>
+<select value="{{ st.val }}" onChange="{{ st.set }}" disabled="{{ ro }}" style="max-width:100%;width:{{ st.w }};padding:6px 8px;border-radius:8px;border:2px solid {{ st.bd }};font-size:13px;background:#fff;font-weight:600"><option value="">— elegir —</option><sc-for list="{{ st.opts }}" as="o"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+</div>
+</div>
+<div style="width:2px;height:14px;background:#0a1a3a"></div>
+</div>
+</sc-for>
+<div style="font-size:13px;font-weight:700;color:#0a1a3a">↺ el sistema funciona para siempre</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ph.bloques }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Completen los <b>bloques</b>, como en Tinkercad Circuitos. Los bloques siguen el mismo orden que su diagrama.</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px">
+<sc-for list="{{ ph.lineas }}" as="ln" hint-placeholder-count="6">
+<div style="margin-left:{{ ln.ml }};align-self:flex-start;max-width:calc(100% - {{ ln.ml }});background:{{ ln.bg }};color:#fff;border-radius:{{ ln.rad }};padding:7px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:700;font-size:14px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)">
+<sc-for list="{{ ln.parts }}" as="pt">
+<sc-if value="{{ pt.txt }}" hint-placeholder-val="{{ true }}"><span>{{ pt.t }}</span></sc-if>
+<sc-if value="{{ pt.slot }}" hint-placeholder-val="{{ false }}"><select value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" style="border:2px solid {{ pt.bd }};border-radius:999px;padding:3px 8px;font-weight:700;font-size:13px;background:#fff;color:#0a1a3a"><option value="">?</option><sc-for list="{{ pt.opts }}" as="o"><option value="{{ o.v }}">{{ o.t }}</option></sc-for></select></sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ ph.verCodigo }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">ASÍ SE VE EN ARDUINO IDE (C++)</div>
+<pre style="margin:0;background:#0f1720;color:#dfe8f5;border-radius:12px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.5;overflow:auto;white-space:pre">{{ ph.codigo }}</pre>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.ajustar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Un sistema real no funciona bien solo con conectarlo: hay que <b>ajustar</b> la mecánica y <b>calibrar</b> los sensores. Muevan cada control hasta el valor correcto y luego pulsen «Comprobar ajustes».</div>
+<sc-for list="{{ ph.ajs }}" as="a" hint-placeholder-count="3">
+<div style="flex:none;background:#fff;border-radius:12px;padding:12px;border:2px solid {{ a.bd }};display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:baseline;gap:8px"><div style="flex:1;min-width:0;font-weight:700;font-size:15px">{{ a.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:18px;color:#2456b8;white-space:nowrap">{{ a.vtxt }}</div></div>
+<div style="position:relative;height:10px;border-radius:5px;background:#e3e7f2"><div style="position:absolute;top:0;bottom:0;left:{{ a.zl }};width:{{ a.zw }};background:{{ a.zc }};border-radius:5px"></div></div>
+<input type="range" min="{{ a.min }}" max="{{ a.max }}" step="{{ a.step }}" value="{{ a.v }}" onChange="{{ a.set }}" disabled="{{ ro }}" style="width:100%">
+<div style="font-size:11px;color:#4a5878">Rango del control: {{ a.rango }}</div>
+<sc-if value="{{ a.exVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#14306b;background:#e8eefb;border-radius:8px;padding:6px 8px;line-height:1.4">{{ a.ex }}</div></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ ph.codigoF }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Este es su programa en <b>Arduino IDE</b> (lenguaje C++), armado a partir de sus bloques y sus conexiones. Completen los huecos amarillos y pulsen <b>⚙ Compilar y subir</b>. {{ ph.cdAyuda }}</div>
+<div style="flex:none;background:#0f1720;border-radius:12px;padding:10px 0;overflow-x:auto;overflow-y:hidden">
+<sc-for list="{{ ph.cdLines }}" as="ln" hint-placeholder-count="14">
+<div style="display:flex;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;white-space:pre;color:#dfe8f5;align-items:center;min-height:22px"><div style="flex:none;width:36px;text-align:right;padding-right:10px;color:#5d6b7e">{{ ln.n }}</div>
+<sc-for list="{{ ln.parts }}" as="pt"><sc-if value="{{ pt.txt }}" hint-placeholder-val="{{ true }}"><span style="color:{{ pt.col }}">{{ pt.t }}</span></sc-if><sc-if value="{{ pt.sel }}" hint-placeholder-val="{{ false }}"><select value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 2px"><option value="">¿?</option><sc-for list="{{ pt.opts }}" as="o"><option value="{{ o }}">{{ o }}</option></sc-for></select></sc-if><sc-if value="{{ pt.inp }}" hint-placeholder-val="{{ false }}"><input value="{{ pt.val }}" onChange="{{ pt.set }}" disabled="{{ ro }}" placeholder="?" spellcheck="false" style="font-family:'IBM Plex Mono',monospace;font-size:12px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 4px;width:{{ pt.w }}"></sc-if></sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;background:#000;color:{{ ph.conCol }};border-radius:12px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;display:flex;flex-direction:column;gap:2px"><div style="color:#8a98ab;letter-spacing:.08em">CONSOLA</div><sc-for list="{{ ph.consola }}" as="c" hint-placeholder-count="1"><div style="white-space:pre-wrap">{{ c }}</div></sc-for></div>
+</sc-if>
+
+<sc-if value="{{ ph.probar }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">Suban el programa y prueben el sistema con situaciones reales del colegio. Miren el escenario 3D mientras corre.</div>
+<button onClick="{{ ph.correr }}" disabled="{{ ph.corriendo }}" style="background:#2456b8;color:#fff;border:none;border-radius:10px;padding:14px;font-size:17px;font-weight:800;cursor:pointer">{{ ph.btnTxt }}</button>
+<div style="flex:none;background:#fff;border-radius:12px;overflow:hidden">
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;padding:8px 10px;background:#0a1a3a;color:#fff;font-size:12px;font-weight:700;letter-spacing:.05em"><div>SITUACIÓN</div><div>DEBE</div><div>HIZO</div><div></div></div>
+<sc-for list="{{ ph.tests }}" as="t" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) 34px;gap:6px;padding:8px 10px;border-top:1px solid #e3e7f2;font-size:13px;background:{{ t.bg }};align-items:center"><div style="font-weight:600">{{ t.txt }}</div><div>{{ t.esp }}</div><div>{{ t.obt }}</div><div style="font-size:16px;text-align:center">{{ t.ic }}</div></div>
+</sc-for>
+</div>
+<sc-if value="{{ ph.fallaVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff6e3;border:2px solid #f0a726;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:19px;color:#a8650a">⚠ FALLA SORPRESA EN LA INSTALACIÓN</div>
+<div style="font-size:15px;line-height:1.45">{{ ph.fSin }}</div>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">{{ ph.fPreg }}</div>
+<sc-for list="{{ ph.fOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="text-align:left;border:2px solid {{ o.bd }};background:{{ o.bg }};border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;cursor:pointer;color:#0a1a3a;line-height:1.35">{{ o.t }}</button></sc-for>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ ph.ficha }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;line-height:1.45">La <b>ficha técnica</b> es la documentación del proyecto, como la que entregan los ingenieros. El sistema ya llenó la parte técnica con su trabajo; ustedes escriben lo que piensan.</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:5px"><div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">SE INCLUYE AUTOMÁTICAMENTE</div><sc-for list="{{ ph.secs }}" as="x" hint-placeholder-count="10"><div style="display:flex;gap:8px;font-size:14px"><div style="color:#1f9d55;font-weight:800">✓</div><div>{{ x }}</div></div></sc-for></div>
+<sc-for list="{{ ph.campos }}" as="c" hint-placeholder-count="4">
+<div style="flex:none;background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;border:2px solid {{ c.bd }}">
+<div style="font-size:14px;font-weight:700;line-height:1.35">{{ c.n }}</div><div style="font-size:12px;color:#4a5878">{{ c.ayuda }}</div>
+<textarea value="{{ c.v }}" onChange="{{ c.set }}" disabled="{{ ro }}" rows="3" placeholder="{{ c.ph }}" style="border:1px solid #9aa6c4;border-radius:8px;padding:8px;font-size:14px;resize:vertical;font-family:inherit"></textarea>
+<div style="font-size:12px;color:{{ c.cc }};text-align:right">{{ c.cnt }}</div>
+</div>
+</sc-for>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ ph.word }}" style="flex:1;min-width:140px;background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">⬇ Descargar Word</button><button onClick="{{ ph.pdf }}" style="flex:1;min-width:140px;background:#fff;color:#c8413a;border:2px solid #c8413a;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">⬇ Guardar PDF</button></div>
+<sc-if value="{{ ph.hecho }}" hint-placeholder-val="{{ false }}">
+<div style="background:#1f9d55;color:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:22px">¡PROYECTO COMPLETO!</div>
+<div style="font-size:16px">Nota del proyecto: <b>{{ ph.nota }}</b> / 10</div>
+<sc-for list="{{ ph.ins }}" as="x" hint-placeholder-count="2"><div style="font-size:14px;background:rgba(255,255,255,.16);border-radius:8px;padding:5px 8px">{{ x }}</div></sc-for>
+</div>
+<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;border:2px solid #f0a726">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#a8650a">COEVALUACIÓN · EVALÚEN A OTRA PAREJA QUE YA TERMINÓ</div>
+<div style="display:flex;gap:8px"><input value="{{ co.cod }}" onChange="{{ co.setCod }}" placeholder="Código de la otra pareja" style="flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:2px solid #9aa6c4;font-size:15px;text-transform:uppercase"><button onClick="{{ co.buscar }}" style="background:#0a1a3a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Buscar</button></div>
+<sc-if value="{{ co.msgVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#a8650a;font-weight:600">{{ co.msg }}</div></sc-if>
+<sc-if value="{{ co.vis }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;font-weight:700">{{ co.info }}</div>
+<div style="font-size:13px;font-style:italic;color:#4a5878;line-height:1.4">{{ co.con }}</div>
+<sc-for list="{{ co.crit }}" as="c" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid #e3e7f2;padding-top:6px"><div style="flex:1;min-width:160px;font-size:14px">{{ c.n }}</div><div style="display:flex;gap:4px"><sc-for list="{{ c.st }}" as="b"><button onClick="{{ b.go }}" style="width:34px;height:34px;border-radius:8px;border:2px solid #f0a726;background:{{ b.bg }};cursor:pointer;font-weight:800;color:#1a1004">{{ b.t }}</button></sc-for></div></div></sc-for>
+<textarea value="{{ co.com }}" onChange="{{ co.setCom }}" rows="2" placeholder="Un consejo para mejorar su proyecto (mínimo 15 letras)" style="border:1px solid #9aa6c4;border-radius:8px;padding:8px;font-size:14px;font-family:inherit"></textarea>
+<button onClick="{{ co.enviar }}" disabled="{{ co.enviado }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:10px;font-weight:800;cursor:pointer">{{ co.btn }}</button>
+</sc-if>
+</div>
+</sc-if>
+</sc-if>
+
+</div>
+<div style="padding:12px 16px;background:#fff;border-top:1px solid #dde3f0;display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ fb.vis }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;padding:10px 12px;background:{{ fb.bg }};color:{{ fb.fg }};font-size:14px;line-height:1.45;display:flex;flex-direction:column;gap:4px"><div style="font-weight:800">{{ fb.tit }}</div><sc-for list="{{ fb.lista }}" as="l"><div>• {{ l }}</div></sc-for></div>
+</sc-if>
+<sc-if value="{{ pz.acciones }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px">
+<sc-if value="{{ pz.pistaVis }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pz.pista }}" style="background:#fff;color:#a8650a;border:2px solid #f0a726;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ pz.pistaTxt }}</button></sc-if>
+<button onClick="{{ pz.siguiente }}" style="flex:1;background:#0a1a3a;color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">{{ pz.sigTxt }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ pz.esDoc }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ pz.docAnt }}" style="background:#fff;color:#0a1a3a;border:2px solid #0a1a3a;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer">← Paso anterior</button>
+<button onClick="{{ pz.docSig }}" style="flex:1;background:#2456b8;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer">Paso siguiente →</button>
+<button onClick="{{ pz.docFin }}" style="background:#c8413a;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer">Terminar explicación</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vDoc }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#f3f4f8;overflow:auto">
+<div style="background:#0a1a3a;color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:46px;width:auto;background:#fff;border-radius:8px;padding:3px">
+<div style="flex:1;min-width:200px;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px">PANEL DOCENTE · MISIÓN</div><div style="font-size:13px;color:#c9d6f2">{{ doc.estado }}</div></div>
+<button onClick="{{ doc.csv }}" style="background:#fff;color:#0a1a3a;border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">⬇ Descargar notas (CSV)</button>
+<button onClick="{{ doc.salir }}" style="background:transparent;color:#fff;border:1px solid #fff;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer">Salir</button>
+</div>
+<div style="padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px">
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;grid-column:1/-1;border:2px solid #f0a726;min-width:0;overflow:hidden">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1;font-size:12px;letter-spacing:.1em;font-weight:700;color:#a8650a">CONSOLA DE LA CLASE · RETOS Y MINIJUEGOS</div><button onClick="{{ dcf.togPausa }}" style="background:{{ dcf.pausaBg }};color:#fff;border:none;border-radius:8px;padding:9px 14px;font-weight:800;cursor:pointer">{{ dcf.pausaTxt }}</button></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Fase de la clase</div><sc-for list="{{ dcf.fases }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.go }}" style="background:{{ f.bg }};color:{{ f.fg }};border:2px solid #2456b8;border-radius:999px;padding:7px 12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ f.t }}</button></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Minijuegos</div><button onClick="{{ dcf.togMinis }}" style="background:{{ dcf.minisBg }};color:#fff;border:none;border-radius:999px;padding:7px 12px;font-weight:700;cursor:pointer">{{ dcf.minisTxt }}</button><sc-for list="{{ dcf.minis }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.go }}" style="background:{{ m.bg }};border:2px solid {{ m.bd }};border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ m.t }}</button></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Tiempo por reto</div><sc-for list="{{ dcf.segs }}" as="g" hint-placeholder-count="4"><button onClick="{{ g.go }}" style="background:{{ g.bg }};border:2px solid #f0a726;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer;color:#1a1004">{{ g.t }}</button></sc-for><div style="font-size:12px;color:#4a5878">de minijuegos que gana la pareja por cada reto superado</div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Retos abiertos</div><button onClick="{{ dcf.retosTodos }}" style="background:#0a1a3a;color:#fff;border:none;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer">Abrir todos</button><sc-for list="{{ dcf.retos }}" as="r" hint-placeholder-count="10"><button onClick="{{ r.go }}" style="background:{{ r.bg }};border:2px solid {{ r.bd }};border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ r.t }}</button></sc-for></div>
+<div style="font-size:12px;color:#4a5878;line-height:1.4">Nota final = 50 % retos (10 por nivel, cada uno vale 7 · 8,5 · 10 según el nivel alcanzado) + 50 % proyecto (10 fases). Los minijuegos no dan nota: se ganan con retos.</div>
+</div>
+
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">1 · SESIÓN DE CLASE</div>
+<div style="display:flex;gap:8px;align-items:center"><input value="{{ doc.codigo }}" onChange="{{ doc.setCodigo }}" placeholder="código" style="flex:1;font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:.12em;padding:8px 10px;border:2px solid #0a1a3a;border-radius:8px;width:120px"><button onClick="{{ doc.nuevoCod }}" style="background:#e8eefb;border:none;border-radius:8px;padding:12px;font-weight:700;cursor:pointer">Nuevo</button></div>
+<button onClick="{{ doc.toggleSesion }}" style="background:{{ doc.sesBg }};color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">{{ doc.sesTxt }}</button>
+<div style="font-size:13px;color:#4a5878">Proyecte este código. Las parejas entran en: <b>{{ doc.url }}</b></div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">2 · MISIONES ABIERTAS</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ doc.proys }}" as="pp" hint-placeholder-count="10"><button onClick="{{ pp.tog }}" style="border:2px solid {{ pp.bd }};background:{{ pp.bg }};color:{{ pp.fg }};border-radius:999px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer">{{ pp.ico }} {{ pp.n }}</button></sc-for></div>
+<div style="display:flex;gap:8px"><button onClick="{{ doc.todos }}" style="flex:1;background:#e8eefb;border:none;border-radius:8px;padding:8px;font-weight:700;cursor:pointer">Abrir todas</button><button onClick="{{ doc.ninguno }}" style="flex:1;background:#e8eefb;border:none;border-radius:8px;padding:8px;font-weight:700;cursor:pointer">Cerrar todas</button></div>
+</div>
+<div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">3 · TOMAR EL CONTROL (MODO EXPLICACIÓN)</div>
+<div style="font-size:13px;color:#4a5878;line-height:1.4">Muestra el proyecto resuelto, paso a paso, en el proyector y en todas las computadoras. Mientras dure, los estudiantes no pueden mover nada.</div>
+<select value="{{ doc.expP }}" onChange="{{ doc.setExpP }}" style="padding:8px;border-radius:8px;border:2px solid #0a1a3a;font-size:15px"><sc-for list="{{ doc.proys }}" as="pp"><option value="{{ pp.id }}">{{ pp.ico }} {{ pp.n }}</option></sc-for></select>
+<button onClick="{{ doc.explicar }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:16px;cursor:pointer">▶ Explicar en el proyector</button>
+</div>
+</div>
+<div style="padding:0 22px 22px">
+<div style="background:#fff;border-radius:12px;overflow:auto">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px;flex-wrap:wrap"><div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">4 · MONITOR EN VIVO · {{ doc.n }} PAREJAS</div><div style="display:flex;gap:8px;align-items:center"><select value="{{ doc.filtro }}" onChange="{{ doc.setFiltro }}" style="padding:6px;border-radius:8px"><sc-for list="{{ doc.filtros }}" as="fo"><option value="{{ fo }}">{{ fo }}</option></sc-for></select><div style="font-size:12px;color:#4a5878">se actualiza cada 10 s</div></div></div>
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:900px">
+<tr style="background:#0a1a3a;color:#fff;text-align:left"><th style="padding:8px">PC</th><th style="padding:8px">Pareja</th><th style="padding:8px">Curso</th><th style="padding:8px">Ahora</th><th style="padding:8px">Completos</th><th style="padding:8px">Nota</th><th style="padding:8px">Fallos</th><th style="padding:8px">Pistas</th><th style="padding:8px">Ayuda</th><th style="padding:8px">Apoyo</th><th style="padding:8px">Visto</th></tr>
+<sc-for list="{{ doc.rows }}" as="r" hint-placeholder-count="4">
+<tr style="border-top:1px solid #e3e7f2;background:{{ r.bg }}"><td style="padding:8px;font-weight:800">{{ r.pc }}</td><td style="padding:8px">{{ r.integrantes }}</td><td style="padding:8px">{{ r.curso }} {{ r.par }}</td><td style="padding:8px">{{ r.ahora }}</td><td style="padding:8px">{{ r.completos }}</td><td style="padding:8px;font-weight:800">{{ r.nota }}</td><td style="padding:8px">{{ r.fallos }}</td><td style="padding:8px">{{ r.pistas }}</td><td style="padding:8px"><button onClick="{{ r.atender }}" style="background:{{ r.ayBg }};color:#fff;border:none;border-radius:6px;padding:4px 8px;font-weight:700;cursor:pointer">{{ r.ayTxt }}</button></td><td style="padding:8px"><button onClick="{{ r.apoyo }}" style="background:{{ r.apBg }};color:{{ r.apFg }};border:1px solid #9aa6c4;border-radius:6px;padding:4px 8px;font-weight:700;cursor:pointer">{{ r.apTxt }}</button></td><td style="padding:8px;color:#4a5878">{{ r.visto }}</td></tr>
+</sc-for>
+</table>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vReto }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30;background:rgba(4,10,16,.82);display:flex;justify-content:center;overflow:auto;padding:22px 14px">
+<div style="width:100%;max-width:1000px;background:#0a141d;border:1px solid rgba(95,208,232,.35);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;align-self:flex-start">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(232,244,248,.15)"><div style="font-size:30px">{{ rt.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:#e8f4f8">{{ rt.n }}</div><div style="font-size:12px;letter-spacing:.12em;color:#5fd0e8;font-weight:700">{{ rt.nivel }}</div></div><button onClick="{{ rt.salir }}" style="background:transparent;color:#e8f4f8;border:1px solid rgba(232,244,248,.4);border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap">✕ Salir</button></div>
+<sc-if value="{{ rt.ctxVis }}" hint-placeholder-val="{{ false }}"><div style="margin:14px 18px 0;background:linear-gradient(90deg,rgba(255,107,95,.16),rgba(95,232,255,.08));border:1px solid rgba(255,107,95,.45);border-radius:12px;padding:10px 14px;color:#e8f4f8;font-size:15px;line-height:1.45"><b style="color:#ffb3ab">{{ rt.ctxZ }}</b><br>{{ rt.ctx }}</div></sc-if>
+
+<div style="padding:18px">{{ rt.el }}</div>
+<sc-if value="{{ rt.fbVis }}" hint-placeholder-val="{{ false }}"><div style="margin:0 18px 12px;border-radius:10px;padding:12px 14px;background:{{ rt.fbBg }};color:#fff;font-weight:700;line-height:1.45">{{ rt.fbT }}</div></sc-if>
+<div style="display:flex;gap:10px;flex-wrap:wrap;padding:0 18px 18px">
+<sc-if value="{{ rt.subir }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.irSubir }}" style="background:#f0a726;color:#1a1004;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">{{ rt.subirTxt }}</button></sc-if>
+<sc-if value="{{ rt.perdio }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.otraVez }}" style="background:#5fd0e8;color:#06140b;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">↻ Intentar con otro ejercicio</button></sc-if>
+<sc-if value="{{ rt.gano }}" hint-placeholder-val="{{ false }}"><button onClick="{{ rt.salir }}" style="background:#1f9d55;color:#fff;border:none;border-radius:10px;padding:12px 18px;font-weight:800;font-size:16px;cursor:pointer">Volver al campus</button></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vMn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;top:12px;z-index:25;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 10px">
+<div style="display:flex;align-items:center;gap:16px;background:rgba(10,20,30,.92);color:#fff;border-radius:14px;padding:10px 18px;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)"><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#6fa8ff">J1 {{ mnh.a }}</div><div style="display:flex;flex-direction:column;align-items:center"><div style="font-size:13px;letter-spacing:.1em;font-weight:700;white-space:nowrap">{{ mnh.ico }} {{ mnh.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:#ffd166">⏱ {{ mnh.t }}</div></div><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#ff6b5f">{{ mnh.b }} J2</div><button onClick="{{ mnh.salir }}" style="background:#c8413a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer">Salir</button></div>
+<div style="background:rgba(10,20,30,.88);color:#fff;border-radius:10px;padding:7px 16px;font-weight:800;font-size:16px;text-align:center">{{ mnh.msg }}</div>
+<div style="background:rgba(10,20,30,.72);color:#dfe8f5;border-radius:10px;padding:6px 12px;font-size:12.5px;max-width:900px;text-align:center;line-height:1.4">{{ mnh.extra }}</div>
+</div>
+<div style="position:absolute;left:12px;bottom:12px;z-index:25;max-width:440px;background:rgba(10,20,30,.88);color:#dfe8f5;border-radius:10px;padding:9px 12px;font-size:13px;line-height:1.45">{{ mnh.ctrl }}</div>
+</sc-if>
+
+<sc-if value="{{ vMn2 }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30;background:rgba(4,10,16,.82);display:flex;justify-content:center;overflow:auto;padding:22px 14px">
+<div style="width:100%;max-width:1000px;background:#0a141d;border:1px solid rgba(255,143,208,.4);border-radius:16px;display:flex;flex-direction:column;align-self:flex-start">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(232,244,248,.15)"><div style="font-size:28px">{{ mnh.ico }}</div><div style="flex:1;font-family:'Archivo Black',sans-serif;font-size:22px;color:#e8f4f8">{{ mnh.n }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:#ffd166">⏱ {{ mnh.t }}</div><button onClick="{{ mnh.salir }}" style="background:#c8413a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer">Salir</button></div>
+<div style="padding:18px">{{ mnh.el }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vPausaDoc }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:45;background:rgba(10,26,58,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:center;padding:20px"><div style="font-size:60px">⏸</div><div style="font-family:'Archivo Black',sans-serif;font-size:34px">EL DOCENTE PAUSÓ LA CLASE</div><div style="font-size:18px">Manos fuera del teclado y miren al frente.</div></div></sc-if>
+<sc-if value="{{ tstVis }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;bottom:96px;transform:translateX(-50%);z-index:40;background:#0a1a3a;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;max-width:80%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3)">{{ tst }}</div></sc-if>
+<sc-if value="{{ vMis }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:50%;top:78px;transform:translateX(-50%);z-index:12;width:min(560px,calc(100% - 620px));min-width:300px;background:rgba(6,18,30,.93);color:#fff;border:2px solid #5fe8ff;border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 24px rgba(95,232,255,.35)">
+<div style="display:flex;align-items:center;gap:10px"><div style="font-size:11px;letter-spacing:.14em;font-weight:800;color:#5fe8ff;white-space:nowrap">{{ mis.n }}</div><div style="flex:1;height:1px;background:rgba(95,232,255,.35)"></div><div style="font-size:11px;letter-spacing:.12em;font-weight:800;color:#ffd166;white-space:nowrap">{{ mis.zona }}</div></div>
+<div style="font-size:16px;font-weight:800;line-height:1.3">{{ mis.txt }}</div>
+<div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ mis.dots }}" as="d" hint-placeholder-count="14"><div style="width:{{ d.w }};height:6px;border-radius:3px;background:{{ d.bg }}"></div></sc-for></div>
+</div>
+</sc-if>
+<sc-if value="{{ vHint }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:16px;bottom:90px;z-index:42;max-width:360px;background:#fff6d6;color:#3a2a00;border:2px solid #f0a726;border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.45;font-weight:600;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.3)"><div>{{ hint }}</div><button onClick="{{ cerrarHint }}" style="align-self:flex-end;background:#f0a726;color:#1a1004;border:none;border-radius:8px;padding:6px 12px;font-weight:800;cursor:pointer">Entendido</button></div></sc-if>
+<sc-if value="{{ vSep }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:20;background:rgba(200,65,58,.92);color:#fff;font-family:'Archivo Black',sans-serif;font-size:24px;padding:14px 24px;border-radius:14px;pointer-events:none">👫 ¡Esperen a su compañero!</div></sc-if>
+<sc-if value="{{ vZr }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:44;background:rgba(6,18,30,.95);border:3px solid #7fe0a0;border-radius:18px;padding:22px 30px;display:flex;flex-direction:column;align-items:center;gap:8px;color:#fff;text-align:center;box-shadow:0 0 50px rgba(127,224,160,.45);pointer-events:none"><div style="font-size:48px">⚡</div><div style="font-family:'Archivo Black',sans-serif;font-size:30px;color:#7fe0a0">ZONA RESTAURADA</div><div style="font-size:20px;font-weight:800">{{ zr.z }}</div><div style="font-size:16px">{{ zr.abre }}</div><div style="font-size:15px;color:#ffd166">{{ zr.seg }}</div></div></sc-if>
+<sc-if value="{{ vIntro }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:46;background:radial-gradient(circle at 50% 40%,rgba(120,10,10,.55),rgba(3,6,10,.96));display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto">
+<div style="max-width:720px;color:#fff;display:flex;flex-direction:column;gap:14px;text-align:center;align-items:center">
+<div style="font-size:54px">⚡</div><div style="font-family:'Archivo Black',sans-serif;font-size:clamp(28px,4vw,44px);line-height:1.05;color:#ff6b5f">APAGÓN EN LA PROVIDENCIA</div>
+<div style="font-size:18px;line-height:1.55">Un apagón dejó al colegio sin sistemas y ustedes quedaron <b>encerrados en el laboratorio</b>. Son el equipo técnico: restauren las <b>5 zonas</b> en orden (Laboratorio → Pasillo → Aula → Bar → Patio) resolviendo sus desafíos, construyan <b>2 proyectos inteligentes</b> y reactiven el <b>sistema principal</b> en la cancha.</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%;text-align:left">
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>🎮 Controles</b><br>J1: W A S D · J2: flechas<br>Entrar: J1 E · J2 ENTER<br>Mouse: arrastrar para girar la cámara, rueda para acercar</div>
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>🧭 Orientación</b><br>Sigan la línea brillante del piso.<br>Arriba siempre está su misión actual.<br>Trabajen juntos: no se separen.</div>
+<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:12px;font-size:14px;line-height:1.5"><b>⭐ Nota</b><br>Desafíos 50 % + proyectos 50 %.<br>Cada zona restaurada da 1 minuto de juego en la cancha.<br>Su código guarda el avance para la próxima clase.</div>
+</div>
+<button onClick="{{ empezar }}" style="background:#ff6b5f;color:#fff;border:none;border-radius:14px;padding:16px 34px;font-family:'Archivo Black',sans-serif;font-size:22px;cursor:pointer;box-shadow:0 0 30px rgba(255,107,95,.5)">¡Comenzar la misión!</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ vFin }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:47;background:rgba(3,10,16,.92);display:flex;align-items:center;justify-content:center;padding:20px">
+<div style="background:#fffdf5;color:#0a1a3a;border:6px double #c9a22a;border-radius:16px;padding:28px 34px;max-width:620px;width:100%;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center">
+<img src="./logo-providencia.png" alt="La Providencia" style="height:70px;width:auto">
+<div style="font-size:13px;letter-spacing:.14em;font-weight:700">U. E. P. «LA PROVIDENCIA» · ROBÓTICA</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1.1">EQUIPO TÉCNICO CERTIFICADO</div>
+<div style="font-size:17px">Por restaurar todos los sistemas del colegio:</div>
+<div style="font-size:20px;font-weight:800">{{ fin.quien }}</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">DESAFÍOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.r }}</div></div><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">PROYECTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.p }}</div></div><div style="background:#0a1a3a;color:#fff;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.nota }}</div></div></div>
+<button onClick="{{ fin.ok }}" style="background:#1f9d55;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:17px;cursor:pointer">¡Ir a la cancha a jugar! 🎮</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ vLogin }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a1a3a,#14306b);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto">
+<div style="margin:auto 0;background:#fff;border-radius:16px;width:100%;max-width:560px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+<div style="display:flex;align-items:center;gap:14px"><img src="./logo-providencia.png" alt="La Providencia" style="height:56px;width:auto"><div style="display:flex;flex-direction:column"><div style="font-family:'Archivo Black',sans-serif;font-size:clamp(17px,2.4vw,24px);line-height:1.2">La Providencia · Misión Apagón</div><div style="font-size:14px;color:#4a5878">Robótica · U. E. P. La Providencia</div></div></div>
+<div style="display:flex;gap:6px;background:#e8eefb;border-radius:10px;padding:4px"><sc-for list="{{ lg.tabs }}" as="tb"><button onClick="{{ tb.go }}" style="flex:1;border:none;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }}">{{ tb.n }}</button></sc-for></div>
+
+<sc-if value="{{ lg.nueva }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Curso<select value="{{ lg.curso }}" onChange="{{ lg.setCurso }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"><option value="">—</option><option value="8vo">8vo EGB</option><option value="9no">9no EGB</option><option value="10mo">10mo EGB</option><option value="3BGU">3ro BGU</option></select></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Paralelo<select value="{{ lg.par }}" onChange="{{ lg.setPar }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"><option value="">—</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">N.º de PC<input value="{{ lg.pc }}" onChange="{{ lg.setPc }}" inputmode="numeric" placeholder="1–20" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Integrante 1 (apellido y nombre)<input value="{{ lg.n1 }}" onChange="{{ lg.setN1 }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Integrante 2 (apellido y nombre)<input value="{{ lg.n2 }}" onChange="{{ lg.setN2 }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la clase (en el proyector)<input value="{{ lg.cod }}" onChange="{{ lg.setCod }}" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:20px;font-family:'Archivo Black',sans-serif;letter-spacing:.12em"></label>
+<div style="background:#e8eefb;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;display:flex;flex-direction:column;gap:2px"><b>Reglas del laboratorio</b><div>1. Sin comida ni bebida cerca de las computadoras.</div><div>2. Trabajamos en pareja: los dos deciden, uno maneja el mouse.</div><div>3. Al terminar, cerramos la sesión y dejamos el puesto ordenado.</div><div>4. Cualquier daño se informa de inmediato al docente.</div><label style="display:flex;gap:8px;align-items:center;margin-top:6px;font-weight:700"><input type="checkbox" checked="{{ lg.acepta }}" onChange="{{ lg.setAcepta }}"> Aceptamos las reglas</label></div>
+</sc-if>
+<sc-if value="{{ lg.seguir }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;color:#4a5878">Escriban el código de su pareja (aparece arriba en el juego) para seguir donde se quedaron.</div>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la pareja<input value="{{ lg.rid }}" onChange="{{ lg.setRid }}" placeholder="T3-XXXXX" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:20px;font-family:'Archivo Black',sans-serif;letter-spacing:.08em"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Código de la clase<input value="{{ lg.cod }}" onChange="{{ lg.setCod }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:18px;font-family:'Archivo Black',sans-serif;letter-spacing:.12em"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">N.º de PC de hoy<input value="{{ lg.pc }}" onChange="{{ lg.setPc }}" style="padding:9px;border-radius:8px;border:1px solid #9aa6c4;font-size:15px"></label>
+</sc-if>
+<sc-if value="{{ lg.docente }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700">Clave del docente<input type="password" value="{{ lg.clave }}" onChange="{{ lg.setClave }}" style="padding:9px;border-radius:8px;border:2px solid #0a1a3a;font-size:18px"></label>
+</sc-if>
+<sc-if value="{{ lg.msgVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fde8e6;color:#8a1f17;border-radius:8px;padding:10px;font-size:14px;font-weight:600">{{ lg.msg }}</div></sc-if>
+<button onClick="{{ lg.entrar }}" style="background:#2456b8;color:#fff;border:none;border-radius:10px;padding:14px;font-size:18px;font-weight:800;cursor:pointer">{{ lg.btn }}</button>
+<sc-if value="{{ lg.demo }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#4a5878;text-align:center">Modo demostración: código de clase 1234 · clave docente 1234 · los datos quedan en esta computadora.</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LS = 'campusmision', LSD = 'campusmision_demo_rows', LSC = 'campusmision_demo_ctl';
+const X = () => window.T3D_DATOS;
+const AJ_ = (D, p, n) => (D && D.ajustes ? D.ajustes(p, n) : []);
+const FL_ = (D, p) => (D && D.fallas ? D.fallas(p) : []);
+const URL_ = () => ((window.ARTICULO_CONFIG || {}).sheetsUrl || '').trim();
+const CLAVE_DEMO = '1234';
+const NF = ['Misión', 'Elegir', 'Ubicar', 'Conectar', 'Diagrama', 'Bloques', 'Ajustar', 'Código', 'Probar', 'Ficha'];
+const TEORIA = [
+  ['Antes de empezar: ¿qué es un sistema automático?', ['Todo sistema automático tiene 3 partes: ENTRADA (un sensor que mide algo), PROCESO (el Arduino que decide) y SALIDA (un actuador que hace algo: luz, sonido o movimiento).', 'El Arduino es una pequeña computadora: lee los sensores por sus pines, sigue el programa y manda órdenes a los actuadores.', 'Los ingenieros siguen siempre los mismos pasos: entender el problema → elegir piezas → ubicarlas → conectarlas → hacer el algoritmo → programar → ajustar → probar → documentar.'], 'En el dispensador de gel: el sensor IR (entrada) detecta la mano, el Arduino (proceso) decide «hay mano», y la bomba (salida) suelta el gel.'],
+  ['Cómo elegir los componentes y las resistencias', ['Lean el objetivo y pregúntense: ¿QUÉ hay que medir? → ese es el sensor (ENT). ¿QUÉ hay que hacer? → ese es el actuador (SAL).', 'Cuidado con los distractores: hay piezas que parecen útiles pero no hacen falta.', 'La RESISTENCIA limita la corriente eléctrica, como una llave que deja pasar menos agua. Algunas piezas se queman o leen mal sin ella.', 'Cuenten cuántos LED, pulsadores y LDR tiene SU proyecto: cada uno necesita su propia resistencia (miren la tabla).'], 'El semáforo solar tiene 3 LED (verde, amarillo y rojo) → necesita 3 resistencias de 220 Ω. Su sensor UV es un módulo → no necesita resistencia.'],
+  ['Por qué importa la ubicación', ['Un sensor solo mide lo que tiene cerca o «ve» de frente: si está mal puesto, el sistema decide mal aunque el programa esté perfecto.', 'Sensores de luz y temperatura: lejos del sol directo, de lámparas y de aparatos que calientan.', 'Sensores de movimiento (PIR): altos, en una esquina, mirando hacia donde pasan las personas.', 'Actuadores: donde se necesita la acción (la luz donde se ve, la alarma donde se escucha, el servo en la bisagra).'], 'Si el LDR de la lámpara queda junto a la lámpara, al prenderse la lámpara la luz lo «engaña» y se apaga sola: prende y apaga sin parar.'],
+  ['Cómo se conecta al Arduino', ['5V = alimentación (el «+» de la pila). GND = tierra (el «−»). Todo componente necesita los dos para funcionar.', 'Pines DIGITALES (D2 a D13): solo dos estados, 1 o 0 (prendido/apagado, sí/no). Para LED, buzzer, relé, PIR, pulsador.', 'Pines ANALÓGICOS (A0 a A5): leen muchos valores (de 0 a 1023). Para sensores de luz, temperatura, humedad o sonido.', 'Pines con ~ (PWM: D3, D5, D6, D9, D10, D11): pueden dar «medio» voltaje. El servomotor los necesita.', 'LED: la pata LARGA (+) va al pin pasando por la resistencia de 220 Ω; la pata CORTA (−) va a GND. Al revés no prende.'], 'Ley de Ohm: el Arduino da 5 V y el LED usa unos 2 V con 15 mA. R = (5 − 2) / 0,015 = 200 Ω → se usa la de 220 Ω, la más cercana.'],
+  ['Diagrama de flujo: el plan antes de programar', ['Óvalo = INICIO o FIN. Paralelogramo = LEER un dato. Rombo = PREGUNTA (SÍ / NO). Rectángulo = ACCIÓN.', 'Se lee de arriba hacia abajo, siguiendo las flechas.', 'Un sistema automático nunca termina: al final siempre VUELVE a leer el sensor (por eso no lleva FIN).', 'Truco: lean el diagrama en voz alta con una situación real («llega una mano… ¿hay mano? SÍ… suelta gel»).'], '¿Humedad < 30 %? → SÍ: encender la bomba · NO: apagar la bomba → volver a leer.'],
+  ['Programar con bloques', ['Los bloques son el mismo algoritmo del diagrama, pero en el idioma del Arduino.', '«para siempre» = el loop(): todo lo que está adentro se repite sin parar.', '«si … entonces … si no» = el rombo del diagrama: elige un camino según la pregunta.', 'Los huecos tienen que coincidir con su diagrama: el mismo límite, la misma comparación y las mismas acciones.'], 'si distancia < 30 entonces → abrir la tapa · si no → cerrar la tapa.'],
+  ['Ajustes y calibración', ['Un sistema real necesita ajustes: el ángulo del servo, la sensibilidad del sensor, cuánto tiempo actúa…', 'Calibrar = comprobar que el sensor mide bien en el lugar real y elegir valores que no fallen.', 'Muevan cada control y lean la explicación: siempre hay una zona correcta, ni muy poco ni demasiado.'], 'Si el PIR queda con 200 segundos de retardo, la luz queda prendida más de 3 minutos después de que la persona se fue.'],
+  ['El código en Arduino IDE', ['void setup() { } se ejecuta UNA vez al encender: ahí se configuran los pines (pinMode).', 'void loop() { } se repite para siempre: ahí se leen los sensores y se decide.', 'pinMode(pin, OUTPUT) = el pin manda señal (actuador). pinMode(pin, INPUT) = el pin recibe señal (sensor).', 'digitalWrite(pin, HIGH) = prender (5 V). LOW = apagar (0 V). analogRead(pin) = leer un valor de 0 a 1023.', 'Cada instrucción termina en ; y Arduino distingue mayúsculas: digitalWrite no es lo mismo que digitalwrite.'], 'if (dato < 30) { digitalWrite(BOMBA, HIGH); } else { digitalWrite(BOMBA, LOW); }'],
+  ['Probar y reparar fallas', ['Probar con situaciones reales, incluso las del límite (justo 30, justo 300…): ahí aparecen los errores.', 'Cuando algo falla, piensen como detectives: ¿la entrada lee bien? ¿el programa decide bien? ¿la salida recibe energía?', 'El monitor serial muestra lo que lee el sensor: es la mejor herramienta para encontrar fallas.'], 'Si el LED nunca prende pero el programa sí manda la orden, el problema está en la conexión del LED, no en el código.'],
+  ['La ficha técnica', ['Es el documento que permite que OTRA persona construya o repare su proyecto.', 'La parte técnica ya está lista con su trabajo. Ustedes explican el PORQUÉ: la importancia, lo que aprendieron y cómo lo mejorarían.', 'Escriban con oraciones completas y ejemplos del colegio.'], 'Conclusión de ejemplo: «Aprendimos que la ubicación del sensor cambia todo: al sol medía 40 °C y en la sombra 26 °C».']
+];
+const RESIS = [['LED (cualquier color)', '220 Ω', 'Limita la corriente para que el LED no se queme. Una por cada LED.'], ['Pulsador', '10 kΩ', 'Resistencia «pull-down»: hace que el pin lea 0 cuando nadie presiona (si no, lee valores al azar).'], ['Fotorresistencia LDR', '10 kΩ', 'Forma un «divisor de voltaje» para que el Arduino pueda medir cuánta luz hay.'], ['Módulos (PIR, ultrasónico, IR, humedad, LM35, UV, sonido, gas)', 'ninguna', 'Ya traen su propio circuito dentro de la placa del módulo.'], ['Servo, buzzer y relé', 'ninguna', 'Se conectan directo; el relé ya trae su circuito.']];
+const RETOS_N = { '8vo': ['orden', 'armar', 'decision', 'sigue', 'aparato', 'simon', 'laberinto', 'tangram', 'robots2', 'error'], '9no': ['vars', 'calculo', 'decision', 'master', 'reglas', 'interrog', 'sokoban', 'pacman', 'compuertas', 'balanza'], '10mo': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'], '3BGU': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'] };
+const RINFO = { orden: ['🔢', 'Ordenar los pasos', 'SECUENCIAS'], armar: ['🧱', 'Armar el diagrama', 'DIAGRAMAS DE FLUJO'], decision: ['🔷', 'Decisiones (rombo)', 'CONDICIONES'], sigue: ['👉', 'Seguir el diagrama', 'LECTURA DE ALGORITMOS'], aparato: ['🔌', 'Del diagrama al aparato', 'ENTRADAS Y SALIDAS'], error: ['🐞', 'Encontrar el error', 'DEPURACIÓN'], simon: ['🎵', 'Simón dice', 'MEMORIA'], laberinto: ['🌀', 'Laberinto', 'COORDINACIÓN'], tangram: ['🔺', 'Tangram', 'GEOMETRÍA'], robots2: ['🤖', 'Robot programable', 'PENSAMIENTO COMPUTACIONAL'], vars: ['📦', 'Variables y operadores', 'PROGRAMACIÓN'], calculo: ['⚡', 'Cálculo relámpago', 'CÁLCULO MENTAL'], master: ['🎯', 'Mastermind', 'PROBAR HIPÓTESIS'], reglas: ['🔐', 'Cerradura de reglas', 'RAZONAMIENTO INDUCTIVO'], interrog: ['🕵', 'Sala de interrogatorio', 'DEDUCCIÓN LÓGICA'], sokoban: ['📦', 'Sokoban (cajas)', 'PLANIFICACIÓN'], pacman: ['👾', 'Pac-Man programable', 'ALGORITMOS'], compuertas: ['🔀', 'Compuertas lógicas', 'LÓGICA DIGITAL'], balanza: ['⚖', 'Balanza', 'ECUACIONES'], sistema: ['🧭', 'Planificar el sistema', 'DISEÑO DE SISTEMAS'], tuberias: ['🚰', 'Tuberías', 'RAZONAMIENTO ESPACIAL'], einstein: ['🧠', 'Rejilla de Einstein', 'DEDUCCIÓN CON PISTAS'], raven: ['🔳', 'Matriz de Raven', 'RAZONAMIENTO ABSTRACTO'], wcst: ['🃏', 'La regla cambió', 'FLEXIBILIDAD MENTAL'], rutas: ['🗺', 'Rutas de la ciudad', 'GRAFOS'], tetris: ['🧩', 'Tetris en equipo', 'VISIÓN ESPACIAL'], crucigrama: ['✏', 'Crucigrama', 'VOCABULARIO TÉCNICO'], galleta: ['🥠', 'Galleta (adivinanzas)', 'PENSAMIENTO LATERAL'] };
+const RPOS = [[-18.6, -6], [-18.6, -1.2], [-18.6, 4], [18, -6], [18, -1.2], [18, 4], [-15.5, 7.6], [-5.5, 7.6], [5.5, 7.6], [15.5, 7.6]];
+const MPOS = { futbol: [-7, -4.5], tenis: [-7, 3.5], basket: [7, -4.5], penales: [7, 3.5], paintball: [0, -5.5], esfero: [0, 3.8] };
+const MINFO_ = () => Object.assign({}, (window.V3_MINI || {}).MINI || {}, { esfero: { n: 'Carrera del esfero', ico: '🖊', ctrl: 'Por turnos, lancen el esfero por la pista: elijan dirección y fuerza. Gana quien llega primero a la meta.' } });
+const RNG = s => () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+const HH = r => ({ int: (a, b) => a + Math.floor(r() * (b - a + 1)), pick: a => a[Math.floor(r() * a.length)], shuffle: a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; } });
+const mmss = n => Math.floor(n / 60) + ':' + String(Math.floor(n % 60)).padStart(2, '0');
+const ZONAS = ['lab', 'pasillo', 'aula', 'bar', 'patio', 'final'];
+const ZN = { lab: 'Laboratorio', pasillo: 'Pasillo', aula: 'Aula', bar: 'Bar', patio: 'Patio', final: 'Cancha · sistema principal' };
+const ZK = { lab: 'lab', labb: 'lab', pasillo: 'pasillo', aula: 'aula', bar: 'bar', bano: 'bar', patio: 'patio' };
+const RZ = { lab: [[-16.7, -14.4], [-10.3, -14.4]], pasillo: [[21.4, -6.6], [21.4, -0.6]], aula: [[10.3, -14.4], [16.7, -14.4]], bar: [[-23.2, -12.6], [-23.2, -6.6]], patio: [[-8, 6.2], [8, 6.2]], final: [[-3, -0.3], [3, -0.3]] };
+const ROOM = { lab: 'lab', pasillo: 'pasillo', aula: 'aula', bar: 'bar', patio: null, final: null };
+const ZCTX = { lab: '🔒 LABORATORIO · El apagón dejó la puerta bloqueada y las luces en rojo.', pasillo: '🚨 PASILLO · Las luces de emergencia parpadean y nadie puede pasar.', aula: '🌑 AULA · El aula quedó a oscuras y sin ventilación.', bar: '🧃 BAR · Las máquinas del bar no responden.', patio: '☀ PATIO · Los sistemas del patio están caídos.', final: '⚡ CANCHA · Último paso: reactivar el sistema principal del colegio.' };
+const RCTX = { orden: 'El robot de mantenimiento perdió el orden de sus instrucciones: ayúdenlo a reordenarlas.', armar: 'El plano del sistema se borró: reconstruyan su diagrama de flujo.', decision: 'El sensor mide bien pero decide mal: programen la pregunta correcta.', sigue: 'Antes de encender la máquina, comprueben qué hará en cada situación.', aparato: 'Conecten las piezas reales que corresponden a cada bloque del diagrama.', error: 'Un técnico dejó un error en el programa: encuéntrenlo antes de que falle.', simon: 'La alarma pide repetir la secuencia de luces del panel.', laberinto: 'Guíen la corriente por el laberinto de cables del tablero.', tangram: 'Reparen la pieza rota del panel armando su forma exacta.', robots2: 'Programen al robot de limpieza para que llegue a su destino.', vars: 'El controlador guarda los datos en variables: calculen sus valores.', calculo: 'El panel de energía pide cálculos rápidos para reiniciarse.', master: 'La cerradura electrónica tiene un código: dedúzcanlo con las pistas.', reglas: 'El teclado de seguridad sigue una secuencia numérica secreta.', interrog: 'Alguien saboteó el sistema: descubran quién dice la verdad.', sokoban: 'Reacomoden las cajas de la bodega sin bloquear el paso.', pacman: 'Programen el recorrido del robot que recoge la basura.', compuertas: 'El circuito de la alarma usa compuertas lógicas: complétenlo.', balanza: 'Equilibren la balanza del laboratorio para calibrarla.', sistema: 'Planifiquen el sistema que resolverá el problema de esta zona.', tuberias: 'El agua no llega a los baños: conecten bien las tuberías.', einstein: 'Los registros se mezclaron: deduzcan quién hizo cada proyecto.', raven: 'Al panel de seguridad le falta una pieza del patrón.', wcst: 'El sistema cambia sus reglas sin avisar: adáptense.', rutas: 'El robot de reparto debe llegar por la ruta más corta.', tetris: 'Acomoden las piezas del almacén sin dejar huecos.', crucigrama: 'Completen el manual técnico con las palabras correctas.', galleta: 'El acertijo del vigilante abre la última puerta.', ohm: 'El indicador de la puerta principal se quemó: calculen la resistencia exacta.', energia: 'El colegio necesita ahorrar energía: calculen el consumo y propongan un plan.' };
+Object.assign(RINFO, { ohm: ['🔌', 'Circuito de la puerta (Ley de Ohm)', 'ELECTRÓNICA APLICADA'], energia: ['⚡', 'Energía del laboratorio', 'MATEMÁTICA APLICADA'] });
+const SALIDA_TXT = { rojo: 'prender la luz roja', verde: 'prender la luz verde', amarillo: 'prender la luz amarilla' };
+const hsh = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return h; };
+const mez = (a, seed) => { const h = hsh(seed); return a.map((v, i) => [v, Math.sin(h + i * 12.9898) * 43758.5453 % 1]).sort((x, y) => x[1] - y[1]).map(x => x[0]); };
+const nuevoId = () => 'T3-' + Array.from({ length: 5 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+const r2 = n => Math.round(n * 100) / 100;
+
+class Component extends DCLogic {
+  state = { vista: 'login', tab: 'nueva', lg: { curso: '', par: '', pc: '', n1: '', n2: '', cod: '', rid: '', clave: '', acepta: false }, lgMsg: '', st: null, cur: null, sel: null, fb: null, run: null, cerca: null, c3d: true, err3d: '', ctl: { on: false, p: '', f: 0 }, abiertos: null, doc: null, exp: null };
+  ref3d = React.createRef();
+
+  componentDidMount() {
+    if (!window.T3D_EXTRA) { let n = 0; this._wx = setInterval(() => { n++; if (window.T3D_EXTRA || n > 60) { clearInterval(this._wx); this.forceUpdate(); } }, 150); }
+    try { const s = JSON.parse(localStorage.getItem(LS) || 'null'); if (s && s.id && s.curso) this.setState({ st: s, vista: 'juego' }, () => this.iniciarPoll()); } catch (e) {}
+    this.crear3d();
+    this._rs = () => this.api && this.api.resize(); window.addEventListener('resize', this._rs);
+  }
+  componentWillUnmount() { clearInterval(this._poll); clearInterval(this._dpoll); clearTimeout(this._sv); window.removeEventListener('resize', this._rs); if (this.api) this.api.destruir(); }
+  async crear3d() {
+    let n = 0; while (!(window.T3D_ESCENA && window.T3D_DATOS) && n < 100) { await new Promise(r => setTimeout(r, 100)); n++; }
+    if (!window.T3D_ESCENA || !this.ref3d.current) { this.setState({ err3d: 'No se pudieron cargar los archivos taller3d-*.js' }); return; }
+    try {
+      this.api = await window.T3D_ESCENA.crear(this.ref3d.current, {
+        onStation: id => this.estacion(id),
+        onSep: v => this.setState({ sep: v }),
+        onSpot: sp => this.ponerSpot(sp),
+        onCerca: id => { if (id !== this.state.cerca) this.setState({ cerca: id }); }
+      });
+      const nom = {}; X().P.forEach(p => { nom[p.id] = p.ico + ' ' + p.n; }); this.api.nombres(nom);
+      this.setState({ c3d: false }, () => this.sync3d(true));
+    } catch (e) { this.setState({ err3d: 'Este navegador no pudo abrir el 3D (' + e.message + ').' }); }
+  }
+  componentDidUpdate() { this.sync3d(false); }
+
+  // ---------- helpers ----------
+  P(id) { return X().P.find(p => p.id === id); }
+  curso() { const c = (this.state.st && this.state.st.curso) || '9no'; return X().CURSO[c] || X().CURSO['9no']; }
+  apoyo() { return !!(this.state.st && this.state.st.ad); }
+  pj(id) { const st = this.state.st; return (st && st.proj && st.proj[id]) || { f: 0, max: 0, done: false, nota: 0, fallos: 0, pistas: 0, sel: {}, res: { r220: 0, r10k: 0 }, ub: {}, con: {}, fl: {}, sl: {}, refl: '', pv: {}, aj: {}, cd: {}, fi: {}, pf: {} }; }
+  setPj(id, ch, cb) { this.setState(s => { const st = Object.assign({}, s.st), proj = Object.assign({}, st.proj); proj[id] = Object.assign({}, (s.st.proj || {})[id] || this.pj(id), ch); st.proj = proj; return { st }; }, () => { this.guardar(); cb && cb(); }); }
+  lim(opts, ok, seed) { let o = opts.map(String); if (this.curso().ops === 2 || this.apoyo()) { const w = o.filter(x => x !== String(ok)); o = [String(ok)].concat(w.slice(0, 1)); } return mez(o, seed); }
+  vista() { const s = this.state; if (s.vista === 'doc' && s.exp) return { modo: 'exp', p: s.exp.p, f: s.exp.f, ro: true }; if (s.vista === 'juego' && s.ctl && s.ctl.on && s.ctl.p) return { modo: 'ctl', p: s.ctl.p, f: s.ctl.f, ro: true }; if (s.vista === 'juego' && s.cur) return { modo: 'jug', p: s.cur, f: this.pj(s.cur).f, ro: false }; return null; }
+  solucion(p) {
+    const D = X(), sel = {}, res = { r220: (p.res && p.res.r220) || 0, r10k: (p.res && p.res.r10k) || 0 }, ub = {}, con = {}, fl = {};
+    p.inst.forEach(it => { sel[it.c] = true; ub[it.i] = it.spot; });
+    const usado = {}, libre = (lista) => lista.find(x => !usado[x]);
+    p.inst.forEach(it => D.COMP[it.c].pins.forEach(([pl, rol], k) => { let to = '', r = D.ROL[rol].r;
+      if (rol === 'vcc' || rol === 'p5') to = '5V'; else if (rol === 'gnd' || rol === 'catodo') to = 'GND'; else if (rol === 'pwm') to = libre(['D9', 'D10', 'D11', 'D6', 'D5', 'D3']); else if (rol === 'ana' || rol === 'div') to = libre(D.A); else to = libre(D.D.filter(x => !D.PWM.includes(x)).concat(D.PWM));
+      if (D.SEN(rol)) usado[to] = 1; con[it.i + '.' + k] = { to, r }; }));
+    p.flujo.forEach(([k, ok]) => { fl[k] = ok; });
+    const aj = {}; AJ_(D, p, 3).forEach(a => { aj[a.k] = a.ok[0] + a.step * Math.round((a.ok[1] - a.ok[0]) / 2 / a.step); });
+    const F0 = FL_(D, p)[0], ej = p.ejemplo || { imp: 'Este sistema resuelve un problema real del colegio: ' + p.historia, mej: 'Agregar una pantalla que muestre el valor del sensor y un registro de cuántas veces se activó.', con: 'Con un sensor, un actuador y un algoritmo con una pregunta, el sistema cumple el objetivo: ' + p.objetivo + ' Lo comprobamos con ' + p.tests.length + ' situaciones reales.' };
+    return { f: 9, max: 9, sel, res, ub, con, fl, sl: Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), pv: {}, refl: 'Ejemplo de respuesta: ' + (p.reflex || ''), aj, cd: {}, fi: ej, pf: {}, falla: F0 ? { t: F0.t } : null, fallaOk: true, fallaPaso: 1, done: true };
+  }
+  datos(v) { const p = this.P(v.p); return v.modo === 'jug' ? this.pj(v.p) : this.solucion(p); }
+  notaFinal(st) { const req = (X().CURSO[st.curso] || {}).req || 1, all = Object.values(st.proj || {}), ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; let s = 0; for (let i = 0; i < req; i++) s += ns[i] || 0; return r2(Math.min(10, s / req + Math.max(0, dn - req) * 0.5)); }
+  nAj() { return this.curso().ops === 2 || this.apoyo() ? 2 : 3; }
+  notaProy(pj) { const ap = this.apoyo(), reach = pj.done ? 10 : (pj.max || 0); let s = 0, b = 0; for (let k = 0; k < reach; k++) { s += (pj.pv && pj.pv[k] && !ap) ? 0.75 : 1; if (k >= 1 && !(pj.pf || {})[k]) b += 0.1; } if (pj.fallaOk && !pj.fallaErr) b += 0.2; return r2(Math.min(10, s + b)); }
+  insignias(pj) { const reach = pj.done ? 10 : (pj.max || 0), o = []; let n = 0; for (let k = 1; k < reach; k++) if (!(pj.pf || {})[k]) n++; if (n) o.push('🎯 Primer intento en ' + n + ' fase' + (n > 1 ? 's' : '') + ' (+' + (n * 0.1).toFixed(1) + ')'); if (pj.fallaOk && !pj.fallaErr) o.push('🕵 Detective: falla resuelta al primer intento (+0,2)'); if (pj.done && !pj.pistas) o.push('🧠 Sin pistas'); if (pj.done) o.push('📄 Documentador: ficha técnica entregada'); return o; }
+
+  // ---------- server ----------
+  post(body) { const u = URL_(); if (!u) return; fetch(u, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }).catch(() => {}); }
+  resumen(st) { const done = Object.entries(st.proj || {}).filter(([, v]) => v.done); const cur = this.state.cur; return { id: st.id, curso: st.curso, par: st.par, pc: st.pc, integrantes: st.integrantes, actual: cur ? this.P(cur).n : 'Campus', fase: cur ? NF[this.pj(cur).f] : '', completos: done.length, nota: this.notaFinal(st), detalle: 'Retos ' + this.notaRetos(st) + ' · Proyecto ' + this.notaProyecto(st) + ' · ' + done.map(([k, v]) => this.P(k).n + ' ' + v.nota).join('; '), fallos: Object.values(st.proj || {}).reduce((a, v) => a + (v.fallos || 0), 0), pistas: Object.values(st.proj || {}).reduce((a, v) => a + (v.pistas || 0), 0) }; }
+  guardar(extra) {
+    const st = this.state.st; if (!st) return; try { localStorage.setItem(LS, JSON.stringify(st)); } catch (e) {}
+    clearTimeout(this._sv); this._sv = setTimeout(() => { const st2 = this.state.st, r = this.resumen(st2);
+      if (!URL_()) { try { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), old = rows[st2.id] || {}; rows[st2.id] = Object.assign({}, r, { ts: Date.now(), visto: new Date().toLocaleTimeString().slice(0, 5), ayuda: extra && extra.pedirAyuda ? 'SÍ' : extra && extra.cancelarAyuda ? 'NO' : (old.ayuda || 'NO'), apoyo: old.apoyo || 'No' }); localStorage.setItem(LSD, JSON.stringify(rows)); } catch (e) {} return; }
+      this.post(Object.assign({ modo: 't3d', json: JSON.stringify(st2) }, r, extra || {})); }, extra ? 10 : 1200);
+  }
+  async getJ(q) { const u = URL_(); if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(u)) throw new Error('la URL de config.js debe terminar en /exec'); const r = await fetch(u + '?' + q + '&t=' + Date.now()); const t = await r.text(); try { return JSON.parse(t); } catch (e) { throw new Error('Unexpected token: ' + t.slice(0, 40)); } }
+  iniciarPoll() {
+    clearInterval(this._poll); const tick = async () => { const st = this.state.st; if (!st) return;
+      if (!URL_()) { let ctl = { on: false }; try { ctl = JSON.parse(localStorage.getItem(LSC) || '{"on":false}'); } catch (e) {} const rows = JSON.parse(localStorage.getItem(LSD) || '{}'), me = rows[st.id] || {}; const ab = JSON.parse(localStorage.getItem('campusmision_demo_ab') || 'null'); this.aplicarPoll({ ctl, abiertos: ab, apoyo: me.apoyo, ayuda: me.ayuda }); return; }
+      try { this.aplicarPoll(await this.getJ('t3ds=' + encodeURIComponent(st.ses || '') + '&id=' + encodeURIComponent(st.id))); } catch (e) {} };
+    tick(); this._poll = setInterval(tick, 5000);
+  }
+  aplicarPoll(r) { const st = this.state.st, ch = {}; if (r.cfg && JSON.stringify(r.cfg) !== JSON.stringify(this.state.cfg)) ch.cfg = r.cfg; const ctl = r.ctl || { on: false }; if (JSON.stringify(ctl) !== JSON.stringify(this.state.ctl)) ch.ctl = ctl; if (JSON.stringify(r.abiertos || null) !== JSON.stringify(this.state.abiertos)) ch.abiertos = r.abiertos || null;
+    const ad = r.apoyo === 'Sí', ay = r.ayuda === 'SÍ'; if (st && (!!st.ad !== ad || (r.ayuda != null && !!st.ayuda !== ay))) ch.st = Object.assign({}, st, { ad, ayuda: r.ayuda != null ? ay : st.ayuda });
+    if (Object.keys(ch).length) this.setState(ch); }
+
+  // ---------- login ----------
+  async entrar() {
+    const s = this.state, f = s.lg, u = URL_(), err = m => this.setState({ lgMsg: m });
+    if (s.tab === 'docente') { if (!f.clave) return err('Escriba la clave.'); if (!u) { if (f.clave !== CLAVE_DEMO) return err('Clave incorrecta (demo: 1234).'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: [], ses: { codigo: localStorage.getItem('campusmision_demo_cod') || '1234', abierta: true, abiertos: JSON.parse(localStorage.getItem('campusmision_demo_ab') || 'null') } }, lgMsg: '' }, () => this.pollDoc()); return; }
+      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(f.clave)); if (r.error) return err('Clave incorrecta.'); this.setState({ vista: 'doc', doc: { clave: f.clave, rows: r.rows, ses: r.sesion }, lgMsg: '' }, () => this.pollDoc()); } catch (e) { const m = String((e && e.message) || e); err(/JSON|Unexpected token|<!DOCTYPE|<html/i.test(m) ? 'Google respondió con una página y no con datos: la implementación no está en «Cualquier usuario» o la URL no es la de /exec.' : 'No hay conexión con la hoja de Google (' + m + '). Revisen la URL de config.js.'); } return; }
+    if (!f.cod) return err('Escriban el código de la clase.');
+    if (!/^\d{1,2}$/.test(String(f.pc).trim()) || +f.pc < 1 || +f.pc > 30) return err('Escriban el número de su computadora (1 a 20).');
+    let ok = !u ? f.cod.trim() === (localStorage.getItem('campusmision_demo_cod') || '1234') : false, info = {};
+    if (u) { try { info = await this.getJ('t3ds=' + encodeURIComponent(f.cod.trim())); ok = info.ok; if (!info.abierta) return err('El docente todavía no abre la clase.'); } catch (e) { return err('No hay conexión con la hoja de Google. Revisen el internet.'); } }
+    if (!ok) return err('El código de la clase no es correcto.');
+    if (s.tab === 'seguir') {
+      const rid = String(f.rid || '').toUpperCase().replace(/\s+/g, '').replace(/^T3(?=[A-Z0-9]{5}$)/, 'T3-'); if (!rid) return err('Escriban el código de la pareja.');
+      let st = null; try { const L = JSON.parse(localStorage.getItem(LS) || 'null'); if (L && L.id === rid) st = L; } catch (e) {}
+      if (!st && u) { try { const r = await this.getJ('t3did=' + encodeURIComponent(rid)); if (r.data) st = Object.assign({}, r.data, { ad: r.apoyo === 'Sí' }); } catch (e) {} }
+      if (!st) return err('No se encontró el código ' + rid + '.');
+      st = Object.assign({}, st, { pc: String(f.pc).trim(), ses: f.cod.trim() }); this.setState({ st, vista: 'juego', lgMsg: '' }, () => { this.guardar(); this.iniciarPoll(); }); return;
+    }
+    if (!f.curso || !f.par) return err('Elijan el curso y el paralelo.'); if (f.n1.trim().length < 5 || f.n2.trim().length < 5) return err('Escriban el apellido y el nombre de los dos integrantes.'); if (!f.acepta) return err('Deben aceptar las reglas del laboratorio.');
+    const st = { id: nuevoId(), curso: f.curso, par: f.curso + ' ' + f.par, pc: String(f.pc).trim(), integrantes: f.n1.trim() + ' / ' + f.n2.trim(), ses: f.cod.trim(), proj: {}, ad: false, ayuda: false, t0: Date.now() };
+    this.setState({ st, vista: 'juego', lgMsg: '', abiertos: info.abiertos || null }, () => { this.guardar(); this.iniciarPoll(); });
+  }
+
+  // ---------- juego ----------
+  abierto(id) { const a = this.state.abiertos; return !a || a.includes(id); }
+  abrir(id) { const s = this.state; if (s.vista !== 'juego' || (s.ctl && s.ctl.on)) return; if (!this.abierto(id)) { this.setState({ fb: { ok: false, t: 'Esa misión está cerrada por el docente.' } }); return; } this.setState({ cur: id, fb: null, sel: null, run: null }, () => this.guardar()); }
+  salir() { this.setState({ cur: null, fb: null, sel: null, run: null }, () => this.guardar()); }
+  ponerSpot(sp) { const v = this.vista(); if (!v || v.ro || v.f !== 2) return; const it = this.state.sel; if (!it) { this.setState({ fb: { ok: false, t: 'Primero toquen un componente de la lista.' } }); return; } const pj = this.pj(v.p); this.setPj(v.p, { ub: Object.assign({}, pj.ub, { [it]: sp }) }); this.setState({ sel: null, fb: null }); }
+  fallo(id, tit, lista) { const pj = this.pj(id), pf = Object.assign({}, pj.pf || {}); pf[pj.f] = (pf[pj.f] || 0) + 1; this.setPj(id, { fallos: pj.fallos + 1, pf }); this.setState({ fb: { ok: false, t: tit, lista } }); }
+  avanzar(id, msg) { const pj = this.pj(id), f = Math.min(9, pj.f + 1); this.setPj(id, { f, max: Math.max(pj.max, f) }); this.setState({ fb: msg ? { ok: true, t: msg } : null, sel: null }); }
+  pista(id) { const pj = this.pj(id); if (pj.pv[pj.f]) return; this.setPj(id, { pistas: pj.pistas + (this.apoyo() ? 0 : 1), pv: Object.assign({}, pj.pv, { [pj.f]: true }) }); }
+  comprobar(id) {
+    const p = this.P(id), pj = this.pj(id), D = X();
+    if (pj.f === 0) return this.avanzar(id);
+    if (pj.f === 1) { const need = D.necesita(p), items = [...new Set(p.inst.map(i => i.c).concat(p.dist))], err = [];
+      items.forEach(c => { if (pj.sel[c] && !need[c]) err.push('«' + D.COMP[c].n + '» no hace falta aquí: ' + D.COMP[c].q.toLowerCase()); if (!pj.sel[c] && need[c]) err.push('Les falta un componente de ' + (D.COMP[c].k === 'E' ? 'ENTRADA (algo que lee un dato del entorno).' : 'SALIDA (algo que actúa: luz, sonido o movimiento).')); });
+      ['r220', 'r10k'].forEach(r => { if ((pj.res[r] || 0) !== (need[r] || 0)) err.push('Revisen las resistencias de ' + (r === 'r220' ? '220 Ω (una por cada LED).' : '10 kΩ (una por cada pulsador o LDR).')); });
+      return err.length ? this.fallo(id, 'La mochila todavía no está lista', err.slice(0, 3)) : this.avanzar(id, '¡Mochila correcta! Ahora ubiquen cada componente.'); }
+    if (pj.f === 2) { const err = []; p.inst.forEach(it => { const u = pj.ub[it.i]; if (!u) { err.push(it.lab + ': todavía no tiene lugar.'); return; } if (u !== it.spot) { const sp = p.spots.find(x => x.id === u); err.push(it.lab + ': ' + (sp && sp.mal ? sp.mal : 'ese no es el mejor lugar. ' + (this.curso().guia ? it.por : 'Piensen desde dónde funciona mejor.'))); } });
+      return err.length ? this.fallo(id, 'Hay componentes mal ubicados', err.slice(0, 3)) : this.avanzar(id, '¡Todo en su lugar! Ahora a conectar.'); }
+    if (pj.f === 3) { const err = D.revisarConex(p, pj.con); return err.length ? this.fallo(id, 'El circuito tiene ' + err.length + ' problema' + (err.length > 1 ? 's' : ''), err.slice(0, this.apoyo() ? 6 : 3).map(e => e.t)) : this.avanzar(id, '¡Circuito correcto! Nada se quema. Ahora el algoritmo.'); }
+    if (pj.f === 4) { const mal = p.flujo.filter(([k, ok]) => pj.fl[k] !== ok); return mal.length ? this.fallo(id, mal.length + ' paso' + (mal.length > 1 ? 's' : '') + ' del diagrama no ' + (mal.length > 1 ? 'son correctos' : 'es correcto'), ['Lean el diagrama en voz alta, de arriba hacia abajo, con una situación real.']) : this.avanzar(id, '¡Diagrama correcto! Pásenlo a bloques.'); }
+    if (pj.f === 5) { const falt = Object.keys(p.slots).filter(k => pj.sl[k] == null || pj.sl[k] === ''); return falt.length ? this.setState({ fb: { ok: false, t: 'Completen todos los huecos (?) de los bloques.' } }) : this.avanzar(id, 'Bloques completos. Ahora ajusten y calibren el sistema, como en la vida real.'); }
+    if (pj.f === 6) { const mal = AJ_(D, p, this.nAj()).filter(a => { const v = (pj.aj || {})[a.k] != null ? pj.aj[a.k] : a.def; return v < a.ok[0] || v > a.ok[1]; });
+      return mal.length ? this.fallo(id, mal.length + ' ajuste' + (mal.length > 1 ? 's' : '') + ' todavía no ' + (mal.length > 1 ? 'están bien' : 'está bien'), mal.map(a => a.n + ': ' + a.ex)) : this.avanzar(id, 'Sistema ajustado y calibrado. Ahora el código real en Arduino IDE.'); }
+    if (pj.f === 7) { const H = this.huecos(p, pj), errs = []; H.holes.forEach(x => { const v = String((pj.cd || {})[x.j] || '').trim(); if (v !== x.ans) errs.push(this.msgHueco(p, x, v)); });
+      if (errs.length) { this.setState({ cons: { id, ok: false, lines: ['Compilando sketch…'].concat(errs.slice(0, 4), ['✗ ' + errs.length + ' problema' + (errs.length > 1 ? 's' : '') + '. Corrijan y vuelvan a compilar.']) } }); return this.fallo(id, 'El programa todavía no está listo', errs.slice(0, 3)); }
+      this.setState({ cons: { id, ok: true, lines: ['Compilando sketch…', 'El Sketch usa ' + (1600 + H.code.length) + ' bytes (' + Math.round((1600 + H.code.length) / 322.56) + '%) del espacio de almacenamiento.', 'Subiendo… ✓ Subido al Arduino UNO.', 'Monitor serial (9600 baud): ' + p.tests.slice(0, 4).map(t => t.v != null ? t.v : t.b != null ? t.b : '…').join(' · ')] } });
+      return this.avanzar(id, '¡Compiló y se subió al Arduino! Ahora prueben el sistema completo.'); }
+    if (pj.f === 9) { const m = this.curso().minTxt || [30, 30, 60], fi = pj.fi || {}, err = [];
+      [['imp', '¿Por qué es importante?', m[0]], ['con', 'Conclusiones', m[2]], ['mej', 'Mejoras', m[1]]].forEach(([k, n, mn]) => { const l = String(fi[k] || '').trim().length; if (l < mn) err.push(n + ': escriban al menos ' + mn + ' letras (llevan ' + l + ').'); });
+      if (String(pj.refl || '').trim().length < 20) err.push('Reflexión: escriban al menos 20 letras.');
+      if (err.length) return this.setState({ fb: { ok: false, t: 'La ficha todavía no está completa', lista: err } });
+      const nota = this.notaProy(Object.assign({}, pj, { done: true })); this.setPj(id, { done: true, nota: Math.max(pj.done ? pj.nota || 0 : 0, nota), max: 9 }, () => this.guardar({}));
+      return this.setState({ fb: { ok: true, t: '¡Proyecto entregado! Nota: ' + nota.toFixed(2) + '. Descarguen la ficha y evalúen a otra pareja.' } }); }
+  }
+  inEstado(p, t, c) { if (p.tipo === 'contador') return { c }; if (p.tipo === 'dos') return { in: { a: t.a, b: t.b } }; return { in: { v: t.v } }; }
+  correr(id, sl, solo) {
+    const p = this.P(id), D = X(), res = D.probar(p, sl); clearInterval(this._rt); let i = 0; this.setState({ run: { id, res, i: 0, fin: false } });
+    const paso = () => { const r = res[i]; if (!r) { clearInterval(this._rt); this.setState({ run: { id, res, i, fin: true } }); if (!solo) this.terminarPrueba(id, res); return; }
+      if (p.tipo === 'contador') { const st = { c: Number(sl.ini) }; res.slice(0, i).forEach(x => x.seq.forEach(ev => D.correr(p, sl, ev, st))); r.seq.forEach((ev, k) => setTimeout(() => { if (this.api) this.api.evento(ev); }, k * 70)); }
+      if (this.api) this.api.sim(id, { in: p.tipo === 'contador' ? {} : (p.tipo === 'dos' ? { a: r.t.a, b: r.t.b } : { v: r.t.v }), out: p.salida[r.sal] || {}, c: r.c });
+      i++; this.setState({ run: { id, res, i, fin: false } }); };
+    paso(); this._rt = setInterval(paso, 1300);
+  }
+  terminarPrueba(id, res) { const mal = res.filter(r => !r.ok); if (mal.length) { this.fallo(id, 'El sistema falló en ' + mal.length + ' de ' + res.length + ' situaciones', mal.slice(0, 3).map(r => r.txt + ': debía ' + this.txtSal(r.esp) + ' y quedó en ' + this.txtSal(r.obt) + '.').concat(['Vuelvan a «Bloques», corrijan y prueben otra vez.'])); return; }
+    const pj = this.pj(id), p = this.P(id); if (pj.fallaOk) return this.avanzar(id, '¡Funciona en todas las situaciones! Último paso: la ficha técnica.');
+    const FL = FL_(X(), p); if (!FL.length) { this.setPj(id, { fallaOk: true }); return this.avanzar(id, '¡Funciona en todas las situaciones!'); } const f = FL[Math.abs(hsh(id + ((this.state.st || {}).id || ''))) % FL.length];
+    this.setPj(id, { falla: { t: f.t }, fallaPaso: 0 }); this.setState({ fb: { ok: false, t: '¡Pasó todas las pruebas! Pero al instalarlo en el lugar real apareció una falla. Diagnostíquenla abajo.' } }); }
+  txtSal(v) { const s = String(v), m = s.match(/^(\w+)( \(.*\))?$/); return m && SALIDA_TXT[m[1]] ? SALIDA_TXT[m[1]] + (m[2] || '') : s.toLowerCase(); }
+
+  // ---------- docente ----------
+  pollDoc() { clearInterval(this._dpoll); const t = async () => { const d = this.state.doc; if (!d) return;
+      if (!URL_()) { const rows = Object.values(JSON.parse(localStorage.getItem(LSD) || '{}')); this.setState({ doc: Object.assign({}, this.state.doc, { rows }) }); return; }
+      try { const r = await this.getJ('t3dlista=' + encodeURIComponent(d.clave)); if (!r.error) this.setState({ doc: Object.assign({}, this.state.doc, { rows: r.rows, ses: Object.assign({}, this.state.doc.ses, r.sesion, this._ed ? { codigo: this.state.doc.ses.codigo } : {}) }) }); } catch (e) {} };
+    t(); this._dpoll = setInterval(t, 10000); }
+  adm(o) { const d = this.state.doc; if (!URL_()) { if (o.accion === 'sesion') localStorage.setItem('campusmision_demo_cod', o.codigo); if (o.accion === 'abiertos') localStorage.setItem('campusmision_demo_ab', JSON.stringify(o.lista)); if (o.accion === 'ctl') localStorage.setItem(LSC, JSON.stringify({ on: o.on, p: o.p, f: o.f })); if (o.accion === 'apoyo' || o.accion === 'ayuda') { const rows = JSON.parse(localStorage.getItem(LSD) || '{}'); if (rows[o.id]) { if (o.accion === 'apoyo') rows[o.id].apoyo = o.on ? 'Sí' : 'No'; else rows[o.id].ayuda = 'NO'; localStorage.setItem(LSD, JSON.stringify(rows)); } } return; } this.post(Object.assign({ modo: 't3dadm', clave: d.clave }, o)); }
+  setSes(ch) { this.setState(s => ({ doc: Object.assign({}, s.doc, { ses: Object.assign({}, s.doc.ses, ch) }) })); }
+  docExp(p, f) { this.setState({ exp: p ? { p, f } : null, fb: null, run: null }); this.adm({ accion: 'ctl', on: !!p, p: p || '', f: f || 0 }); }
+  csv() { const rows = (this.state.doc.rows || []), H = ['Codigo', 'Curso', 'Paralelo', 'PC', 'Integrantes', 'Completos', 'Nota', 'Detalle', 'Fallos', 'Pistas', 'Apoyo', 'Visto'];
+    const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', txt = [H.join(';')].concat(rows.map(r => [r.id, r.curso, r.par, r.pc, r.integrantes, r.completos, String(r.nota).replace('.', ','), r.detalle, r.fallos, r.pistas, r.apoyo, r.visto].map(q).join(';'))).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + txt], { type: 'text/csv' })); a.download = 'Taller3D-notas.csv'; document.body.appendChild(a); a.click(); a.remove(); }
+
+  // ---------- v2: código, ficha, coevaluación ----------
+  huecos(p, pj, ro) {
+    const D = X(), cur = this.curso(), pins = {}; Object.keys(pj.con || {}).forEach(k => { pins[k] = (pj.con[k] || {}).to; });
+    const S = Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), sl = Object.assign({}, S, ro ? {} : pj.sl);
+    let code = ''; try { code = D.codigo(p, sl, pins, pj.aj || {}); } catch (e) { code = '// (no se pudo generar el código)'; }
+    const lines = code.split('\n'), RX = /\b(OUTPUT|INPUT|HIGH|LOW|digitalWrite|digitalRead|analogRead|pinMode|setup|loop)\b|(<=|>=|==|<|>)(?= \d)|(?<=[<>=] )\d+(?=\))/g, cands = [];
+    let fin = false; lines.forEach((l, i) => { if (/^long medir/.test(l)) fin = true; if (fin || /^\s*\/\//.test(l) || /^#|^Servo|^const|^int /.test(l)) return; RX.lastIndex = 0; let m; while ((m = RX.exec(l))) cands.push({ i, a: m.index, b: m.index + m[0].length, ans: m[0] }); });
+    const k = Math.min(cands.length, this.apoyo() ? 3 : (cur.huecos || 5)), pick = [];
+    for (let j = 0; j < k; j++) { const ix = k === 1 ? 0 : Math.round(j * (cands.length - 1) / (k - 1)); if (!pick.includes(cands[ix])) pick.push(cands[ix]); }
+    const OPT = { OUTPUT: ['OUTPUT', 'INPUT', 'HIGH'], INPUT: ['INPUT', 'OUTPUT', 'LOW'], HIGH: ['HIGH', 'LOW', 'OUTPUT'], LOW: ['LOW', 'HIGH', 'INPUT'], digitalWrite: ['digitalWrite', 'digitalRead', 'analogWrite'], digitalRead: ['digitalRead', 'digitalWrite', 'analogRead'], analogRead: ['analogRead', 'digitalRead', 'analogWrite'], pinMode: ['pinMode', 'digitalWrite', 'Serial'], setup: ['setup', 'loop', 'main'], loop: ['loop', 'setup', 'repeat'] };
+    const opts = a => OPT[a] || (/^\d+$/.test(a) ? [...new Set([a, String(Number(a) * 2), String(Math.max(1, Math.round(Number(a) / 2)))])] : ['<', '>', '==', '='].includes(a) || ['<=', '>='].includes(a) ? [...new Set([a, '<', '>', '=='])] : [a]);
+    const esc = this.apoyo() ? 0 : (cur.escribir || 0);
+    return { code, lines, holes: pick.map((c, j) => Object.assign({}, c, { j, typed: esc === 1 || (esc === 0.5 && j % 2 === 1), opts: mez(opts(c.ans), p.id + j) })) };
+  }
+  msgHueco(p, x, v) {
+    const ln = 'línea ' + (x.i + 1) + ': ', FN = ['digitalWrite', 'digitalRead', 'analogRead', 'analogWrite', 'pinMode', 'setup', 'loop', 'main', 'repeat', 'Serial'], nd = "error: '" + v + "' was not declared in this scope";
+    if (!v) return ln + 'falta completar un hueco.';
+    if (/^(OUTPUT|INPUT)$/.test(x.ans)) return ln + (['OUTPUT', 'INPUT'].includes(v) ? 'compila, pero el pin queda como ' + v + '. ' + (x.ans === 'OUTPUT' ? 'Un actuador (LED, buzzer, relé) usa OUTPUT: el Arduino manda la señal.' : 'Un sensor usa INPUT: el Arduino recibe la señal.') : nd);
+    if (/^(HIGH|LOW)$/.test(x.ans)) return ln + (['HIGH', 'LOW'].includes(v) ? 'compila, pero hace lo contrario. HIGH = encender (5 V) y LOW = apagar (0 V).' : nd);
+    if (/^[<>=]/.test(x.ans)) return ln + (v === '=' ? 'un solo = guarda un valor; para comparar se usa ==, < o >.' : /^(<|>|<=|>=|==)$/.test(v) ? 'compila, pero la comparación no cumple el objetivo: ' + p.objetivo : "error: expected primary-expression before '" + v + "'");
+    if (/^\d+$/.test(x.ans)) return ln + (/^\d+$/.test(v) ? 'compila, pero el límite ' + v + ' no es el de su diagrama.' : nd);
+    return ln + (FN.includes(v) ? 'compila, pero ' + v + '() no hace lo que se necesita en esta línea.' : nd + (v.toLowerCase() === x.ans.toLowerCase() ? ' · ¡mayúsculas! Arduino distingue: se escribe ' + x.ans : ''));
+  }
+  fichaHTML(p, pj0, st) {
+    const D = X(), ro = !pj0, d = ro ? this.solucion(p) : pj0, pins = {}; Object.keys(d.con || {}).forEach(k => { pins[k] = (d.con[k] || {}).to; });
+    const sl = Object.assign({}, Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), ro ? {} : d.sl), e = x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    let code = ''; try { code = D.codigo(p, sl, pins, d.aj || {}); } catch (x) {}
+    const cnt = {}; p.inst.forEach(it => { cnt[it.c] = (cnt[it.c] || 0) + 1; }); const mats = Object.keys(cnt).map(c => [D.COMP[c].n, cnt[c], (D.PRECIO || {})[c] || 2]);
+    Object.keys(p.res || {}).forEach(r => { if (p.res[r]) mats.push([D.RES[r], p.res[r], 0.05]); }); mats.push(['Arduino UNO', 1, 14], ['Protoboard', 1, 4], ['Cables de conexión (paquete)', 1, 3]);
+    const tot = mats.reduce((a, m) => a + m[1] * m[2], 0), $ = n => '$' + n.toFixed(2);
+    const tests = D.probar(p, sl), FD = d.falla ? FL_(D, p).find(x => x.t === d.falla.t) : FL_(D, p)[0], fi = d.fi || {};
+    const th = 'border:1px solid #999;padding:5px 7px;background:#e8eefb;text-align:left', td = 'border:1px solid #999;padding:5px 7px', tb = (H, R) => '<table style="border-collapse:collapse;width:100%;font-size:10.5pt;margin:6px 0">' + '<tr>' + H.map(x => '<th style="' + th + '">' + e(x) + '</th>').join('') + '</tr>' + R.map(r => '<tr>' + r.map(x => '<td style="' + td + '">' + e(x) + '</td>').join('') + '</tr>').join('') + '</table>';
+    const h2 = t => '<h2 style="font-size:13pt;color:#0a1a3a;border-bottom:2px solid #2456b8;padding-bottom:3px;margin:16px 0 6px">' + t + '</h2>', pp = t => '<p style="margin:4px 0;line-height:1.45">' + e(t) + '</p>';
+    const logo = new URL('logo-providencia.png', location.href).href, quien = st ? st.integrantes : 'Ejemplo resuelto (docente)', cur = st ? ((D.CURSO[st.curso] || {}).nombre || st.curso) + ' ' + (st.par || '') : '';
+    const conex = []; p.inst.forEach(it => D.COMP[it.c].pins.forEach(([pl], k) => { const c = (d.con || {})[it.i + '.' + k] || {}; conex.push([it.lab, pl, c.to || '—', c.r ? (c.r === '220' ? '220 Ω' : '10 kΩ') : '—']); }));
+    let body = '<div style="display:flex;align-items:center;gap:14px;border-bottom:3px solid #0a1a3a;padding-bottom:10px"><img src="' + logo + '" style="height:64px" alt=""><div><div style="font-size:10pt;letter-spacing:.08em">UNIDAD EDUCATIVA PARTICULAR «LA PROVIDENCIA» · ROBÓTICA</div><div style="font-size:18pt;font-weight:800">FICHA TÉCNICA DEL PROYECTO</div></div></div>';
+    body += tb(['Proyecto', 'Lugar', 'Integrantes', 'Curso', 'Fecha'], [[p.n, p.lugar, quien, cur, new Date().toLocaleDateString('es-EC')]]);
+    body += h2('1. Problema') + pp(p.historia) + h2('2. Objetivo') + pp(p.objetivo) + '<ul style="margin:4px 0 4px 18px">' + p.criterios.map(c => '<li>' + e(c) + '</li>').join('') + '</ul>' + h2('3. ¿Por qué es importante?') + pp(fi.imp || '');
+    body += h2('4. Materiales y presupuesto') + tb(['Componente', 'Cantidad', 'Precio unitario', 'Subtotal'], mats.map(m => [m[0], m[1], $(m[2]), $(m[1] * m[2])]).concat([['TOTAL APROXIMADO', '', '', $(tot)]]));
+    body += h2('5. Ubicación de los componentes') + tb(['Componente', 'Lugar', 'Por qué'], p.inst.map(it => { const sp = p.spots.find(x => x.id === ((d.ub || {})[it.i] || it.spot)); return [it.lab, sp ? sp.lab : '—', it.por]; }));
+    body += h2('6. Conexiones al Arduino') + tb(['Componente', 'Pata', 'Pin', 'Resistencia'], conex);
+    body += h2('7. Diagrama de flujo') + '<ol style="margin:4px 0 4px 18px;line-height:1.5"><li>INICIO</li>' + p.flujo.map(f => '<li>' + e(f[1]) + '</li>').join('') + '</ol>';
+    body += h2('8. Ajustes y calibración') + tb(['Ajuste', 'Valor elegido', 'Rango correcto'], AJ_(D, p, 3).map(a => [a.n, ((d.aj || {})[a.k] != null ? d.aj[a.k] : a.def) + ' ' + a.u, a.ok[0] + ' – ' + a.ok[1] + ' ' + a.u]));
+    body += h2('9. Código (Arduino IDE)') + '<pre style="font-family:Consolas,monospace;font-size:9pt;background:#f4f6fa;border:1px solid #ccc;padding:8px;white-space:pre-wrap">' + e(code) + '</pre>';
+    body += h2('10. Pruebas') + tb(['Situación', 'Debía', 'Resultado', '¿Funciona?'], tests.map(r => [r.txt, this.txtSal(r.esp), this.txtSal(r.obt), r.ok ? 'Sí' : 'No']));
+    if (FD) body += h2('11. Falla encontrada y reparación') + tb(['Síntoma', 'Causa', 'Reparación'], [[FD.sin, FD.causas[0], FD.arreglos[0]]]);
+    body += h2('12. Conclusiones') + pp(fi.con || '') + h2('13. Mejoras para una versión 2') + pp(fi.mej || '') + h2('14. Reflexión') + '<p style="margin:4px 0;font-weight:700">' + e(p.reflex) + '</p>' + pp(d.refl || '');
+    if (!ro) body += '<p style="margin-top:14px;font-size:10pt;color:#555">Nota del proyecto: ' + (d.nota || this.notaProy(d)).toFixed(2) + ' / 10 · ' + this.insignias(d).join(' · ') + '</p>';
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ficha técnica · ' + e(p.n) + '</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;max-width:760px;margin:20px auto">' + body + '</body></html>';
+  }
+  descargar(id, tipo) {
+    const p = this.P(id), v = this.vista(), html = this.fichaHTML(p, v && v.ro ? null : this.pj(id), v && v.ro ? null : this.state.st), nom = 'Ficha tecnica - ' + p.n;
+    if (tipo === 'doc') { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + html], { type: 'application/msword' })); a.download = nom + '.doc'; document.body.appendChild(a); a.click(); a.remove(); return; }
+    const w = window.open('', '_blank'); if (!w) { this.setState({ fb: { ok: false, t: 'El navegador bloqueó la ventana. Permitan las ventanas emergentes o usen «Word».' } }); return; }
+    w.document.write(html.replace('</body>', '<script>window.onload=function(){setTimeout(function(){window.print()},500)}<\/script></body>')); w.document.close();
+  }
+  async coBuscar() {
+    const co = this.state.co || {}, st = this.state.st || {}, c = String(co.cod || '').trim().toUpperCase(), set = ch => this.setState({ co: Object.assign({}, this.state.co, ch) });
+    if (!c) return set({ msg: 'Escriban el código de la otra pareja.' }); if (c === st.id) return set({ msg: 'Ese es su propio código: evalúen a otra pareja.' });
+    if (!URL_()) return set({ msg: 'En modo demostración no se puede buscar a otras parejas.' });
+    set({ msg: 'Buscando…' });
+    try { const r = await this.getJ('t3did=' + encodeURIComponent(c)), dd = r && r.data; const pr = dd && Object.entries(dd.proj || {}).find(([, x]) => x.done);
+      if (!dd) return set({ msg: 'No existe una pareja con ese código.' }); if (!pr) return set({ msg: 'Esa pareja todavía no entrega su ficha técnica.' });
+      set({ msg: '', vis: true, enviado: false, crit: [0, 0, 0, 0], com: '', otro: { id: c, integrantes: dd.integrantes || '', pid: pr[0], n: (this.P(pr[0]) || {}).n || pr[0], con: (pr[1].fi || {}).con || '' } });
+    } catch (e) { set({ msg: 'No se pudo conectar. Revisen el internet.' }); }
+  }
+  coEnviar() {
+    const co = this.state.co || {}, st = this.state.st || {}, set = ch => this.setState({ co: Object.assign({}, this.state.co, ch) });
+    if ((co.crit || []).some(x => !x)) return set({ msg: 'Califiquen los 4 criterios (1 a 4).' }); if (String(co.com || '').trim().length < 15) return set({ msg: 'Escriban un consejo de al menos 15 letras.' });
+    const c = co.crit, prom = r2(c.reduce((a, b) => a + b, 0) / 4 * 2.5);
+    this.post({ modo: 't3dco', evaluador: st.id, evaluadores: st.integrantes, curso: st.curso, par: st.par, evaluado: co.otro.id, evaluados: co.otro.integrantes, proyecto: co.otro.n, c1: c[0], c2: c[1], c3: c[2], c4: c[3], nota: prom, comentario: co.com });
+    set({ enviado: true, msg: '¡Coevaluación enviada! Nota que le dieron: ' + prom.toFixed(2) + ' / 10.' });
+  }
+
+  // ---------- v3: retos, minijuegos y consola ----------
+  cfg() { const d = { fase: 'ambas', minisOn: true, minis: {}, seg: 60, retosAb: null, pausa: false }; let c = this.state.cfg || (this.state.doc && this.state.doc.ses && this.state.doc.ses.cfg); if (!URL_() && !c) { try { c = JSON.parse(localStorage.getItem('campusmision_demo_cfg') || 'null'); } catch (e) {} } return Object.assign(d, c || {}); }
+  setCfg(ch) { const c = Object.assign({}, this.cfg(), ch); this.setState({ cfg: c }); if (!URL_()) { try { localStorage.setItem('campusmision_demo_cfg', JSON.stringify(c)); } catch (e) {} return; } this.adm({ accion: 'cfg', cfg: c }); }
+  retosCurso() { const c = (this.state.st && this.state.st.curso) || '9no'; return RETOS_N[c] || RETOS_N['9no']; }
+  rInfo(id) { const r = RINFO[id] || ['🧩', id, '']; return { ico: r[0], n: r[1], hab: r[2] }; }
+  notaRetos(st) { const L = RETOS_N[st.curso] || RETOS_N['9no'], R = st.retos || {}; return r2(L.reduce((a, id) => a + [0, 7, 8.5, 10][(R[id] || {}).best || 0], 0) / L.length); }
+  notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; return r2(Math.min(10, ns[0] + Math.max(0, dn - 1) * 0.5)); }
+  notaFinal(st) { return r2(Math.min(10, this.notaRetos(st) * 0.5 + this.notaProyecto(st) * 0.5)); }
+  toast(t) { this.setState({ tst: t }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ tst: '' }), 3800); }
+  snd(t) { try { const A = this._ac || (this._ac = new (window.AudioContext || window.webkitAudioContext)()), o = A.createOscillator(), g = A.createGain(), n = A.currentTime; o.type = 'triangle'; o.frequency.setValueAtTime(t === 'err' ? 220 : t === 'ok' ? 880 : 520, n); g.gain.setValueAtTime(0.05, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.2); o.connect(g); g.connect(A.destination); o.start(n); o.stop(n + 0.22); } catch (e) {} }
+  estacion(id) { if (/^r:/.test(id)) return this.abrirReto(id.slice(2)); if (/^m:/.test(id)) return this.abrirMini(id.slice(2)); if (this.cfg().fase === 'retos') return this.toast('El docente todavía no abre los proyectos: primero resuelvan los retos.'); this.abrir(id); }
+  abrirReto(id) { const c = this.cfg(), st = this.state.st; if (c.fase === 'proyecto') return this.toast('El docente cerró los retos: ahora toca el proyecto.'); if (c.retosAb && !c.retosAb.includes(id)) return this.toast('Ese reto está cerrado por el docente.');
+    const b = ((st.retos || {})[id] || {}).best || 0, ini = st.curso === '3BGU' ? 2 : 1; this.setState({ rt: { id, tier: b ? Math.min(3, b + 1) : ini, nonce: 0, estado: 'jugando', fb: null } }); }
+  retoFin(ok, eff, txt) { const s = this.state, rt = s.rt; if (!rt || rt.estado !== 'jugando') return; if (!ok) { this.snd('err'); return this.setState({ rt: Object.assign({}, rt, { estado: 'perdio', fb: { ok: false, t: txt || 'Esta vez no salió.' } }) }); }
+    this.snd('ok'); const st = Object.assign({}, s.st), R = Object.assign({}, st.retos || {}), cur = R[rt.id] || { best: 0, n: 0 }, gana = this.cfg().seg || 60; R[rt.id] = { best: Math.max(cur.best || 0, rt.tier), n: (cur.n || 0) + 1 }; st.retos = R; st.mt = Math.min(900, (st.mt || 0) + gana);
+    this.setState({ st, rt: Object.assign({}, rt, { estado: 'gano', fb: { ok: true, t: (txt || '¡Reto superado!') + '  +' + gana + ' s de minijuegos 🎮' } }) }, () => this.guardar()); }
+  retoErr(t) { const rt = this.state.rt; if (rt) this.setState({ rt: Object.assign({}, rt, { fb: { ok: false, t } }) }); }
+  abrirMini(id) { const c = this.cfg(), st = this.state.st; if (!c.minisOn || c.minis[id] === false) return this.toast('El docente tiene cerrado este minijuego por ahora.'); if ((st.mt || 0) < 20) return this.toast('Necesitan al menos 20 s de minijuegos. Ganen retos para conseguir tiempo 🎮');
+    if (id === 'esfero') return this.setState({ mn: { id, d2: true, nonce: 0 } }, () => this.relojMini());
+    const ctrl = window.V3_MINI && window.V3_MINI.crear(id, { onHud: h => this.setState({ mnHud: h }), onEnd: r => this.finMini(r) }); if (!ctrl || !this.api) return; this.api.mini(ctrl); this.setState({ mn: { id }, mnHud: null }, () => this.relojMini()); }
+  relojMini() { clearInterval(this._mr); this._mr = setInterval(() => { const s = this.state; if (!s.mn || !s.st) return clearInterval(this._mr); if (this.cfg().pausa) return; const mt = Math.max(0, (s.st.mt || 0) - 1); this.setState({ st: Object.assign({}, s.st, { mt }) }); if (mt <= 0) this.finMini({ msg: 'Se acabó su tiempo de minijuegos. ¡Ganen más retos!' }); }, 1000); }
+  finMini(r) { clearInterval(this._mr); if (this.api) this.api.mini(null); const s = this.state; if (!s.st) return; const st = Object.assign({}, s.st), MJ = Object.assign({}, st.mj || {}); if (s.mn) MJ[s.mn.id] = (MJ[s.mn.id] || 0) + 1; st.mj = MJ; this.setState({ mn: null, mnHud: null, st }, () => { this.guardar(); if (r && r.msg) this.toast(r.msg); }); }
+  marcas() { const st = this.state.st; if (!st) return []; const R = st.retos || {}, c = this.cfg(), M = MINFO_();
+    const out = this.retosCurso().map((id, i) => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { id: 'r:' + id, x: RPOS[i][0], z: RPOS[i][1], c: !ab ? '#7a7a7a' : b >= 3 ? '#ffd23f' : b ? '#21d07a' : '#5fd0e8', lab: (ab ? '' : '🔒 ') + I.ico + ' ' + I.n + (b ? ' ' + '★'.repeat(b) : ''), done: b >= 3 }; });
+    Object.keys(MPOS).forEach(id => { const on = c.minisOn && c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; out.push({ id: 'm:' + id, x: MPOS[id][0], z: MPOS[id][1], c: on ? '#ff8fd0' : '#7a7a7a', lab: (on ? '' : '🔒 ') + I.ico + ' ' + I.n, bg: 'rgba(60,10,40,.88)' }); }); return out; }
+  vistaV3(out) { const s = this.state, c = this.cfg(), st = s.st, MC = window.ESC_MENTE && window.ESC_MENTE.make(React), V = window.V3_RETOS && window.V3_RETOS.make(React), M = MINFO_();
+    out.tstVis = !!s.tst; out.tst = s.tst || '';
+    if (out.hud) { if (st) { const R = st.retos || {}; out.hud.retosTit = 'RETOS DE ' + (((X().CURSO[st.curso] || {}).nombre) || st.curso).toUpperCase() + ' · ' + this.retosCurso().filter(id => (R[id] || {}).best).length + '/' + this.retosCurso().length; out.hud.retosL = this.retosCurso().map(id => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { ico: ab ? I.ico : '🔒', n: I.n, st: b ? '★'.repeat(b) : '—', bg: b >= 3 ? '#fff6d6' : b ? '#e3f6ea' : '#f3f6fb', op: ab ? 1 : 0.5, ir: () => this.abrirReto(id) }; }); } else { out.hud.retosTit = ''; out.hud.retosL = []; } }
+    out.vPausaDoc = s.vista === 'juego' && !!c.pausa;
+    out.vReto = !!s.rt && s.vista === 'juego';
+    if (s.rt && st) { const rt = s.rt, I = this.rInfo(rt.id), key = rt.id + '|' + rt.tier + '|' + rt.nonce; if (this._rk !== key) { this._rk = key; this._rh = HH(RNG((Math.abs(hsh(key + st.id)) % 2147483646) + 1)); }
+      const props = { key, id: rt.id, tier: rt.tier, fin: rt.estado !== 'jugando', h: this._rh, snd: t => this.snd(t), onFin: (ok, e, t) => this.retoFin(ok, e, t), onErr: t => this.retoErr(t) }, Cmp = (window.V4_APL && window.V4_APL.make(React)[rt.id]) || (V && V[rt.id]) || MC;
+      out.rt = { el: Cmp ? React.createElement(Cmp, props) : null, n: I.n, ico: I.ico, nivel: I.hab + ' · NIVEL ' + rt.tier + ' DE 3' + ' · ' + '★'.repeat(((st.retos || {})[rt.id] || {}).best || 0), fbVis: !!rt.fb, fbT: rt.fb ? rt.fb.t : '', fbBg: rt.fb && rt.fb.ok ? '#1f9d55' : '#c8413a',
+        gano: rt.estado === 'gano', perdio: rt.estado === 'perdio', subir: rt.estado === 'gano' && rt.tier < 3, subirTxt: 'Subir al nivel ' + (rt.tier + 1) + ' →', irSubir: () => this.setState({ rt: { id: rt.id, tier: rt.tier + 1, nonce: rt.nonce + 1, estado: 'jugando', fb: null } }), otraVez: () => this.setState({ rt: Object.assign({}, rt, { nonce: rt.nonce + 1, estado: 'jugando', fb: null }) }), salir: () => this.setState({ rt: null }) };
+    } else out.rt = { fbVis: false, gano: false, perdio: false, subir: false };
+    const mn = s.mn, MI = mn ? (M[mn.id] || { n: mn.id, ico: '🎮', ctrl: '' }) : null, hd = s.mnHud || {};
+    out.vMn = !!mn && !mn.d2; out.vMn2 = !!mn && !!mn.d2;
+    out.mnh = { n: MI ? MI.n : '', ico: MI ? MI.ico : '', a: hd.a || 0, b: hd.b || 0, msg: hd.msg || 'Cargando…', extra: hd.extra || '', ctrl: MI ? MI.ctrl : '', t: mmss((st && st.mt) || 0), salir: () => this.finMini({}), el: null };
+    if (mn && mn.d2 && MC) { const key = 'esf' + mn.nonce; if (this._ek !== key) { this._ek = key; this._eh = HH(RNG(Date.now() % 100000 + 7)); } out.mnh.el = React.createElement(MC, { key, id: 'esferos', tier: 2, fin: false, h: this._eh, snd: t => this.snd(t), onFin: (ok, e, t) => { this.toast(t || '¡Fin de la carrera!'); this.setState({ mn: Object.assign({}, this.state.mn, { nonce: mn.nonce + 1 }) }); }, onErr: t => this.toast(t) }); }
+    if (s.vista === 'doc' && s.doc) { const T = (k, v) => () => this.setCfg({ [k]: v }), all = [...new Set([].concat(...Object.values(RETOS_N)))];
+      out.dcf = { fases: [['retos', 'Solo retos (clase 1)'], ['proyecto', 'Solo proyecto (clase 2)'], ['ambas', 'Retos y proyecto']].map(([k, t]) => ({ t, bg: c.fase === k ? '#2456b8' : '#fff', fg: c.fase === k ? '#fff' : '#0a1a3a', go: T('fase', k) })),
+        minisTxt: c.minisOn ? '🟢 Minijuegos abiertos' : '🔴 Minijuegos cerrados', minisBg: c.minisOn ? '#1f9d55' : '#c8413a', togMinis: T('minisOn', !c.minisOn),
+        minis: Object.keys(MPOS).map(id => { const on = c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; return { t: I.ico + ' ' + I.n, bg: on ? '#e3f6ea' : '#fff', bd: on ? '#1f9d55' : '#c5ccdb', go: () => this.setCfg({ minis: Object.assign({}, c.minis, { [id]: !on }) }) }; }),
+        segs: [30, 60, 90, 120].map(n => ({ t: n + ' s', bg: c.seg === n ? '#f0a726' : '#fff', go: T('seg', n) })),
+        retos: all.map(id => { const on = !c.retosAb || c.retosAb.includes(id), I = this.rInfo(id); return { t: I.ico + ' ' + I.n, bg: on ? '#e8eefb' : '#fff', bd: on ? '#2456b8' : '#c5ccdb', go: () => { const cur = c.retosAb || all; this.setCfg({ retosAb: on ? cur.filter(x => x !== id) : cur.concat([id]) }); } }; }),
+        retosTodos: T('retosAb', null), pausaTxt: c.pausa ? '▶ Reanudar a todos' : '⏸ Pausar a todos', pausaBg: c.pausa ? '#1f9d55' : '#c8413a', togPausa: T('pausa', !c.pausa) };
+    } else out.dcf = { fases: [], minis: [], segs: [], retos: [] };
+  }
+  // ---------- Modo Misión ----------
+  misiones(st) { const L = (RETOS_N[(st && st.curso) || '9no'] || RETOS_N['9no']), m = []; ['lab', 'pasillo', 'aula', 'bar', 'patio'].forEach((z, i) => { m.push({ t: 'reto', id: L[i * 2], z, k: 0 }, { t: 'reto', id: L[i * 2 + 1], z, k: 1 }); if (z === 'pasillo') m.push({ t: 'proy', n: 1, z }); if (z === 'bar') m.push({ t: 'proy', n: 2, z }); }); m.push({ t: 'reto', id: 'ohm', z: 'final', k: 0 }, { t: 'reto', id: 'energia', z: 'final', k: 1 }); return m; }
+  retosCurso() { return this.misiones(this.state.st).filter(M => M.t === 'reto').map(M => M.id); }
+  nProy(st) { return Object.values(st.proj || {}).filter(x => x.done).length; }
+  hecho(st, M) { return M.t === 'reto' ? !!(((st.retos || {})[M.id] || {}).best) : this.nProy(st) >= M.n; }
+  actual(st) { const ms = this.misiones(st), i = ms.findIndex(M => !this.hecho(st, M)); return { ms, i, M: i < 0 ? null : ms[i] }; }
+  zonaHecha(st, z) { return this.misiones(st).filter(M => M.z === z && M.t === 'reto').every(M => this.hecho(st, M)); }
+  zonaAbierta(st, z) { const zi = ZONAS.indexOf(z); for (let k = 0; k < zi; k++) if (!this.zonaHecha(st, ZONAS[k])) return false; return z !== 'final' || this.nProy(st) >= 2; }
+  zonaDe(id) { const M = this.misiones(this.state.st).find(x => x.id === id); return M ? M.z : 'patio'; }
+  anclas() { if (!this._anc && this.api && this.api.anclas) this._anc = this.api.anclas(); return this._anc || {}; }
+  abierto(id) { const a = this.state.abiertos; if (a && !a.includes(id)) return false; const st = this.state.st, an = this.anclas()[id]; return !(st && an) || this.zonaAbierta(st, ZK[an.e] || 'patio'); }
+  notaRetos(st) { const L = this.misiones(st).filter(M => M.t === 'reto'), R = st.retos || {}; return r2(L.reduce((a, M) => a + [0, 7, 8.5, 10][(R[M.id] || {}).best || 0], 0) / L.length); }
+  notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = this.nProy(st); return r2(Math.min(10, ((ns[0] || 0) + (ns[1] || 0)) / 2 + Math.max(0, dn - 2) * 0.5)); }
+  abrirReto(id) { const st = this.state.st, z = this.zonaDe(id); if (!this.zonaAbierta(st, z)) return this.toast('Esa zona todavía está bloqueada. Sigan la misión de la barra de arriba.'); const c = this.cfg(); if (c.retosAb && !c.retosAb.includes(id)) return this.toast('Ese reto está cerrado por el docente.');
+    const b = ((st.retos || {})[id] || {}).best || 0, ini = st.curso === '3BGU' ? 2 : 1; this._prog = Date.now(); this.setState({ rt: { id, tier: b ? Math.min(3, b + 1) : ini, nonce: 0, estado: 'jugando', fb: null }, hint: '' }); }
+  retoFin(ok, eff, txt) { const s = this.state, rt = s.rt; if (!rt || rt.estado !== 'jugando') return; if (!ok) { this.snd('err'); return this.setState({ rt: Object.assign({}, rt, { estado: 'perdio', fb: { ok: false, t: txt || 'Esta vez no salió.' } }) }); }
+    this.snd('ok'); const z = this.zonaDe(rt.id), antes = this.zonaHecha(s.st, z), st = Object.assign({}, s.st), R = Object.assign({}, st.retos || {}), cur = R[rt.id] || { best: 0, n: 0 }; R[rt.id] = { best: Math.max(cur.best || 0, rt.tier), n: (cur.n || 0) + 1 }; st.retos = R;
+    const ahora = this.zonaHecha(st, z), extra = {}; let msg = txt || '¡Reto superado!';
+    if (!antes && ahora) { const gana = this.cfg().seg || 60; st.mt = Math.min(900, (st.mt || 0) + gana); const nz = ZONAS[ZONAS.indexOf(z) + 1]; extra.zr = { z, abre: nz && this.zonaAbierta(st, nz) ? ZN[nz] : nz === 'final' ? 'Cancha (cuando terminen 2 proyectos)' : '', seg: gana }; msg += '  ⚡ ¡Zona restaurada!'; setTimeout(() => this.setState({ zr: null }), 5200); }
+    if (!this.actual(st).M) { st.mt = Math.max(st.mt || 0, 900); extra.finOn = true; }
+    this._prog = Date.now(); this.setState(Object.assign({ st, rt: Object.assign({}, rt, { estado: 'gano', fb: { ok: true, t: msg } }) }, extra), () => this.guardar()); }
+  marcas() { const st = this.state.st; if (!st) return []; const R = st.retos || {}, A = this.actual(st), M = MINFO_(), c = this.cfg(), out = [];
+    A.ms.forEach(m => { if (m.t !== 'reto' || !this.zonaAbierta(st, m.z)) return; const I = this.rInfo(m.id), b = (R[m.id] || {}).best || 0, cur = A.M && A.M.id === m.id, p = RZ[m.z][m.k];
+      out.push({ id: 'r:' + m.id, x: p[0], z: p[1], c: cur ? '#5fe8ff' : b >= 3 ? '#ffd23f' : b ? '#21d07a' : '#9fd8ff', lab: (cur ? '▶ ' : '') + I.ico + ' ' + I.n + (b ? ' ' + '★'.repeat(b) : ''), bg: cur ? 'rgba(0,70,110,.92)' : undefined, done: b >= 3 }); });
+    Object.keys(MPOS).forEach(id => { const on = c.minisOn && c.minis[id] !== false && (st.mt || 0) >= 20, I = M[id] || { n: id, ico: '🎮' }; out.push({ id: 'm:' + id, x: MPOS[id][0], z: MPOS[id][1], c: on ? '#ff8fd0' : '#7a7a7a', lab: (on ? '' : '🔒 ') + I.ico + ' ' + I.n, bg: 'rgba(60,10,40,.88)' }); }); return out; }
+  objetivo(st) { const A = this.actual(st), M = A.M; if (!M) return null; if (M.t === 'reto') { const p = RZ[M.z][M.k]; return { x: p[0], z: p[1], room: ROOM[M.z] }; }
+    const an = this.anclas(), ref = RZ[M.z][0]; let best = null; Object.keys(an).forEach(id => { const pj = (st.proj || {})[id]; if (pj && pj.done) return; if (!this.abierto(id)) return; const a = an[id], d = Math.hypot(a.x - ref[0], a.z - ref[1]) - (pj ? 30 : 0); if (!best || d < best.d) best = { d, x: a.x, z: a.z, room: a.e === 'patio' ? null : a.e }; }); return best; }
+  hintTxt() { const s = this.state; return s.rt ? '💡 Lean otra vez «Cómo se juega» y prueben con un caso pequeño. Si se traban, pulsen «Salir» y vuelvan: el ejercicio cambia.' : this.vista() ? '💡 Abran «📘 Aprende» de esta fase: ahí está la explicación con un ejemplo.' : '💡 Sigan la línea brillante del piso hasta el anillo de su misión y presionen E (J1) o ENTER (J2).'; }
+  vistaMision(out) { const s = this.state, st = s.st; out.vIntro = false; out.vMis = false; out.vZr = !!s.zr && s.vista === 'juego'; out.zr = s.zr ? { z: ZN[s.zr.z], abre: s.zr.abre ? '🔓 Se abrió: ' + s.zr.abre : '', seg: '🎮 +' + s.zr.seg + ' s de juego en la cancha' } : { z: '', abre: '', seg: '' };
+    out.vSep = !!s.sep && s.vista === 'juego' && !s.rt && !this.vista(); out.vHint = !!s.hint && s.vista === 'juego'; out.hint = s.hint || ''; out.cerrarHint = () => { this._prog = Date.now(); this.setState({ hint: '' }); };
+    out.vFin = false; out.fin = {};
+    if (!st || s.vista !== 'juego') return; const A = this.actual(st), M = A.M;
+    const sig = A.i + '|' + Object.values(st.proj || {}).map(x => x.max || 0).join(','); if (this._psig !== sig) { this._psig = sig; this._prog = Date.now(); if (s.hint) setTimeout(() => this.setState({ hint: '' }), 0); }
+    if (!this._hintT) this._hintT = setInterval(() => { const S = this.state; if (!S.st || S.vista !== 'juego' || S.hint || this.cfg().pausa) return; if (Date.now() - (this._prog || Date.now()) > 120000) this.setState({ hint: this.hintTxt() }); }, 5000);
+    out.vIntro = !st.intro; out.empezar = () => this.setState({ st: Object.assign({}, st, { intro: true }) }, () => { this._prog = Date.now(); this.guardar(); });
+    out.vMis = !!st.intro && !s.rt && !s.mn;
+    out.mis = { n: M ? 'MISIÓN ' + (A.i + 1) + ' DE ' + A.ms.length : 'MISIÓN CUMPLIDA', zona: M ? ZN[M.z].toUpperCase() : 'COLEGIO RESTAURADO', txt: !M ? 'Restauraron todo el colegio. ¡La cancha es libre! 🎮' : M.t === 'reto' ? (M.z === 'final' ? 'Reactiven el sistema principal: ' : 'Descifren: ') + this.rInfo(M.id).ico + ' ' + this.rInfo(M.id).n : 'Proyecto ' + M.n + ' de 2: elijan un proyecto en cualquier zona abierta y completen sus 10 fases',
+      dots: A.ms.map((m, i) => ({ bg: this.hecho(st, m) ? '#21d07a' : i === A.i ? '#5fe8ff' : 'rgba(255,255,255,.22)', w: m.t === 'proy' ? '22px' : '12px' })) };
+    out.vFin = !M && !st.finVisto; out.fin = { nota: this.notaFinal(st).toFixed(2), r: this.notaRetos(st).toFixed(2), p: this.notaProyecto(st).toFixed(2), quien: st.integrantes, ok: () => this.setState({ st: Object.assign({}, st, { finVisto: true }) }, () => this.guardar()) }; }
+  // ---------- 3D sync ----------
+  sync3d(force) {
+    const A = this.api; if (!A) return; const v = this.vista(), s = this.state, pid = v ? v.p : null;
+    if (s.vista === 'juego' && s.st && A.zona) { const st = s.st, zs = {}; Object.keys(ZK).forEach(k => { if (k === 'patio') return; const z = ZK[k]; zs[k] = !this.zonaAbierta(st, z) || (z === 'lab' && !this.zonaHecha(st, 'lab')) ? 'cerrada' : this.zonaHecha(st, z) ? 'restaurada' : 'abierta'; }); const zk = JSON.stringify(zs); if (this._zk !== zk) { this._zk = zk; Object.keys(zs).forEach(k => A.zona(k, zs[k])); if (A.abiertos) A.abiertos(Object.keys(this.anclas()).filter(id => this.abierto(id))); }
+      if (!this._spw) { this._spw = true; if (!this.zonaHecha(st, 'lab') && A.spawn) A.spawn(-13.5, -13.9, Math.PI); }
+      const ob = !this.vista() && !s.rt && !s.mn && st.intro ? this.objetivo(st) : null, gk = JSON.stringify(ob); if (this._gk !== gk) { this._gk = gk; A.guia(ob); } }
+    if (A.marcadores && s.vista === 'juego') { const mk = JSON.stringify(this.marcas()); if (this._mk !== mk) { this._mk = mk; A.marcadores(this.marcas()); } } if (A.pausa) A.pausa(!!(s.rt || (s.mn && s.mn.d2) || v || this.cfg().pausa));
+    const panel = !!v, sigP = pid + '|' + panel; if (force || this._sp !== sigP) { this._sp = sigP; A.proyecto(pid); this._sg = ''; setTimeout(() => A.resize(), 30); }
+    const ab = JSON.stringify(s.abiertos); if (force || this._sa !== ab) { this._sa = ab; A.abiertos(s.abiertos); }
+    if (!v) return; const p = this.P(pid), d = this.datos(v);
+    const col = it => X().COMP[it.c].col, placed = v.f >= 2 ? p.inst.filter(it => d.ub[it.i]).map(it => { const sp = p.spots.find(x => x.id === d.ub[it.i]); return { spot: sp.id, pos: sp.pos, col: col(it) }; }) : [];
+    const spotsOn = v.f === 2 && !v.ro, sig = JSON.stringify([placed, spotsOn, s.sel]);
+    if (this._sg !== sig) { this._sg = sig; A.spots(spotsOn ? p.spots : null, null); A.colocados(placed); if (!s.run) A.sim(pid, null); }
+  }
+
+  renderVals() {
+    const s = this.state, D = window.T3D_DATOS, v = D ? this.vista() : null, st = s.st;
+    const out = { ref3d: this.ref3d, cargando3d: s.c3d, err3d: s.err3d, vLogin: s.vista === 'login', vDoc: s.vista === 'doc' && !s.exp, vWalk: s.vista === 'juego' && !v && !s.c3d, vPanel: !!v, panelW: 'min(480px, 46vw)', v3dRight: v ? 'min(480px, 46vw)' : (s.vista === 'doc' && !s.exp ? '100%' : '0px'), ro: !!(v && v.ro) };
+    // login
+    const f = s.lg, setF = k => e => { const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value; this.setState(x => ({ lg: Object.assign({}, x.lg, { [k]: val }), lgMsg: '' })); };
+    out.lg = Object.assign({}, f, { tabs: [['nueva', 'Pareja nueva'], ['seguir', 'Continuar'], ['docente', 'Docente']].map(([k, n]) => ({ n, bg: s.tab === k ? '#0a1a3a' : 'transparent', fg: s.tab === k ? '#fff' : '#0a1a3a', go: () => this.setState({ tab: k, lgMsg: '' }) })), nueva: s.tab === 'nueva', seguir: s.tab === 'seguir', docente: s.tab === 'docente', msg: s.lgMsg, msgVis: !!s.lgMsg, btn: s.tab === 'docente' ? 'Entrar como docente' : 'Entrar al campus →', demo: !URL_(), entrar: () => this.entrar(),
+      setCurso: setF('curso'), setPar: setF('par'), setPc: setF('pc'), setN1: setF('n1'), setN2: setF('n2'), setCod: setF('cod'), setRid: setF('rid'), setClave: setF('clave'), setAcepta: setF('acepta') });
+    // feedback
+    const fb = s.fb; out.fb = { vis: !!fb, bg: fb && fb.ok ? '#e3f6ea' : '#fde8e6', fg: fb && fb.ok ? '#14532d' : '#8a1f17', tit: fb ? fb.t : '', lista: (fb && fb.lista) || [] };
+    // hud
+    if (st && D) { const req = (D.CURSO[st.curso] || {}).req || 3, done = Object.values(st.proj || {}).filter(x => x.done).length;
+      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, completos: 'Retos ' + this.retosCurso().filter(id => ((st.retos || {})[id] || {}).best).length + '/' + this.retosCurso().length + ' · Proy. ' + Math.min(2, this.nProy(st)) + '/2 · 🎮 ' + mmss(st.mt || 0), nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
+        ayuda: () => { const on = !st.ayuda; this.setState({ st: Object.assign({}, st, { ayuda: on }) }, () => this.guardar(on ? { pedirAyuda: true } : { cancelarAyuda: true })); },
+        cerrar: () => { if (!window.confirm('Anoten su código para continuar la próxima clase:\n\n' + st.id + '\n\n¿Cerrar la sesión?')) return; this.guardar(); clearInterval(this._poll); try { localStorage.removeItem(LS); } catch (e) {} this.setState({ st: null, cur: null, vista: 'login', tab: 'seguir', lg: Object.assign({}, s.lg, { rid: '', cod: '' }) }); },
+        cerca: !!s.cerca, cercaTxt: s.cerca ? (/^r:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + this.rInfo(s.cerca.slice(2)).ico + ' ' + this.rInfo(s.cerca.slice(2)).n : /^m:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + ((MINFO_()[s.cerca.slice(2)] || {}).n || 'Minijuego') + ' (🎮 ' + mmss(st.mt || 0) + ')' : this.abierto(s.cerca) ? 'J1 E · J2 ENTER → ' + this.P(s.cerca).n : '🔒 ' + this.P(s.cerca).n + ' (cerrada)') : '',
+        lista: D.P.map(p => { const pj = (st.proj || {})[p.id], ab = this.abierto(p.id); return { ico: p.ico, n: p.n, lugar: p.lugar, estado: !ab ? 'cerrada' : pj && pj.done ? '✓ nota ' + pj.nota : pj ? 'en paso ' + (pj.f + 1) + ' de 10' : 'nueva', bg: pj && pj.done ? '#e3f6ea' : pj ? '#fff6e3' : '#f3f4f8', op: ab ? 1 : 0.5, ir: () => this.abrir(p.id) }; }) };
+    } else out.hud = { pareja: '', completos: '', nota: '', lista: [], cerca: false, cercaTxt: '', ayudaTxt: '', ayudaBg: '#2456b8', ayuda: () => {}, cerrar: () => {} };
+    // panel
+    out.pz = { pasos: [], ico: '', n: '', lugar: '', key: '', acciones: false, esDoc: false }; out.ph = {};
+    if (v) {
+      const p = this.P(v.p), d = this.datos(v), ro = v.ro, F = v.f, pj = d, cur = this.curso(), id = p.id, pv = (pj.pv || {})[F] || ro;
+      const upd = ch => this.setPj(id, ch);
+      out.pz = { ico: p.ico, n: p.n, lugar: p.lugar.toUpperCase() + ' · ' + (v.modo === 'jug' ? 'paso ' + (F + 1) + ' de 10' : 'modo explicación'), key: id + F, puedeSalir: v.modo === 'jug', salir: () => this.salir(),
+        banner: v.modo !== 'jug', bannerTxt: v.modo === 'ctl' ? '👀 El profesor está explicando. Miren el proyector.' : '📽 Proyectando a todas las computadoras · ' + NF[F],
+        pasos: NF.map((n, k) => { const done = v.modo === 'jug' ? k < pj.max || (k === 9 && pj.done) : false, now = k === F, puede = v.modo === 'exp' || (v.modo === 'jug' && k <= pj.max);
+          return { n, num: done ? '✓' : String(k + 1), bg: now ? '#f0a726' : done ? '#1f9d55' : puede ? '#2456b8' : 'rgba(255,255,255,.12)', fg: now ? '#1a1004' : '#fff', cur: puede ? 'pointer' : 'default', ir: () => { if (v.modo === 'exp') this.docExp(id, k); else if (puede && v.modo === 'jug') { this.setPj(id, { f: k }); this.setState({ fb: null, sel: null, run: null }); } } }; }),
+        acciones: v.modo === 'jug' && !(F === 8), pistaVis: F >= 1 && F <= 7 && !pv, pistaTxt: this.apoyo() ? 'Ver ayuda' : 'Pista (−1)', pista: () => this.pista(id),
+        sigTxt: ['Aceptar la misión →', 'Comprobar la mochila', 'Comprobar ubicación', 'Comprobar circuito', 'Comprobar diagrama', 'Comprobar bloques →', 'Comprobar ajustes', '⚙ Compilar y subir', '', pj.done ? 'Actualizar la ficha' : '📄 Entregar la ficha técnica'][F], siguiente: () => this.comprobar(id),
+        esDoc: v.modo === 'exp', docAnt: () => this.docExp(id, Math.max(0, F - 1)), docSig: () => this.docExp(id, Math.min(9, F + 1)), docFin: () => this.docExp(null) };
+      if (v.modo === 'jug' && F === 8) { out.pz.acciones = false; }
+      const teoK = id + ':' + F, teoOpen = ro || ((s.teo || {})[teoK] != null ? s.teo[teoK] : !!(cur.guia || this.apoyo() || F === 0)), TE = TEORIA[F] || TEORIA[0];
+      const ph = { teoVis: true, teoOpen, teoTit: 'Aprende · ' + TE[0], teoItems: TE[1], teoEj: TE[2], teoBtn: teoOpen ? 'Ocultar ▲' : 'Ver la teoría ▼', teoTog: () => this.setState({ teo: Object.assign({}, s.teo, { [teoK]: !teoOpen }) }), resVis: F === 1 || F === 3, resTab: RESIS.map(x => ({ c: x[0], r: x[1], y: x[2], col: x[1] === 'ninguna' ? '#4a5878' : '#c8413a' })), mision: F === 0, elegir: F === 1, ubicar: F === 2, conectar: F === 3, diagrama: F === 4, bloques: F === 5, ajustar: F === 6, codigoF: F === 7, probar: F === 8, ficha: F === 9 };
+      if (F === 0) Object.assign(ph, { historia: p.historia, objetivo: p.objetivo, criterios: p.criterios });
+      if (F === 1) { const need = D.necesita(p), items = mez([...new Set(p.inst.map(i => i.c).concat(p.dist))], id + 'e');
+        ph.items = items.map(c => { const C = D.COMP[c], on = !!pj.sel[c], hint = pv && !ro, bad = hint && (on !== !!need[c]); return { n: C.n + (need[c] > 1 && (on || ro) ? ' ×' + need[c] : ''), q: C.q, col: C.col, k: C.k === 'E' ? 'ENT' : 'SAL', bg: on ? '#e8eefb' : '#fff', bd: bad ? '#c8413a' : on ? '#2456b8' : '#dde3f0', tog: () => upd({ sel: Object.assign({}, pj.sel, { [c]: !on }) }) }; });
+        ph.resis = [['r220', 'Resistencia 220 Ω'], ['r10k', 'Resistencia 10 kΩ']].map(([k, n]) => ({ n, v: pj.res[k] || 0, menos: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.max(0, (pj.res[k] || 0) - 1) }) }), mas: () => upd({ res: Object.assign({}, pj.res, { [k]: Math.min(6, (pj.res[k] || 0) + 1) }) }) }));
+        { const n = c => p.inst.filter(i => i.c === c || (c === 'led' && /^led/.test(i.c))).length, L = n('led'), Bt = n('btn'), Ld = n('ldr'); ph.cuentaVis = !!(cur.guia || this.apoyo() || pv) && !ro; ph.cuenta = 'Cuenten en su proyecto: ' + L + ' LED' + (L === 1 ? '' : 's') + ', ' + Bt + ' pulsador' + (Bt === 1 ? '' : 'es') + ' y ' + Ld + ' LDR. Ahora piensen cuántas resistencias de cada tipo hacen falta.'; }
+        if (pv && !ro) this._hintE = true; }
+      if (F === 2) ph.inst = p.inst.map(it => { const u = pj.ub[it.i], sp = p.spots.find(x => x.id === u), abierto = !ro && s.sel === it.i, ok = u === it.spot;
+        return { lab: it.lab, col: D.COMP[it.c].col, donde: sp ? '📍 ' + sp.lab : 'sin ubicar', accion: ro ? '' : abierto ? 'elijan el lugar ↓' : 'cambiar', abierto, bd: abierto ? '#f0a726' : pv && u ? (ok ? '#1f9d55' : '#c8413a') : '#dde3f0', sel: () => this.setState({ sel: abierto ? null : it.i, fb: null }),
+          spots: p.spots.map(x => ({ lab: x.lab, bg: x.id === u ? '#e8eefb' : '#fff', go: () => { upd({ ub: Object.assign({}, pj.ub, { [it.i]: x.id }) }); this.setState({ sel: null }); } })), porVis: pv || (cur.guia && !ro && !!u && !ok), por: it.por }; });
+      if (F === 3) { const dest = [{ v: '', t: '— pin —' }, { v: '5V', t: '5V' }, { v: 'GND', t: 'GND' }].concat(D.D.map(x => ({ v: x, t: x + (D.PWM.includes(x) ? ' ~' : '') }))).concat(D.A.map(x => ({ v: x, t: x })));
+        const errs = !ro && s.fb && !s.fb.ok ? D.revisarConex(p, pj.con).map(e => e.k) : [];
+        ph.filas = p.inst.map(it => ({ lab: it.lab, col: D.COMP[it.c].col, pins: D.COMP[it.c].pins.map(([pl, rol], k) => { const key = it.i + '.' + k, c = pj.con[key] || {}, R = D.ROL[rol];
+          return { pl, to: c.to || '', r: c.r || '', dest, conR: D.SEN(rol) || rol === 'catodo', bd: errs.includes(key) ? '#c8413a' : c.to ? '#2456b8' : '#9aa6c4', reglaVis: pv || cur.prefPin, regla: R.tx,
+            setTo: e => upd({ con: Object.assign({}, pj.con, { [key]: Object.assign({}, c, { to: e.target.value }) }) }), setR: e => upd({ con: Object.assign({}, pj.con, { [key]: Object.assign({}, c, { r: e.target.value }) }) }) }; }) }));
+        ph.ohm = cur.ohm; ph.esquema = this.esquema(p, pj.con, errs); }
+      if (F === 4) ph.pasos = p.flujo.map(([k, ok, wr]) => { const sh = k === 'leer' ? 'io' : /^(preg|e$|s$)/.test(k) ? 'rombo' : k === 'rep' ? 'loop' : 'rect', val = pj.fl[k] || '', mark = pv && !ro && val;
+        const poly = sh === 'rombo' ? '200,0 400,50 200,100 0,50' : sh === 'io' ? '30,0 400,0 370,100 0,100' : sh === 'loop' ? '0,0 400,0 400,100 0,100' : '0,0 400,0 400,100 0,100';
+        return { tag: sh === 'rombo' ? 'PREGUNTA' : sh === 'io' ? 'LEER DATO' : sh === 'loop' ? 'REPETIR' : /^si/.test(k) ? 'SI ES SÍ' : /^no/.test(k) ? 'SI ES NO' : 'ACCIÓN', poly, h: sh === 'rombo' ? '130px' : '84px', pad: sh === 'rombo' ? '20px 70px' : '10px 28px', w: sh === 'rombo' ? '230px' : '100%', fill: sh === 'rombo' ? '#fff6e3' : sh === 'io' ? '#efe8fb' : sh === 'loop' ? '#e8eefb' : '#fff', stroke: mark ? (val === ok ? '#1f9d55' : '#c8413a') : '#0a1a3a',
+          val: ro ? ok : val, bd: mark ? (val === ok ? '#1f9d55' : '#c8413a') : '#9aa6c4', opts: this.lim([ok].concat(wr), ok, id + k).length && (cur.ops === 2 || this.apoyo()) ? mez([ok, wr[0]], id + k) : mez([ok].concat(wr), id + k), set: e => upd({ fl: Object.assign({}, pj.fl, { [k]: e.target.value }) }) }; });
+      if (F === 5) { const S = D.sol(p); const slot = k => { const def = p.slots[k]; if (!def) return { t: '' , txt: true }; const okv = String(def[1]), val = pj.sl[k] != null ? String(pj.sl[k]) : ''; const lab = x => p.tipo === 'contador' && (k === 'e' || k === 's') ? x : SALIDA_TXT[x] || String(x);
+          return { slot: true, txt: false, val: ro ? okv : val, bd: pv && !ro && val ? (val === okv ? '#1f9d55' : '#c8413a') : '#fff', opts: this.lim(def[0], okv, id + k).map(x => ({ v: x, t: lab(x) })), set: e => upd({ sl: Object.assign({}, pj.sl, { [k]: e.target.value }) }) }; };
+        const T = t => ({ txt: true, slot: false, t }), L = (ind, bg, parts, rad) => ({ ml: ind * 22 + 'px', bg, parts, rad: rad || '8px' });
+        const C1 = '#e68a1c', C2 = '#cf6d0e', IN = '#8e5be0', OUT = '#2f8fd6', VAR = '#d14f8e'; const lines = [];
+        if (p.tipo === 'contador') { lines.push(L(0, C2, [T('al iniciar')], '14px 14px 8px 8px'), L(1, VAR, [T('fijar PERSONAS en'), slot('ini')]), L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, C1, [T('si'), T('IR de entrada detecta'), T('entonces')]), L(2, VAR, [T('cambiar PERSONAS en'), slot('e')]), L(1, C1, [T('si'), T('IR de salida detecta'), T('entonces')]), L(2, VAR, [T('cambiar PERSONAS en'), slot('s')]), L(1, C1, [T('si PERSONAS'), slot('op'), slot('n'), T('entonces')]), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'umbral') { const n = p.sen.n; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer ' + n)]), p.dig ? L(1, C1, [T('si ' + n + ' ='), slot('n'), T('entonces')]) : L(1, C1, [T('si ' + n), slot('op'), slot('n'), T((p.u || '') + ' entonces')]), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'dos') { const bpart = p.b.dig ? [T(p.b.n)] : [T(p.b.n), slot('op'), slot('n')]; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer: ' + p.a.n + ' · ' + p.b.n)]), L(1, C1, [T('si ' + p.a.n), slot('lg')].concat(bpart, [T('entonces')])), L(2, OUT, [slot('si')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('no')])); }
+        if (p.tipo === 'tramos') { const u = p.u; lines.push(L(0, C2, [T('para siempre')], '14px 14px 8px 8px'), L(1, IN, [T('leer el valor (' + u + ')')]), L(1, C1, [T('si valor <'), slot('n1'), T(u + ' entonces')]), L(2, OUT, [slot('c1')]), L(1, C1, [T('si no, si valor <'), slot('n2'), T(u + ' entonces')]), L(2, OUT, [slot('c2')]), L(1, C1, [T('si no')]), L(2, OUT, [slot('c3')])); }
+        ph.lineas = lines; ph.verCodigo = cur.codigo || ro; const pins = {}; Object.keys(pj.con || {}).forEach(k => { pins[k] = (pj.con[k] || {}).to; }); const sl = ro ? Object.fromEntries(Object.entries(S).map(([k, x]) => [k, String(x)])) : pj.sl; try { ph.codigo = D.codigo(p, Object.assign({}, S, sl), pins, pj.aj || {}); } catch (e) { ph.codigo = ''; } }
+      if (F === 8) { const run = s.run && s.run.id === id ? s.run : null, sl = ro ? Object.fromEntries(Object.entries(D.sol(p)).map(([k, x]) => [k, String(x)])) : pj.sl;
+        ph.tests = (run ? run.res : D.probar(p, Object.assign({}, D.sol(p)))).map((r, k) => { const vis = run && k < run.i; return { txt: r.txt, esp: this.txtSal(r.esp), obt: vis ? this.txtSal(r.obt) : '…', ic: vis ? (r.ok ? '✅' : '❌') : '', bg: vis ? (r.ok ? '#f1fbf4' : '#fdf1f0') : '#fff' }; });
+        ph.corriendo = !!(run && !run.fin); ph.btnTxt = run && !run.fin ? 'Probando…' : run ? '▶ Probar otra vez' : '▶ Subir y probar el sistema'; ph.correr = () => this.correr(id, sl, ro);
+        const FD = pj.falla ? FL_(D, p).find(x => x.t === pj.falla.t) : null; ph.fallaVis = !!FD && (ro || !pj.fallaOk);
+        if (FD) { const paso = ro ? 0 : (pj.fallaPaso || 0), lista = paso ? FD.arreglos : FD.causas, ok = lista[0], ops = this.apoyo() ? [ok, lista[1]] : lista;
+          ph.fSin = FD.sin; ph.fPreg = paso ? '2 · ¿CÓMO LO ARREGLAN?' : '1 · ¿CUÁL ES LA CAUSA?';
+          ph.fOpts = mez(ops, id + paso).map(t => ({ t, bd: ro && t === ok ? '#1f9d55' : '#c5ccdb', bg: ro && t === ok ? '#e3f6ea' : '#fff', go: () => { if (ro) return; if (t !== ok) { this.setPj(id, { fallaErr: (pj.fallaErr || 0) + 1 }); return this.fallo(id, 'Esa no es la respuesta', ['Lean otra vez el síntoma: ¿qué parte del sistema no está respondiendo como debería?']); }
+            if (!paso) { this.setPj(id, { fallaPaso: 1 }); return this.setState({ fb: { ok: true, t: 'Correcto: esa es la causa. Ahora, ¿cómo lo arreglan?' } }); }
+            this.setPj(id, { fallaOk: true, f: 9, max: Math.max(pj.max, 9) }); this.setState({ fb: { ok: true, t: '¡Falla reparada! El sistema funciona en el lugar real. Último paso: la ficha técnica.' }, sel: null }); } })); } }
+      if (F === 6) { const aj = pj.aj || {}, mk = !ro && (pv || (s.fb && !s.fb.ok)), zonas = pv || ro || this.apoyo();
+        ph.ajs = AJ_(D, p, ro ? 3 : this.nAj()).map(a => { const v = ro ? (pj.aj || {})[a.k] : (aj[a.k] != null ? aj[a.k] : a.def), bien = v >= a.ok[0] && v <= a.ok[1], sp = a.max - a.min;
+          return { n: a.n, v, vtxt: v + (a.u ? ' ' + a.u : ''), min: a.min, max: a.max, step: a.step, bd: mk ? (bien ? '#1f9d55' : '#c8413a') : '#dde3f0', zl: ((a.ok[0] - a.min) / sp * 100) + '%', zw: ((a.ok[1] - a.ok[0]) / sp * 100) + '%', zc: zonas ? 'rgba(31,157,85,.5)' : 'transparent', exVis: ro || pv || (mk && !bien), ex: a.ex, rango: a.min + ' – ' + a.max + (a.u ? ' ' + a.u : ''),
+            set: e => { const nv = Number(e.target.value); upd({ aj: Object.assign({}, pj.aj, { [a.k]: nv }) }); if (a.k === 'ang' && this.api) { const o = {}; p.inst.filter(x => x.c === 'servo').forEach(x => { o[x.i] = nv; }); this.api.sim(id, { in: {}, out: o }); } } }; }); }
+      if (F === 7) { const H = this.huecos(p, pj, ro), cd = pj.cd || {}, mk = !ro && (pv || (s.cons && s.cons.id === id && !s.cons.ok)), byL = {};
+        H.holes.forEach(x => { (byL[x.i] = byL[x.i] || []).push(x); });
+        ph.cdLines = H.lines.map((l, i) => { const parts = [], hs = (byL[i] || []).sort((a, b) => a.a - b.a), col = /^\s*\/\//.test(l) ? '#7fd18b' : /^#|^Servo/.test(l) ? '#c792ea' : '#dfe8f5'; let c = 0;
+          hs.forEach(x => { if (x.a > c) parts.push({ txt: true, sel: false, inp: false, t: l.slice(c, x.a), col }); const val = ro ? x.ans : String(cd[x.j] == null ? '' : cd[x.j]), bd = mk && val ? (val.trim() === x.ans ? '#1f9d55' : '#ff6b6b') : '#ffd166';
+            parts.push({ txt: false, sel: !x.typed, inp: x.typed, val, bd, w: (x.ans.length + 3) + 'ch', opts: x.opts, set: e => upd({ cd: Object.assign({}, pj.cd, { [x.j]: e.target.value }) }) }); c = x.b; });
+          parts.push({ txt: true, sel: false, inp: false, t: l.slice(c) || ' ', col }); return { n: String(i + 1), parts }; });
+        ph.cdAyuda = H.holes.some(x => x.typed) ? 'En los huecos para escribir, cuidado con las mayúsculas: Arduino las distingue.' : 'Elijan la palabra correcta en cada hueco amarillo.';
+        const cs = s.cons && s.cons.id === id ? s.cons : null; ph.consola = ro ? ['Compilando sketch…', 'Subiendo… ✓ Subido al Arduino UNO.'] : cs ? cs.lines : ['Pulsen «⚙ Compilar y subir» cuando completen los ' + H.holes.length + ' huecos.']; ph.conCol = ro || (cs && cs.ok) ? '#7fe0a0' : cs ? '#ff8a80' : '#c9d6f2'; }
+      if (F === 9) { const fi = pj.fi || {}, m = this.curso().minTxt || [30, 30, 60], st0 = s.st || {};
+        ph.secs = ['Portada: proyecto, lugar, integrantes, curso y fecha', 'Problema y objetivo', 'Lista de materiales con presupuesto en dólares', 'Ubicación de cada componente', 'Tabla de conexiones al Arduino', 'Diagrama de flujo', 'Ajustes y calibración', 'Código completo en Arduino IDE', 'Resultados de las pruebas', 'Falla encontrada y cómo la repararon'];
+        const campo = (k, n, ayuda, ph0, mn, val, setv) => { const l = String(val || '').trim().length; return { n, ayuda, ph: ph0, v: val || '', set: setv, cnt: l + ' / ' + mn + ' letras', cc: l >= mn ? '#1f9d55' : '#a8650a', bd: !ro && s.fb && !s.fb.ok && l < mn ? '#c8413a' : '#dde3f0' }; };
+        const setF = k => e => upd({ fi: Object.assign({}, pj.fi, { [k]: e.target.value }) });
+        ph.campos = [campo('imp', '1 · ¿Por qué es importante para el colegio?', 'Expliquen a quién ayuda y qué problema resuelve.', 'Este sistema ayuda a…', m[0], fi.imp, setF('imp')),
+          campo('con', '2 · Conclusiones', '¿Qué aprendieron? ¿Funcionó? ¿Qué fue lo más difícil y cómo lo resolvieron?', 'Concluimos que…', m[2], fi.con, setF('con')),
+          campo('mej', '3 · Mejoras para una versión 2', '¿Qué le agregarían o cambiarían?', 'Le agregaríamos…', m[1], fi.mej, setF('mej')),
+          campo('refl', '4 · Reflexión: ' + (p.reflex || ''), 'Respondan con sus palabras.', 'Pensamos que…', 20, pj.refl, e => upd({ refl: e.target.value }))];
+        ph.word = () => this.descargar(id, 'doc'); ph.pdf = () => this.descargar(id, 'pdf'); ph.hecho = !ro && !!pj.done; ph.nota = (pj.nota || 0).toFixed(2); ph.ins = this.insignias(pj); ph.insVis = ph.ins.length > 0; }
+      out.ph = ph;
+    }
+    // docente
+    if (s.vista === 'doc' && s.doc && D) { const d = s.doc, ses = d.ses || {}, ab = ses.abiertos, filtro = d.filtro || 'Todos';
+      const rows = (d.rows || []).filter(r => filtro === 'Todos' || (r.curso + ' ' + r.par).includes(filtro) || String(r.par) === filtro).sort((a, b) => (Number(a.pc) || 99) - (Number(b.pc) || 99));
+      const setAb = lista => { this.setSes({ abiertos: lista }); this.adm({ accion: 'abiertos', lista }); };
+      out.doc = { estado: (ses.abierta ? '🟢 Clase abierta' : '🔴 Clase cerrada') + ' · código ' + (ses.codigo || '—') + (URL_() ? '' : ' · modo demostración'), codigo: ses.codigo || '', url: location.href.replace(/[?#].*$/, ''),
+        setCodigo: e => { this._ed = true; this.setSes({ codigo: e.target.value.trim().toUpperCase() }); }, nuevoCod: () => { this._ed = true; this.setSes({ codigo: String(Math.floor(1000 + Math.random() * 9000)) }); },
+        sesTxt: ses.abierta ? 'Cerrar la clase' : 'Abrir la clase con este código', sesBg: ses.abierta ? '#c8413a' : '#1f9d55', toggleSesion: () => { const on = !ses.abierta; this._ed = false; this.setSes({ abierta: on }); this.adm({ accion: 'sesion', codigo: ses.codigo || '1234', abierta: on }); },
+        proys: D.P.map(p => { const on = !ab || ab.includes(p.id); return { id: p.id, ico: p.ico, n: p.n, bg: on ? '#e3f6ea' : '#fff', fg: on ? '#14532d' : '#4a5878', bd: on ? '#1f9d55' : '#c5ccdb', tog: () => { const cur = ab || D.P.map(x => x.id); setAb(on ? cur.filter(x => x !== p.id) : cur.concat([p.id])); } }; }),
+        todos: () => setAb(null), ninguno: () => setAb([]), expP: d.expP || 'solar', setExpP: e => this.setState({ doc: Object.assign({}, d, { expP: e.target.value }) }), explicar: () => this.docExp(d.expP || 'solar', 0),
+        filtro, filtros: ['Todos'].concat([...new Set((d.rows || []).map(r => String(r.par)))].sort()), setFiltro: e => this.setState({ doc: Object.assign({}, d, { filtro: e.target.value }) }), n: rows.length,
+        csv: () => this.csv(), salir: () => { clearInterval(this._dpoll); this.docExp(null); this.setState({ vista: 'login', doc: null }); },
+        rows: rows.map(r => { const ay = r.ayuda === 'SÍ', ap = r.apoyo === 'Sí'; return Object.assign({}, r, { ahora: r.actual + (r.fase ? ' · ' + r.fase : ''), bg: ay ? '#fff1e0' : '#fff', ayTxt: ay ? '✋ Atender' : '—', ayBg: ay ? '#c8413a' : '#c5ccdb', atender: () => { if (!ay) return; this.adm({ accion: 'ayuda', id: r.id }); this.setState({ doc: Object.assign({}, this.state.doc, { rows: this.state.doc.rows.map(x => x.id === r.id ? Object.assign({}, x, { ayuda: 'NO' }) : x) }) }); },
+          apTxt: ap ? 'Con apoyo' : 'Activar', apBg: ap ? '#2456b8' : '#fff', apFg: ap ? '#fff' : '#0a1a3a', apoyo: () => { this.adm({ accion: 'apoyo', id: r.id, on: !ap }); this.setState({ doc: Object.assign({}, this.state.doc, { rows: this.state.doc.rows.map(x => x.id === r.id ? Object.assign({}, x, { apoyo: ap ? 'No' : 'Sí' }) : x) }) }); } }); }) };
+    } else out.doc = { rows: [], proys: [], filtros: [] };
+    { const co = s.co || {}, setC = ch => this.setState({ co: Object.assign({}, this.state.co, ch) }), CR = ['Resuelve un problema real del colegio', 'El sistema funciona en todas las pruebas', 'La ficha está completa y clara', 'Las conclusiones muestran lo que aprendieron'];
+      out.co = { cod: co.cod || '', setCod: e => setC({ cod: e.target.value.toUpperCase() }), buscar: () => this.coBuscar(), msg: co.msg || '', msgVis: !!co.msg, vis: !!co.vis, info: co.otro ? co.otro.n + ' · ' + co.otro.integrantes : '', con: co.otro && co.otro.con ? '«' + co.otro.con + '»' : '', com: co.com || '', setCom: e => setC({ com: e.target.value }), enviado: !!co.enviado, btn: co.enviado ? '✓ Enviada' : 'Enviar coevaluación', enviar: () => this.coEnviar(),
+        crit: CR.map((n, k) => ({ n, st: [1, 2, 3, 4].map(v => ({ t: String(v), bg: (co.crit || [])[k] === v ? '#f0a726' : '#fff', go: () => { const c = (co.crit || [0, 0, 0, 0]).slice(); c[k] = v; setC({ crit: c }); } })) })) }; }
+    this.vistaV3(out); this.vistaMision(out);
+    if (s.rt && out.rt) { const z = this.zonaDe(s.rt.id); out.rt.ctxVis = true; out.rt.ctxZ = ZCTX[z] || ''; out.rt.ctx = RCTX[s.rt.id] || ''; }
+    if (s.vista === 'doc' && s.exp) { out.vDoc = false; }
+    return out;
+  }
+
+  esquema(p, con, errs) {
+    const h = React.createElement, D = X(), comps = p.inst, W = 440, rowH = 74, H = Math.max(250, comps.length * rowH + 40);
+    const ax = 300, pinX = ax + 18, pins = ['5V', 'GND'].concat(D.D).concat(D.A), py = k => 30 + k * ((H - 50) / (pins.length - 1));
+    const el = [h('rect', { key: 'b', x: ax, y: 10, width: 130, height: H - 20, rx: 10, fill: '#0b5e8a' }), h('text', { key: 'bt', x: ax + 92, y: H / 2, fill: '#fff', fontSize: 15, fontWeight: 700, textAnchor: 'middle', transform: 'rotate(-90 ' + (ax + 92) + ' ' + H / 2 + ')' }, 'ARDUINO UNO')];
+    pins.forEach((pn, k) => { el.push(h('circle', { key: 'p' + k, cx: pinX, cy: py(k), r: 4, fill: pn === '5V' ? '#e23b3b' : pn === 'GND' ? '#111' : '#f2d36b' })); el.push(h('text', { key: 'pt' + k, x: pinX + 8, y: py(k) + 4, fill: '#fff', fontSize: 10, fontFamily: 'monospace' }, pn)); });
+    comps.forEach((it, i) => { const C = D.COMP[it.c], y0 = 20 + i * rowH; el.push(h('rect', { key: 'c' + i, x: 6, y: y0, width: 110, height: rowH - 14, rx: 8, fill: '#f3f4f8', stroke: C.col, strokeWidth: 3 })); el.push(h('text', { key: 'ct' + i, x: 61, y: y0 + 16, fontSize: 11, fontWeight: 700, textAnchor: 'middle', fill: '#0a1a3a' }, it.lab.slice(0, 18)));
+      C.pins.forEach(([pl, rol], k) => { const key = it.i + '.' + k, c = con[key] || {}, yy = y0 + 28 + k * 12, idx = pins.indexOf(c.to); el.push(h('circle', { key: 'cp' + key, cx: 116, cy: yy, r: 3.5, fill: '#555' })); el.push(h('text', { key: 'cl' + key, x: 112, y: yy + 3, fontSize: 8.5, textAnchor: 'end', fill: '#4a5878' }, pl.slice(0, 14)));
+        if (idx >= 0) { const ty = py(idx), bad = errs.includes(key), color = bad ? '#c8413a' : c.to === '5V' ? '#e23b3b' : c.to === 'GND' ? '#222' : ['#f2f2f2', '#f4f1e0', '#1d1d1d', '#2b2b2b', '#333', '#2f6fd0', '#0b5e8a'].includes(C.col) ? '#e08a00' : C.col;
+          el.push(h('path', { key: 'w' + key, d: 'M116 ' + yy + ' C 210 ' + yy + ', 210 ' + ty + ', ' + pinX + ' ' + ty, fill: 'none', stroke: color, strokeWidth: 2.5, strokeDasharray: bad ? '6 4' : 'none' }));
+          if (c.r) { const mx = 200, my = (yy + ty) / 2; el.push(h('g', { key: 'r' + key }, h('rect', { x: mx - 13, y: my - 5, width: 26, height: 10, rx: 4, fill: '#e9d7a8', stroke: '#7a5a1a' }), h('rect', { x: mx - 7, y: my - 5, width: 3, height: 10, fill: c.r === '220' ? '#d33' : '#7a3' }), h('rect', { x: mx + 1, y: my - 5, width: 3, height: 10, fill: c.r === '220' ? '#d33' : '#f80' }), h('text', { x: mx, y: my - 8, fontSize: 9, textAnchor: 'middle', fill: '#7a5a1a', fontWeight: 700 }, c.r === '220' ? '220Ω' : '10kΩ'))); } } }); });
+    return h('svg', { viewBox: '0 0 ' + W + ' ' + H, style: { width: '100%', height: 'auto', display: 'block' } }, el);
+  }
+}
+</script>
+</body>
+</html>

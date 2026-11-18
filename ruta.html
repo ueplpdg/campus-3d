@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Misión Apagón · La Ruta</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#07101f;overflow:hidden;font-family:'IBM Plex Sans',system-ui,sans-serif}a{color:#5fd0e8}a:hover{color:#9fe6f5}button{font-family:inherit}@keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(240,196,25,.65)}50%{box-shadow:0 0 0 8px rgba(240,196,25,0)}}@keyframes rin{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}@keyframes rflick{0%,100%{opacity:1}92%{opacity:1}94%{opacity:.35}96%{opacity:1}}</style>
+<script src="./config.js"></script>
+<script src="./taller3d-datos.js"></script>
+<script src="./taller3d-extra.js"></script>
+<script src="./taller3d-campus.js"></script>
+<script src="./ruta-datos.js"></script>
+<script src="./ruta-escena.js"></script>
+</helmet>
+<div style="position:fixed;inset:0;background:#07101f;color:#0a1a3a;overflow:hidden">
+
+<sc-if value="{{ vLogin }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#3a3315 0%,#14110a 60%,#07101f 100%);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;overflow-x:hidden">
+<div style="position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(205,184,92,.05) 0 9px,transparent 9px 32px);pointer-events:none"></div>
+<div style="position:relative;margin:auto 0;width:100%;max-width:560px;background:#f5f7fb;border-radius:20px;padding:28px 30px;display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:rin .5s ease-out">
+<div style="display:flex;align-items:center;gap:14px"><img src="./logo-providencia.png" alt="" style="height:58px;width:auto"><div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:11px;letter-spacing:.1em;font-weight:700;color:#2456b8;line-height:1.3">U. E. P. «LA PROVIDENCIA» · ROBÓTICA</div><div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1;color:#0a1a3a">MISIÓN APAGÓN</div><div style="font-size:14px;color:#4a5878">La ruta: 7 salas · 7 llaves · 1 proyecto</div></div></div>
+<div style="display:flex;gap:6px;background:#e3e8f2;border-radius:12px;padding:4px"><button onClick="{{ tabNuevo }}" style="flex:1;border:none;border-radius:9px;padding:10px;font-weight:700;font-size:15px;cursor:pointer;background:{{ tabBg1 }};color:#0a1a3a">Nueva pareja</button><button onClick="{{ tabSeguir }}" style="flex:1;border:none;border-radius:9px;padding:10px;font-weight:700;font-size:15px;cursor:pointer;background:{{ tabBg2 }};color:#0a1a3a">Continuar con código</button></div>
+<sc-if value="{{ esNuevo }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#2456b8">J1 · NOMBRE Y APELLIDO<input value="{{ f.j1 }}" onChange="{{ setJ1 }}" placeholder="Teclado izquierdo (W A S D)" style="padding:11px 12px;border-radius:10px;border:2px solid #c5ccdb;font-size:15px;font-family:inherit;background:#fff;color:#0a1a3a"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#c8413a">J2 · NOMBRE Y APELLIDO<input value="{{ f.j2 }}" onChange="{{ setJ2 }}" placeholder="Teclado derecho (flechas)" style="padding:11px 12px;border-radius:10px;border:2px solid #c5ccdb;font-size:15px;font-family:inherit;background:#fff;color:#0a1a3a"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="font-size:13px;font-weight:700;color:#4a5878">CURSO</div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px"><sc-for list="{{ cursos }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.go }}" style="border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};border-radius:10px;padding:10px 4px;font-weight:800;font-size:15px;cursor:pointer">{{ c.t }}</button></sc-for></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#4a5878">PARALELO<input value="{{ f.par }}" onChange="{{ setPar }}" maxlength="1" placeholder="A" style="padding:11px 12px;border-radius:10px;border:2px solid #c5ccdb;font-size:15px;text-transform:uppercase;font-family:inherit;background:#fff;color:#0a1a3a"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#4a5878">N.º DE PC<input value="{{ f.pc }}" onChange="{{ setPc }}" inputmode="numeric" placeholder="1 a 30" style="padding:11px 12px;border-radius:10px;border:2px solid #c5ccdb;font-size:15px;font-family:inherit;background:#fff;color:#0a1a3a"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#4a5878">CÓDIGO DE CLASE<input value="{{ f.ses }}" onChange="{{ setSes }}" placeholder="Lo da el docente" style="padding:11px 12px;border-radius:10px;border:2px solid #c5ccdb;font-size:15px;font-family:inherit;background:#fff;color:#0a1a3a"></label>
+</div>
+<button onClick="{{ entrar }}" style="background:#0a1a3a;color:#f0c419;border:none;border-radius:12px;padding:15px;font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:.04em;cursor:pointer">{{ btnEntrar }}</button>
+</sc-if>
+<sc-if value="{{ esSeguir }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;color:#4a5878;line-height:1.45">Escriban el código que les dio el juego la clase anterior (empieza con <b>RT-</b>). Continuarán en la sala donde se quedaron.</div>
+<input value="{{ f.cod }}" onChange="{{ setCod }}" placeholder="RT-XXXXX" style="padding:14px;border-radius:12px;border:2px solid #c5ccdb;font-size:22px;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;text-align:center;background:#fff;color:#0a1a3a">
+<button onClick="{{ seguir }}" style="background:#0a1a3a;color:#f0c419;border:none;border-radius:12px;padding:15px;font-family:'Archivo Black',sans-serif;font-size:19px;cursor:pointer">{{ btnSeguir }}</button>
+</sc-if>
+<sc-if value="{{ msgVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fde8e6;color:#9b2d25;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;line-height:1.4">{{ msg }}</div></sc-if>
+<div style="font-size:12px;color:#6a7690;line-height:1.5;border-top:1px solid #dde3f0;padding-top:10px">J1 juega con <b>W A S D</b> y <b>E</b>. J2 con las <b>flechas</b> y <b>ENTER</b>. Con el mouse: arrastrar gira la cámara y la rueda acerca o aleja.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ vJuego }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ refHost }}" style="position:absolute;inset:0;background:#14110a"></div>
+<sc-if value="{{ err3dVis }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;padding:30px;text-align:center">{{ err3d }}</div></sc-if>
+
+<div style="position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:10px;background:rgba(7,16,31,.82);backdrop-filter:blur(6px);border:1px solid rgba(240,196,25,.35);border-radius:14px;padding:8px 14px 8px 8px;color:#fff;max-width:min(420px,40vw)">
+<img src="./logo-providencia.png" alt="" style="height:38px;width:auto;flex:none">
+<div style="display:flex;flex-direction:column;min-width:0"><div style="font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.04em;color:#f0c419;white-space:nowrap">MISIÓN APAGÓN</div><div style="font-size:12px;color:#c9d6f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hud.pareja }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5fd0e8;font-weight:700">{{ hud.cod }}</div></div>
+</div>
+
+<div style="position:absolute;left:50%;top:78px;transform:translateX(-50%);width:min(640px,calc(100vw - 28px));background:rgba(7,16,31,.82);backdrop-filter:blur(6px);border:1px solid rgba(95,208,232,.45);border-radius:14px;padding:10px 16px;color:#fff;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:12px;letter-spacing:.14em;font-weight:700;color:#5fd0e8;white-space:nowrap">{{ hud.sala }}</div><div style="flex:1;height:1px;background:rgba(95,208,232,.3)"></div><div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#f0c419;white-space:nowrap">{{ hud.paso }}</div></div>
+<div style="font-size:16px;font-weight:600;line-height:1.35;text-wrap:pretty">{{ hud.obj }}</div>
+<sc-if value="{{ hud.kdVis }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ffd166;font-weight:700"><div>SEÑAL DE LA LLAVE</div><div style="display:flex;gap:3px"><sc-for list="{{ hud.kd }}" as="b" hint-placeholder-count="5"><div style="width:14px;height:10px;border-radius:2px;background:{{ b }}"></div></sc-for></div><div style="color:#c9d6f2;font-weight:500;white-space:nowrap">{{ hud.kdTxt }}</div></div></sc-if>
+</div>
+
+<div style="position:absolute;right:14px;top:14px;display:flex;gap:8px;align-items:stretch">
+<div style="background:rgba(7,16,31,.82);backdrop-filter:blur(6px);border:1px solid rgba(240,196,25,.35);border-radius:14px;padding:6px 14px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:11px;letter-spacing:.14em;color:#c9d6f2;font-weight:700">NOTA</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px;color:#f0c419;line-height:1.1">{{ hud.nota }}</div></div>
+<button onClick="{{ ayuda }}" style="background:{{ hud.ayBg }};color:#fff;border:none;border-radius:14px;padding:0 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap">{{ hud.ayTxt }}</button>
+<button onClick="{{ salir }}" style="background:rgba(7,16,31,.82);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:0 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap">Guardar y salir</button>
+</div>
+
+<sc-if value="{{ promptVis }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;bottom:112px;transform:translateX(-50%);background:{{ prompt.bg }};color:{{ prompt.fg }};border-radius:999px;padding:12px 24px;font-weight:800;font-size:18px;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap;animation:rin .25s ease-out">{{ prompt.t }}</div></sc-if>
+
+<div style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(7,16,31,.82);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:8px 8px 6px"><div style="display:flex;gap:6px">
+<sc-for list="{{ inv }}" as="s" hint-placeholder-count="7">
+<div style="width:66px;height:62px;border-radius:12px;border:2px solid {{ s.bd }};background:{{ s.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;opacity:{{ s.op }};animation:{{ s.anim }};position:relative">
+<div style="font-size:24px;line-height:1">{{ s.ico }}</div><div style="font-size:10px;font-weight:700;color:{{ s.fg }};text-align:center;line-height:1.1;padding:0 3px">{{ s.n }}</div>
+<div style="position:absolute;top:3px;right:5px;font-size:11px">{{ s.key }}</div>
+</div>
+</sc-for>
+</div><div style="font-size:11px;color:#c9d6f2;white-space:nowrap"><b style="color:#7fb0ff">J1</b> W A S D · E   ·   <b style="color:#ff8a80">J2</b> flechas · ENTER   ·   mouse: arrastrar gira · rueda acerca</div>
+</div>
+
+<sc-if value="{{ toastVis }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;top:170px;transform:translateX(-50%);background:#f0c419;color:#1a1004;border-radius:12px;padding:12px 20px;font-weight:700;font-size:16px;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:min(680px,90vw);text-align:center;line-height:1.35;animation:rin .3s ease-out">{{ toast }}</div></sc-if>
+
+<sc-if value="{{ vOv }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(4,8,16,.72);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:18px;z-index:20">
+<div style="width:min(1260px,100%);max-height:100%;background:#f5f7fb;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.6);animation:rin .35s ease-out">
+<div style="flex:none;display:flex;align-items:center;gap:12px;padding:12px 18px;background:#0a1a3a;color:#fff">
+<div style="font-size:26px">{{ ov.ico }}</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;letter-spacing:.14em;font-weight:700;color:#5fd0e8">{{ ov.kick }}</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px;line-height:1.15">{{ ov.tit }}</div></div>
+<sc-if value="{{ ov.teoBtnVis }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ov.teoTog }}" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ ov.teoBtn }}</button></sc-if>
+<sc-if value="{{ ov.cerrable }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cerrarOv }}" style="background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:10px;width:40px;height:40px;font-size:20px;cursor:pointer">✕</button></sc-if>
+</div>
+<div style="flex:1;min-height:0;display:flex;overflow:hidden">
+<div style="flex:1;min-width:0;overflow:auto;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1fr);align-content:start;gap:14px">
+
+<sc-if value="{{ v.proyecto }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:16px;line-height:1.5;color:#22324f">El colegio se quedó sin energía. Para devolverla, cada pareja diseña un <b>sistema automático</b> que resuelve un problema real del colegio. Elijan <b>uno</b>: lo irán armando pieza por pieza en las 7 salas.</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">
+<sc-for list="{{ pr.lista }}" as="p" hint-placeholder-count="8">
+<button onClick="{{ p.go }}" style="text-align:left;border:2px solid {{ p.bd }};background:{{ p.bg }};border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;cursor:pointer;color:#0a1a3a">
+<div style="display:flex;align-items:center;gap:8px"><div style="font-size:26px">{{ p.ico }}</div><div style="display:flex;flex-direction:column"><div style="font-weight:800;font-size:15px;line-height:1.2">{{ p.n }}</div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#2456b8">{{ p.lugar }}</div></div></div>
+<div style="font-size:13px;line-height:1.4;color:#3a4a66">{{ p.h }}</div>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ pr.selVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#0a1a3a;color:#fff;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+<div style="font-size:12px;letter-spacing:.12em;font-weight:700;color:#f0c419">OBJETIVO DEL SISTEMA</div><div style="font-size:16px;line-height:1.45">{{ pr.obj }}</div>
+<button onClick="{{ pr.confirmar }}" style="align-self:flex-start;background:#f0c419;color:#1a1004;border:none;border-radius:10px;padding:12px 20px;font-weight:800;font-size:16px;cursor:pointer">Elegir este proyecto y comenzar →</button>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ v.llave }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div style="background:#0a1a3a;color:#f0c419;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;letter-spacing:.1em">{{ ac.cat }}</div><div style="font-size:13px;color:#4a5878;font-weight:600">{{ ac.cont }}</div></div>
+<div style="font-size:21px;font-weight:700;line-height:1.4;color:#0a1a3a;text-wrap:pretty">{{ ac.q }}</div>
+<sc-if value="{{ ac.visVis }}" hint-placeholder-val="{{ false }}"><div style="background:#0a1a3a;color:#fff;border-radius:14px;padding:18px;font-family:'IBM Plex Mono',monospace;font-size:clamp(24px,3vw,38px);font-weight:700;text-align:center;letter-spacing:.06em">{{ ac.vis }}</div></sc-if>
+<sc-if value="{{ ac.gridVis }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;display:grid;grid-template-columns:repeat(3,96px);gap:6px;background:#0a1a3a;padding:10px;border-radius:14px"><sc-for list="{{ ac.grid }}" as="g" hint-placeholder-count="9"><div style="height:96px;border-radius:8px;background:{{ g.bg }};color:{{ g.fg }};display:flex;align-items:center;justify-content:center;font-size:{{ g.fs }};font-weight:700;text-align:center;line-height:1;word-break:break-all;padding:4px">{{ g.t }}</div></sc-for></div></sc-if>
+<sc-if value="{{ ac.keypad }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+<div style="background:#1b2230;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;width:260px">
+<div style="background:#06210f;color:#7fe0a0;border-radius:8px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:30px;text-align:right;letter-spacing:.12em;min-height:40px;border:2px solid #2f6b4d">{{ ac.inpTxt }}</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ ac.teclas }}" as="k" hint-placeholder-count="12"><button onClick="{{ k.go }}" style="height:52px;border-radius:10px;border:none;background:{{ k.bg }};color:{{ k.fg }};font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;cursor:pointer">{{ k.t }}</button></sc-for></div>
+</div>
+<div style="flex:1;min-width:220px;font-size:14px;color:#4a5878;line-height:1.5">Escriban el código con el teclado del candado o con los números del teclado de la computadora. <b>ENTER</b> o ✓ para probar.</div>
+</div>
+</sc-if>
+<sc-if value="{{ ac.optsVis }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px"><sc-for list="{{ ac.opts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.go }}" style="border:2px solid {{ o.bd }};background:{{ o.bg }};border-radius:12px;padding:14px;font-size:{{ o.fs }};font-weight:700;cursor:pointer;color:#0a1a3a;text-align:center;line-height:1.3">{{ o.t }}</button></sc-for></div></sc-if>
+<sc-if value="{{ ac.fbVis }}" hint-placeholder-val="{{ false }}"><div style="background:{{ ac.fbBg }};border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45;color:#0a1a3a;border:2px solid {{ ac.fbBd }}"><b>{{ ac.fbT }}</b> {{ ac.fbEx }}</div></sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ ac.pista }}" style="background:#fff;color:#a8650a;border:2px solid #f0a726;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer">{{ ac.pistaTxt }}</button></div>
+</sc-if>
+
+<sc-if value="{{ v.comp }}" hint-placeholder-val="{{ false }}">
+<div style="background:#0a1a3a;color:#fff;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45"><b style="color:#f0c419">OBJETIVO:</b> {{ pz.obj }}</div>
+<div style="font-size:15px;color:#22324f;line-height:1.45">1) Toquen los componentes que necesita el sistema (no más). 2) En cada uno elijan si es <b style="color:#1f9d55">ENTRADA</b> (mide) o <b style="color:#c8413a">SALIDA</b> (actúa).</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+<sc-for list="{{ cp.cards }}" as="c" hint-placeholder-count="6">
+<div style="border:2px solid {{ c.bd }};background:{{ c.bg }};border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ c.tog }}" style="display:flex;gap:10px;align-items:center;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a">{{ c.svg }}<div style="display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-weight:800;font-size:14px;line-height:1.2">{{ c.n }}</div><div style="font-size:12px;color:#4a5878;line-height:1.35">{{ c.q }}</div></div></button>
+<sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px"><button onClick="{{ c.setE }}" style="flex:1;border:2px solid #1f9d55;background:{{ c.eBg }};color:{{ c.eFg }};border-radius:8px;padding:7px;font-weight:800;font-size:13px;cursor:pointer">ENTRADA</button><button onClick="{{ c.setS }}" style="flex:1;border:2px solid #c8413a;background:{{ c.sBg }};color:{{ c.sFg }};border-radius:8px;padding:7px;font-weight:800;font-size:13px;cursor:pointer">SALIDA</button></div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ v.ubi }}" hint-placeholder-val="{{ false }}">
+<div style="background:#0a1a3a;color:#fff;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45"><b style="color:#f0c419">LUGAR: {{ pz.lugar }}.</b> {{ pz.hist }}</div>
+<div style="font-size:15px;color:#22324f">Para cada componente, elijan dónde se instala. Piensen: ¿dónde ocurre lo que mide? ¿dónde se necesita su efecto? ¿qué lo puede dañar o engañar?</div>
+<sc-for list="{{ ub.filas }}" as="r" hint-placeholder-count="3">
+<div style="background:#fff;border:2px solid {{ r.bd }};border-radius:14px;padding:12px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+<div style="display:flex;gap:10px;align-items:center;width:220px">{{ r.svg }}<div style="font-weight:800;font-size:15px">{{ r.lab }}</div></div>
+<div style="flex:1;min-width:260px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px"><sc-for list="{{ r.ops }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.go }}" style="border:2px solid {{ o.bd }};background:{{ o.bg }};border-radius:10px;padding:9px 10px;font-size:14px;font-weight:600;cursor:pointer;color:#0a1a3a;text-align:left;line-height:1.3">{{ o.t }}</button></sc-for></div>
+<sc-if value="{{ r.msgVis }}" hint-placeholder-val="{{ false }}"><div style="flex-basis:100%;font-size:13px;color:{{ r.msgCol }};font-weight:600;line-height:1.4">{{ r.msg }}</div></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ v.con }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;font-weight:700"><div style="display:flex;align-items:center;gap:5px;white-space:nowrap"><div style="width:22px;height:5px;border-radius:3px;background:#e53935"></div>5V</div><div style="display:flex;align-items:center;gap:5px;white-space:nowrap"><div style="width:22px;height:5px;border-radius:3px;background:#263238"></div>GND</div><div style="display:flex;align-items:center;gap:5px;white-space:nowrap"><div style="width:22px;height:5px;border-radius:3px;background:#43a047"></div>Digital</div><div style="display:flex;align-items:center;gap:5px;white-space:nowrap"><div style="width:22px;height:5px;border-radius:3px;background:#fb8c00"></div>PWM ~</div><div style="display:flex;align-items:center;gap:5px;white-space:nowrap"><div style="width:22px;height:5px;border-radius:3px;background:#1e88e5"></div>Analógico</div><div style="flex:1"></div><div style="color:#4a5878;font-weight:500">Toquen una pata (círculo) y luego un pin del Arduino. Toquen el chip del cable para poner resistencia.</div></div>
+<div style="background:#e9eef6;border-radius:14px;padding:6px;border:1px solid #d3dbe8">{{ cn.svg }}</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#0a1a3a;color:#fff;border-radius:12px;padding:10px 14px"><div style="font-size:14px;line-height:1.4;flex:1;min-width:240px">{{ cn.info }}</div><sc-if value="{{ cn.quitarVis }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cn.quitar }}" style="background:#c8413a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer">Quitar este cable</button></sc-if></div>
+</sc-if>
+
+<sc-if value="{{ v.flujo }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;color:#22324f;line-height:1.45">Toquen cada bloque con «?» y elijan su texto. Recuerden: <b>leer → decidir → actuar → repetir</b>. Objetivo: {{ pz.obj }}</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:0;padding-bottom:6px">
+<sc-for list="{{ fl.bloques }}" as="b" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;align-items:center;width:100%">
+<sc-if value="{{ b.flecha }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:3px;height:16px;background:#0a1a3a"></div><div style="font-size:12px;font-weight:800;color:{{ b.preCol }};min-height:2px">{{ b.pre }}</div><div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #0a1a3a"></div></div></sc-if>
+<button onClick="{{ b.go }}" style="width:{{ b.w }};min-height:{{ b.h }};background:{{ b.bg }};color:{{ b.fg }};border:none;clip-path:{{ b.clip }};border-radius:{{ b.rad }};padding:{{ b.pad }};font-weight:700;font-size:14px;line-height:1.3;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;outline:{{ b.ol }}">{{ b.t }}</button>
+<sc-if value="{{ b.abierto }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:5px;margin:8px 0;width:min(440px,100%)"><sc-for list="{{ b.ops }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="border:2px solid #2456b8;background:#fff;border-radius:10px;padding:9px;font-size:14px;font-weight:600;cursor:pointer;color:#0a1a3a">{{ o.t }}</button></sc-for></div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ v.prog }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ pg.paso0 }}" hint-placeholder-val="{{ true }}">
+<div style="font-size:15px;color:#22324f;line-height:1.45"><b>Paso 1 de 2 · Programen la decisión.</b> Objetivo: {{ pz.obj }}</div>
+<sc-for list="{{ pg.slots }}" as="s" hint-placeholder-count="4">
+<div style="background:#fff;border:2px solid {{ s.bd }};border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="width:210px;font-weight:800;font-size:14px">{{ s.n }}</div><div style="display:flex;gap:6px;flex-wrap:wrap;flex:1"><sc-for list="{{ s.ops }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="border:2px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};border-radius:8px;padding:8px 12px;font-weight:700;font-size:14px;cursor:pointer">{{ o.t }}</button></sc-for></div></div>
+</sc-for>
+<div style="background:#0f1720;color:#dfe8f5;border-radius:12px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.6;white-space:pre-wrap">{{ pg.prev }}</div>
+</sc-if>
+<sc-if value="{{ pg.paso1 }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;color:#22324f;line-height:1.45"><b>Paso 2 de 2 · Código en Arduino IDE.</b> Completen los huecos amarillos y pulsen «⚙ Compilar». {{ pg.ayuda }}</div>
+<div style="background:#0f1720;border-radius:12px;padding:10px 0;overflow-x:auto">
+<sc-for list="{{ pg.lines }}" as="ln" hint-placeholder-count="14">
+<div style="display:flex;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.8;white-space:pre;color:#dfe8f5;align-items:center;min-height:22px"><div style="flex:none;width:36px;text-align:right;padding-right:10px;color:#5d6b7e">{{ ln.n }}</div><sc-for list="{{ ln.parts }}" as="pt"><sc-if value="{{ pt.txt }}" hint-placeholder-val="{{ true }}"><span style="color:{{ pt.col }}">{{ pt.t }}</span></sc-if><sc-if value="{{ pt.sel }}" hint-placeholder-val="{{ false }}"><select value="{{ pt.val }}" onChange="{{ pt.set }}" style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 2px"><option value="">¿?</option><sc-for list="{{ pt.opts }}" as="o"><option value="{{ o }}">{{ o }}</option></sc-for></select></sc-if><sc-if value="{{ pt.inp }}" hint-placeholder-val="{{ false }}"><input value="{{ pt.val }}" onChange="{{ pt.set }}" placeholder="?" spellcheck="false" style="font-family:'IBM Plex Mono',monospace;font-size:13px;background:#1d2a3a;color:#ffd166;border:1px solid {{ pt.bd }};border-radius:4px;padding:1px 4px;width:{{ pt.w }}"></sc-if></sc-for></div>
+</sc-for>
+</div>
+<div style="background:#000;color:{{ pg.conCol }};border-radius:12px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;display:flex;flex-direction:column;gap:2px"><div style="color:#8a98ab;letter-spacing:.08em">CONSOLA</div><sc-for list="{{ pg.consola }}" as="c" hint-placeholder-count="1"><div style="white-space:pre-wrap">{{ c }}</div></sc-for></div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ v.prueba }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;color:#22324f;line-height:1.45">Su sistema ya está instalado en <b>{{ pz.lugar }}</b>. Pulsen <b>▶ Probar</b>: veremos qué hace en cada situación real.</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap">
+<div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ pb.filas }}" as="r" hint-placeholder-count="5"><div style="display:flex;gap:8px;align-items:center;background:{{ r.bg }};border:2px solid {{ r.bd }};border-radius:10px;padding:8px 10px;font-size:14px"><div style="width:22px;font-weight:800">{{ r.ic }}</div><div style="flex:1;min-width:0;font-weight:600">{{ r.txt }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4a5878;white-space:nowrap">{{ r.val }}</div><div style="font-size:12px;font-weight:700;color:#2456b8;max-width:200px;text-align:right">{{ r.sal }}</div></div></sc-for>
+</div>
+<div style="width:340px;max-width:100%;background:#0a1a3a;border-radius:16px;padding:14px;color:#fff;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.12em;font-weight:700;color:#5fd0e8">SIMULACIÓN EN VIVO</div>
+<div style="font-size:14px;font-weight:700;min-height:20px">{{ pb.sit }}</div>
+<div style="background:#06121f;border-radius:10px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:24px;color:#7fe0a0;text-align:center">{{ pb.lect }}</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+<sc-for list="{{ pb.outs }}" as="x" hint-placeholder-count="2">
+<div style="background:#13233d;border-radius:10px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px">
+<sc-if value="{{ x.led }}" hint-placeholder-val="{{ false }}"><div style="width:34px;height:34px;border-radius:50%;background:{{ x.col }};box-shadow:{{ x.glow }};border:2px solid #0a1a3a"></div></sc-if>
+<sc-if value="{{ x.servo }}" hint-placeholder-val="{{ false }}"><div style="width:44px;height:44px;position:relative"><div style="position:absolute;left:4px;right:4px;bottom:8px;height:16px;background:#1e63c6;border-radius:3px"></div><div style="position:absolute;left:19px;bottom:14px;width:6px;height:28px;background:#fff;border-radius:3px;transform-origin:50% 100%;transform:rotate({{ x.ang }}deg);transition:transform .4s"></div></div></sc-if>
+<sc-if value="{{ x.otro }}" hint-placeholder-val="{{ false }}"><div style="font-size:30px;opacity:{{ x.op }};filter:{{ x.fil }}">{{ x.ico }}</div></sc-if>
+<div style="font-size:11px;text-align:center;line-height:1.2;color:#c9d6f2">{{ x.n }}</div><div style="font-size:12px;font-weight:800;color:{{ x.stCol }}">{{ x.st }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<sc-if value="{{ pb.fallaVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff6e3;border:2px solid #f0a726;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:19px;color:#a8650a">⚠ FALLA SORPRESA AL INSTALARLO</div>
+<div style="font-size:15px;line-height:1.45">{{ pb.fSin }}</div>
+<div style="font-size:12px;letter-spacing:.1em;font-weight:800;color:#2456b8">{{ pb.fPreg }}</div>
+<sc-for list="{{ pb.fOps }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="text-align:left;border:2px solid #c5ccdb;background:#fff;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;cursor:pointer;color:#0a1a3a;line-height:1.35">{{ o.t }}</button></sc-for>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ v.ficha }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;color:#22324f;line-height:1.45">La <b>ficha técnica</b> documenta su proyecto. El sistema ya llenó la parte técnica con todo lo que armaron; ustedes escriben lo que piensan.</div>
+<sc-for list="{{ fi.campos }}" as="c" hint-placeholder-count="3">
+<div style="background:#fff;border:2px solid {{ c.bd }};border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px"><div style="font-weight:800;font-size:15px">{{ c.n }}</div><div style="font-size:13px;color:#4a5878">{{ c.ay }}</div><textarea value="{{ c.v }}" onChange="{{ c.set }}" rows="3" placeholder="{{ c.ph }}" style="border:1px solid #9aa6c4;border-radius:8px;padding:9px;font-size:15px;font-family:inherit;resize:vertical;background:#fff;color:#0a1a3a"></textarea><div style="font-size:12px;color:{{ c.cc }};text-align:right;font-weight:700">{{ c.cnt }}</div></div>
+</sc-for>
+<button onClick="{{ fi.word }}" style="align-self:flex-start;background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer">⬇ Descargar la ficha (Word)</button>
+</sc-if>
+
+<sc-if value="{{ v.fin }}" hint-placeholder-val="{{ false }}">
+<div style="background:linear-gradient(135deg,#0a1a3a,#163a7a);color:#fff;border-radius:16px;padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px"><div style="font-family:'Archivo Black',sans-serif;font-size:28px;color:#f0c419">¡ENERGÍA RESTAURADA!</div><div style="font-size:16px;line-height:1.45">{{ fn.quien }} completaron el proyecto <b>{{ fn.proy }}</b>. El colegio vuelve a la vida y la cancha está abierta.</div></div>
+<div style="text-align:center"><div style="font-size:12px;letter-spacing:.14em;font-weight:700;color:#c9d6f2">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:56px;color:#f0c419;line-height:1">{{ fn.nota }}</div><div style="font-size:12px;color:#c9d6f2">Proyecto {{ fn.np }} / 7 · Llaves {{ fn.nl }} / 3</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px"><sc-for list="{{ fn.filas }}" as="r" hint-placeholder-count="7"><div style="background:#fff;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:3px"><div style="font-size:12px;font-weight:800;color:#2456b8">{{ r.sala }}</div><div style="font-weight:700;font-size:14px">{{ r.pieza }}</div><div style="font-size:13px;color:#4a5878">🔑 {{ r.ll }} · 🧩 {{ r.pz }}</div></div></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ fi.word }}" style="background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer">⬇ Ficha técnica (Word)</button><button onClick="{{ cerrarOv }}" style="background:#f0c419;color:#1a1004;border:none;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer">🏀 Ir a la cancha</button></div>
+<div style="font-size:14px;color:#4a5878">Su código para continuar o revisar: <b style="font-family:'IBM Plex Mono',monospace;color:#0a1a3a">{{ hud.cod }}</b></div>
+</sc-if>
+
+<sc-if value="{{ v.cancha }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:15px;color:#22324f">Básquet de precisión: cada uno tiene 5 lanzamientos por turnos. Presionen su tecla (<b>J1 E</b> · <b>J2 ENTER</b>) cuando la marca esté en la zona verde. En el centro dorado vale 3.</div>
+<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center">
+<div style="background:#0a1a3a;color:#fff;border-radius:14px;padding:14px 20px;text-align:center"><div style="font-size:13px;font-weight:700;color:#7fb0ff">J1</div><div style="font-family:'Archivo Black',sans-serif;font-size:40px">{{ bk.p1 }}</div><div style="font-size:12px">{{ bk.t1 }}</div></div>
+<div style="width:min(520px,80vw);display:flex;flex-direction:column;gap:10px;align-items:center"><div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:#0a1a3a">{{ bk.turno }}</div><div style="position:relative;width:100%;height:44px;border-radius:22px;background:#e3e7f2;overflow:hidden"><div style="position:absolute;left:36%;width:28%;top:0;bottom:0;background:#9ad7a8"></div><div style="position:absolute;left:45.5%;width:9%;top:0;bottom:0;background:#f0c419"></div><div style="position:absolute;top:2px;bottom:2px;width:8px;border-radius:4px;background:#0a1a3a;left:{{ bk.pos }}"></div></div><div style="font-size:15px;font-weight:700;min-height:20px;color:#2456b8;white-space:nowrap">{{ bk.msg }}</div></div>
+<div style="background:#c8413a;color:#fff;border-radius:14px;padding:14px 20px;text-align:center"><div style="font-size:13px;font-weight:700">J2</div><div style="font-family:'Archivo Black',sans-serif;font-size:40px">{{ bk.p2 }}</div><div style="font-size:12px">{{ bk.t2 }}</div></div>
+</div>
+<button onClick="{{ bk.otra }}" style="align-self:center;background:#0a1a3a;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer">{{ bk.otraTxt }}</button>
+</sc-if>
+
+<sc-if value="{{ pzFb.vis }}" hint-placeholder-val="{{ false }}"><div style="background:{{ pzFb.bg }};border:2px solid {{ pzFb.bd }};border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:5px"><div style="font-weight:800;font-size:15px;color:{{ pzFb.col }}">{{ pzFb.t }}</div><sc-for list="{{ pzFb.lista }}" as="x" hint-placeholder-count="1"><div style="font-size:14px;line-height:1.4;display:flex;gap:6px"><div>•</div><div>{{ x }}</div></div></sc-for></div></sc-if>
+
+<sc-if value="{{ pzBtns }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:-18px;background:#f5f7fb;padding:10px 0 4px"><button onClick="{{ pzCheck }}" style="background:#0a1a3a;color:#f0c419;border:none;border-radius:12px;padding:13px 22px;font-family:'Archivo Black',sans-serif;font-size:17px;cursor:pointer;white-space:nowrap">{{ pzCheckTxt }}</button><button onClick="{{ pzPista }}" style="background:#fff;color:#a8650a;border:2px solid #f0a726;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer">💡 Pista (resta un poco)</button></div></sc-if>
+
+</div>
+<sc-if value="{{ teoVis }}" hint-placeholder-val="{{ false }}">
+<div style="width:330px;flex:none;border-left:1px solid #dde3f0;background:#eef3fd;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;letter-spacing:.12em;font-weight:800;color:#2456b8">📖 APRENDE · LEAN ANTES DE RESOLVER</div>
+<sc-for list="{{ teo.lineas }}" as="x" hint-placeholder-count="4"><div style="display:flex;gap:8px;font-size:14px;line-height:1.45;color:#0a1a3a"><div style="color:#2456b8;font-weight:800">›</div><div>{{ x }}</div></div></sc-for>
+<sc-if value="{{ teo.compVis }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12px;letter-spacing:.12em;font-weight:800;color:#2456b8;margin-top:6px">📚 BIBLIOTECA TÉCNICA</div>
+<sc-for list="{{ teo.comps }}" as="c" hint-placeholder-count="3"><div style="background:#fff;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:center;gap:8px">{{ c.svg }}<div style="font-weight:800;font-size:13px;line-height:1.2">{{ c.n }}</div></div><div style="font-size:12.5px;line-height:1.45;color:#22324f">{{ c.t }}</div></div></sc-for>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const KEY = 'ruta_apagon_v1';
+const URL_ = () => ((window.ARTICULO_CONFIG || {}).sheetsUrl || '').trim();
+const X = () => window.T3D_DATOS, RD = () => window.RUTA_DATOS;
+const r2 = n => Math.round(n * 100) / 100;
+function rngS(str) { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } let s = h >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const mez = (a, seed) => { const r = rngS(seed), o = a.slice(); for (let i = o.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; } return o; };
+const CURSOS = [['8vo', '8vo EGB'], ['9no', '9no EGB'], ['10mo', '10mo EGB'], ['3BGU', '3ro BGU']];
+const SLOTN = { op: 'Signo de comparación', n: 'Valor límite', n1: 'Primer límite', n2: 'Segundo límite', si: 'Si se cumple (SÍ) →', no: 'Si no se cumple (NO) →', c1: 'Por debajo del 1.er límite →', c2: 'Entre los dos límites →', c3: 'Sobre el 2.º límite →', lg: 'Unir las dos condiciones con', e: 'Cuando alguien ENTRA, el contador…', s: 'Cuando alguien SALE, el contador…', ini: 'Valor inicial del contador' };
+const svgEl = (svg, size) => React.createElement('span', { style: { display: 'inline-block', width: size, height: size, flex: 'none' }, dangerouslySetInnerHTML: { __html: svg } });
+const PISTAC = { 'Numérico': 'Busquen qué operación se repite: ¿se suma, se multiplica, se alterna? Escriban los cálculos en una hoja.', 'Verbal': 'Piensen en la RELACIÓN entre las palabras: ¿función, lugar, contrario, categoría?', 'Lógico': 'Ordenen los datos en una línea o tabla y descarten las opciones que contradicen alguna frase.', 'Abstracto': 'Miren una sola cosa a la vez: ¿cambia la dirección, la cantidad o el relleno al avanzar?', 'Lógica': 'Lean despacio y prueben con un ejemplo. Escriban lo que saben.', 'Razonamiento': 'Separen los datos importantes y prueben cada opción.' };
+
+class Component extends DCLogic {
+  state = { vista: 'login', tab: 'nuevo', f: { j1: '', j2: '', curso: '', par: '', pc: '', ses: '', cod: '' }, msg: '', cargando: false, st: null, ov: null, ui: {}, near: null, room: 0, kd: null, toast: null, teo: true, err3d: '', bk: null };
+  refHost = React.createRef();
+  componentDidMount() { try { const g = JSON.parse(localStorage.getItem(KEY) || 'null'); if (g && g.id) this.setState({ f: Object.assign({}, this.state.f, { cod: g.id }), tab: 'seguir' }); } catch (e) {} this.kh = e => this.tecla(e); window.addEventListener('keydown', this.kh); }
+  componentWillUnmount() { window.removeEventListener('keydown', this.kh); clearInterval(this._ti); clearInterval(this._bk); clearTimeout(this._tt); if (this.api) this.api.destruir(); }
+  setF(k, v) { this.setState({ f: Object.assign({}, this.state.f, { [k]: v }), msg: '' }); }
+  async getJ(q) { const u = URL_(); const r = await fetch(u + (u.includes('?') ? '&' : '?') + q + '&t=' + Date.now()); return JSON.parse(await r.text()); }
+  post(b) { const u = URL_(); if (!u) return; fetch(u, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(b) }).catch(() => {}); }
+  sfx(ok) { try { const A = this._ac || (this._ac = new (window.AudioContext || window.webkitAudioContext)()), o = A.createOscillator(), g = A.createGain(), t = A.currentTime; o.type = 'triangle'; (ok ? [660, 880, 1320] : [220, 160]).forEach((f, i) => o.frequency.setValueAtTime(f, t + i * 0.09)); g.gain.setValueAtTime(0.07, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.4); o.connect(g); g.connect(A.destination); o.start(t); o.stop(t + 0.42); } catch (e) {} }
+  toast(t, ms) { clearTimeout(this._tt); this.setState({ toast: t }); this._tt = setTimeout(() => this.setState({ toast: null }), ms || 4500); }
+  P() { const st = this.state.st; return st && st.proy ? X().P.find(p => p.id === st.proy) : null; }
+
+  // ---------- ingreso ----------
+  async entrar() {
+    const f = this.state.f, j1 = f.j1.trim(), j2 = f.j2.trim(), par = f.par.trim().toUpperCase(), pc = String(f.pc).trim(), ses = f.ses.trim();
+    if (j1.length < 3 || j2.length < 3) return this.setState({ msg: 'Escriban los nombres de los dos integrantes.' });
+    if (!f.curso) return this.setState({ msg: 'Elijan su curso.' });
+    if (!/^[A-Z]$/.test(par)) return this.setState({ msg: 'Escriban la letra del paralelo (A, B, C…).' });
+    if (!/^\d{1,2}$/.test(pc)) return this.setState({ msg: 'Escriban el número de la computadora.' });
+    if (!ses) return this.setState({ msg: 'Escriban el código de clase que muestra el docente.' });
+    this.setState({ cargando: true, msg: '' });
+    try { if (URL_()) { const r = await this.getJ('t3ds=' + encodeURIComponent(ses)); if (!r.ok) { this.setState({ cargando: false, msg: r.abierta ? 'El código de clase no es correcto.' : 'La sesión todavía no está abierta. Esperen al docente.' }); return; } } else if (ses !== '1234') { this.setState({ cargando: false, msg: 'Modo demostración: el código de clase es 1234.' }); return; } }
+    catch (e) { this.setState({ cargando: false, msg: 'No hay conexión con el servidor. Revisen el internet.' }); return; }
+    const id = 'RT-' + Array.from({ length: 5 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+    const st = { ruta: 1, id, curso: f.curso, par: f.curso + ' ' + par, pc, integrantes: j1 + ' / ' + j2, ses, t0: Date.now(), proy: null, abiertas: 0, est: 1, fase: 'llave', keySpot: 0, ll: {}, pz: {}, d: {}, done: false };
+    this.setState({ st, vista: 'juego', cargando: false }, () => { this.guardar(); this.montar(); this.abrirOv('proyecto'); });
+  }
+  async seguir() {
+    const cod = this.state.f.cod.trim().toUpperCase(); if (!/^RT-[A-Z0-9]{5}$/.test(cod)) return this.setState({ msg: 'El código tiene la forma RT-XXXXX.' });
+    this.setState({ cargando: true, msg: '' }); let st = null;
+    try { const g = JSON.parse(localStorage.getItem(KEY) || 'null'); if (g && g.id === cod) st = g; } catch (e) {}
+    if (!st && URL_()) { try { const r = await this.getJ('t3did=' + encodeURIComponent(cod)); if (r && r.data && r.data.ruta) st = r.data; } catch (e) {} }
+    if (!st) return this.setState({ cargando: false, msg: 'No se encontró ese código. Revisen que esté bien escrito.' });
+    this.setState({ st, vista: 'juego', cargando: false }, () => { this.montar(); if (!st.proy) this.abrirOv('proyecto'); else this.toast('¡Bienvenidos de vuelta! Continúen en ' + RD().ROOMS[Math.min(st.est, 8)].n + '.'); });
+  }
+  montar() {
+    const go = () => { const host = this.refHost.current; if (!host || !window.RUTA_ESCENA || !window.RUTA_DATOS || !window.T3D_DATOS) { setTimeout(go, 120); return; }
+      window.RUTA_ESCENA.crear(host, { onNear: n => this.setState({ near: n }), onAccion: n => this.accion(n), onRoom: r => this.setState({ room: r }), onToast: t => this.toast(t, 3000),
+        onKeyDist: d => { const b = d == null ? null : d < 2 ? 5 : d < 3.5 ? 4 : d < 5.5 ? 3 : d < 8 ? 2 : 1; if (b !== this.state.kd) this.setState({ kd: b }); } })
+        .then(api => { this.api = api; const st = this.state.st; api.setMundo(this.mundo()); api.spawn(st.done ? 7 : st.proy ? st.est : 0); if (this.state.ov) api.pausa(true); })
+        .catch(e => this.setState({ err3d: 'No se pudo iniciar el 3D en esta computadora: ' + (e && e.message) })); };
+    go();
+  }
+  mundo() { const s = this.state.st; return { est: s.est, fase: s.fase, abiertas: s.abiertas, keySpot: s.keySpot }; }
+  upd(ch, cb) { const st = Object.assign({}, this.state.st, ch); this.setState({ st }, () => { this.guardar(); if (this.api) this.api.setMundo(this.mundo()); cb && cb(); }); }
+  guardar(extra) {
+    const st = this.state.st; if (!st) return; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
+    clearTimeout(this._sv); this._sv = setTimeout(() => { const s = this.state.st, R = RD().ROOMS, n = Object.values(s.pz).filter(x => x.ok).length, p = this.P();
+      this.post(Object.assign({ modo: 't3d', id: s.id, curso: s.curso, par: s.par, pc: s.pc, integrantes: s.integrantes, actual: 'Ruta · ' + (p ? p.n : 'sin proyecto'), fase: s.done ? 'Terminado' : R[Math.min(s.est, 8)].n + ' · ' + s.fase, completos: n + '/7', nota: this.nota(), detalle: 'Llaves ' + Object.values(s.ll).filter(x => x.ok).length + '/7 · Piezas ' + n + '/7', fallos: Object.values(s.pz).reduce((a, x) => a + (x.err || 0), 0) + Object.values(s.ll).reduce((a, x) => a + (x.w || 0), 0), pistas: Object.values(s.pz).concat(Object.values(s.ll)).reduce((a, x) => a + (x.pi || 0), 0), json: JSON.stringify(s) }, extra || {})); }, extra ? 10 : 1500);
+  }
+  llPts(s) { const x = (this.state.st.ll || {})[s]; return x && x.ok ? Math.max(0.4, 1 - 0.3 * (x.w || 0) - 0.15 * (x.pi || 0)) : 0; }
+  pzPts(s) { const x = (this.state.st.pz || {})[s]; return x && x.ok ? Math.max(0.5, 1 - 0.12 * (x.err || 0) - 0.15 * (x.pi || 0)) : 0; }
+  nota() { let a = 0, b = 0; for (let s = 1; s <= 7; s++) { a += this.pzPts(s); b += this.llPts(s); } return r2(a + b * 3 / 7); }
+
+  // ---------- acciones del mundo ----------
+  accion(n) {
+    const st = this.state.st; if (!st || this.state.ov) return;
+    if (n.tipo === 'llave' && st.fase === 'llave' && n.room === st.est) { this.sfx(true); this.upd({ fase: 'lock' }); this.toast('🔑 ¡Encontraron la LLAVE! Llévenla a la terminal del candado. Deben estar los DOS junto a ella.'); return; }
+    if (n.tipo === 'terminal' && st.fase === 'lock') return this.abrirOv('llave');
+    if (n.tipo === 'mesa' && st.fase === 'pieza') return this.abrirOv('pieza');
+    if (n.tipo === 'tablero') { if (!st.proy) return this.abrirOv('proyecto'); const p = this.P(); return this.toast('Su proyecto: ' + p.n + '. ' + p.objetivo, 6000); }
+    if (n.tipo === 'cancha' && st.done) return this.abrirOv('cancha');
+  }
+  abrirOv(tipo) {
+    const st = this.state.st, s = st.est, p = this.P(); if (this.api) this.api.pausa(true);
+    let ui = { fb: null };
+    if (tipo === 'llave') { const prev = (st.ll[s] || {}); ui = { r: RD().acertijos(st.curso, s, rngS(st.id + ':' + s)), k: prev.k || 0, inp: '', fb: null, wrong: 0, pista: false }; }
+    if (tipo === 'pieza') { const d = st.d || {};
+      if (s === 1) ui = { sel: {}, cls: {}, cards: mez([...new Set(p.inst.map(i => i.c))].concat((p.dist || []).filter(c => X().COMP[c])), st.id + 'c') };
+      if (s === 2) ui = { ub: {}, ops: mez(p.spots.map(x => x.id), st.id + 'u') };
+      if (s === 3) ui = { con: {}, pk: null, errK: {}, info: 'Toquen una pata de un componente (círculo de la derecha) para empezar.' };
+      if (s === 4) ui = { fl: {}, ab: null };
+      if (s === 5) ui = { paso: 0, sl: {}, cd: {}, cons: null };
+      if (s === 6) ui = { res: X().probar(p, d.sl || X().sol(p)), ti: -1, run: false, fstep: 0, falla: null };
+      if (s === 7) ui = { fi: Object.assign({ imp: '', con: '', mej: '' }, d.fi || {}) };
+      ui.fb = null; }
+    if (tipo === 'cancha') { this.nuevoBasket(); }
+    this.setState({ ov: tipo, ui });
+  }
+  cerrarOv() { if (this.state.ov === 'proyecto' && !this.state.st.proy) return; clearInterval(this._ti); clearInterval(this._bk); this.setState({ ov: null, ui: {} }); if (this.api) this.api.pausa(false); }
+  setUi(ch) { this.setState({ ui: Object.assign({}, this.state.ui, ch) }); }
+  tecla(e) {
+    const ov = this.state.ov, t = e.target, enInp = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT');
+    if (!ov) return;
+    if (e.code === 'Escape' && !enInp) { this.cerrarOv(); return; }
+    if (ov === 'cancha' && (e.code === 'KeyE' || e.code === 'Enter') && !e.repeat) { e.preventDefault(); this.tiro(e.code === 'KeyE' ? 0 : 1); return; }
+    if (ov === 'llave' && !enInp) { const q = this.state.ui.r && this.state.ui.r[this.state.ui.k]; if (!q || !q.keypad) return; if (/^\d$/.test(e.key)) this.kp(e.key); else if (e.code === 'Backspace') this.kp('⌫'); else if (e.code === 'Enter' || e.code === 'NumpadEnter') this.kp('✓'); }
+  }
+  // ---------- acertijos ----------
+  kp(k) { const ui = this.state.ui; if (k === '⌫') return this.setUi({ inp: ui.inp.slice(0, -1) }); if (k === '✓') return this.responder(ui.inp); if (ui.inp.length < 7) this.setUi({ inp: ui.inp + k }); }
+  responder(v) {
+    const ui = this.state.ui, st = this.state.st, s = st.est, q = ui.r[ui.k]; if (v === '' || v == null) return;
+    const ok = String(v).trim().toUpperCase() === String(q.ans).toUpperCase(), L = Object.assign({ w: 0, pi: 0 }, st.ll[s] || {});
+    if (!ok) { this.sfx(false); L.w++; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }) }); const w = ui.wrong + 1; return this.setUi({ wrong: w, inp: '', fb: { ok: false, t: 'Incorrecto.', ex: w >= 2 ? 'Razonamiento: ' + q.ex : 'Revisen otra vez. ' + (w === 1 ? 'Después de otro intento verán la explicación.' : '') } }); }
+    this.sfx(true);
+    if (ui.k + 1 < ui.r.length) { L.k = ui.k + 1; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }) }); return this.setUi({ k: ui.k + 1, inp: '', wrong: 0, pista: false, fb: { ok: true, t: '¡Correcto! Primer candado abierto.', ex: 'Falta el segundo.' } }); }
+    L.ok = true; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }), fase: 'pieza' }, () => { this.cerrarOv(); this.toast('🔓 ¡Candado abierto! Ahora vayan juntos a la MESA DE TRABAJO (' + RD().ROOMS[s].pieza + ').'); });
+  }
+  // ---------- piezas ----------
+  fallo(titulo, lista) { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); Z.err++; this.sfx(false); this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) }); this.setUi({ fb: { ok: false, t: titulo, lista } }); }
+  completar(dch, msg) { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); Z.ok = true; this.sfx(true);
+    const ch = { pz: Object.assign({}, st.pz, { [s]: Z }), d: Object.assign({}, st.d, dch || {}), est: s + 1, abiertas: s + 1, fase: 'llave', keySpot: Math.floor(rngS(st.id + 'k' + (s + 1))() * 4) };
+    clearInterval(this._ti);
+    if (s === 7) { ch.done = true; this.setState({ ov: 'fin', ui: {} }, () => this.upd(ch, () => this.guardar({}))); return; }
+    this.setState({ ov: null, ui: {} }, () => { if (this.api) this.api.pausa(false); });
+    this.upd(ch, () => { this.toast('🧩 Pieza «' + RD().ROOMS[s].pieza + '» lista. La puerta hacia ' + RD().ROOMS[s + 1].n + ' se abrió. ¡Busquen la siguiente llave!', 6000); }); }
+  pista() { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); if (this.state.ui.pistaVista) return; Z.pi++; this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) }); this.setUi({ pistaVista: true }); }
+  pinsDe() { const con = (this.state.st.d || {}).con || {}, o = {}; Object.keys(con).forEach(k => { o[k] = con[k].to; }); return o; }
+  comprobar() {
+    const st = this.state.st, s = st.est, p = this.P(), ui = this.state.ui, C = X().COMP;
+    if (s === 1) { const need = [...new Set(p.inst.map(i => i.c))], selc = Object.keys(ui.sel).filter(k => ui.sel[k]), err = [];
+      const falt = need.filter(c => !selc.includes(c)); if (falt.length) err.push('Les falta' + (falt.length > 1 ? 'n ' + falt.length + ' componentes' : ' 1 componente') + '. Relean el objetivo: ¿qué debe MEDIR el sistema y qué debe HACER?' + (ui.pistaVista ? ' (Falta: ' + falt.map(c => C[c].n).join(', ') + ')' : ''));
+      selc.filter(c => !need.includes(c)).forEach(c => err.push('Sobra «' + C[c].n + '»: ' + C[c].q + ' Este proyecto no lo necesita.'));
+      selc.filter(c => need.includes(c)).forEach(c => { if (!ui.cls[c]) err.push('Falta clasificar «' + C[c].n + '» como ENTRADA o SALIDA.'); else if (ui.cls[c] !== C[c].k) err.push('«' + C[c].n + '» está mal clasificado: ' + (C[c].k === 'E' ? 'MIDE algo del ambiente → es ENTRADA.' : 'HACE algo → es SALIDA.')); });
+      return err.length ? this.fallo('Todavía no está bien', err) : this.completar({ sel: need }); }
+    if (s === 2) { const err = []; p.inst.forEach(it => { const v = ui.ub[it.i]; if (!v) { err.push('Elijan un lugar para «' + it.lab + '».'); return; } if (v !== it.spot) { const sp = p.spots.find(x => x.id === v); err.push('«' + it.lab + '» en «' + sp.lab + '»: ' + (sp.mal || 'ese lugar es para otro componente.') + (ui.pistaVista ? ' Pista: ' + it.por : '')); } });
+      return err.length ? this.fallo('Revisen la ubicación', err) : this.completar({ ub: ui.ub }); }
+    if (s === 3) { const errs = X().revisarConex(p, ui.con), ek = {}; errs.forEach(e => { ek[e.k] = 1; }); if (errs.length) { this.setUi({ errK: ek }); return this.fallo(errs.length + ' conexión' + (errs.length > 1 ? 'es' : '') + ' por corregir', errs.slice(0, 5).map(e => e.t)); }
+      return this.completar({ con: ui.con }); }
+    if (s === 4) { const err = []; p.flujo.forEach(([k, txt]) => { const v = ui.fl[k]; if (v !== txt) err.push(!v ? 'Falta completar un bloque.' : k === 'leer' ? 'Revisen el bloque de LEER: antes de decidir hay que leer el sensor correcto.' : /^preg/.test(k) ? 'Revisen el ROMBO: la pregunta sale del objetivo.' : /^si/.test(k) ? 'Revisen la acción del camino SÍ: ¿qué debe hacer el sistema cuando la respuesta es sí?' : /^no/.test(k) ? 'Revisen la acción del camino NO.' : 'Revisen el último bloque: un sistema automático nunca termina.'); });
+      return err.length ? this.fallo('El diagrama todavía no funciona', [...new Set(err)]) : this.completar({ fl: ui.fl }); }
+    if (s === 5) { const S = X().sol(p);
+      if (ui.paso === 0) { const err = []; Object.keys(p.slots).forEach(k => { const v = ui.sl[k]; if (v == null) err.push('Falta elegir: ' + (SLOTN[k] || k)); else if (String(v) !== String(S[k])) err.push((SLOTN[k] || k) + ': «' + v + '» no cumple el objetivo.' + (ui.pistaVista ? ' Debe ser «' + S[k] + '».' : '')); });
+        if (err.length) return this.fallo('La decisión todavía no cumple el objetivo', err); this.sfx(true); return this.setUi({ paso: 1, fb: { ok: true, t: '¡Decisión correcta! Ahora el código.' } }); }
+      const H = this.huecos(), err = []; H.holes.forEach(h => { const v = String(ui.cd[h.j] == null ? '' : ui.cd[h.j]).trim(); if (v !== h.ans) err.push('línea ' + (h.i + 1) + ': ' + (v ? (/^[A-Z]/.test(h.ans) && v.toLowerCase() === h.ans.toLowerCase() ? 'mayúsculas: se escribe ' + h.ans : '«' + v + '» no es correcto aquí') : 'falta completar un hueco') + (ui.pistaVista ? ' (va: ' + h.ans + ')' : '')); });
+      if (err.length) { this.setUi({ cons: { ok: false, l: ['Compilando sketch…'].concat(err.slice(0, 5), ['✗ ' + err.length + ' error(es).']) } }); return this.fallo('El programa no compila', err.slice(0, 4)); }
+      this.setUi({ cons: { ok: true, l: ['Compilando sketch…', 'Sketch usa ' + (1500 + H.code.length) + ' bytes.', '✓ Subido al Arduino UNO.'] } }); return setTimeout(() => this.completar({ sl: S }), 900); }
+    if (s === 6) { if (!ui.run && ui.ti < 0) return this.correr(); return; }
+    if (s === 7) { const m = RD().MINTXT[st.curso] || [50, 60, 40], err = []; [['imp', '¿Por qué es importante?', m[0]], ['con', 'Conclusiones', m[1]], ['mej', 'Mejoras', m[2]]].forEach(([k, n, mn]) => { const l = String(ui.fi[k] || '').trim().length; if (l < mn) err.push(n + ': escriban al menos ' + mn + ' letras (llevan ' + l + ').'); });
+      return err.length ? this.fallo('La ficha todavía no está completa', err) : this.completar({ fi: ui.fi }); }
+  }
+  correr() { clearInterval(this._ti); this.setUi({ run: true, ti: 0 }); this._ti = setInterval(() => { const ui = this.state.ui; if (ui.ti + 1 >= ui.res.length) { clearInterval(this._ti); const FL = X().fallas ? X().fallas(this.P()) : []; const f = FL.length ? FL[Math.floor(rngS(this.state.st.id + 'f')() * FL.length)] : null; this.sfx(true); this.setUi({ run: false, falla: f, fstep: 0, fb: { ok: true, t: '¡Pasó las ' + ui.res.length + ' pruebas!' + (f ? ' Pero al instalarlo apareció una falla…' : '') } }); if (!f) setTimeout(() => this.completar({}), 900); return; } this.setUi({ ti: ui.ti + 1 }); }, 1100); }
+  huecos() {
+    const st = this.state.st, p = this.P(), S = X().sol(p), code = X().codigo(p, S, this.pinsDe(), {}), lines = code.split('\n'), cand = [];
+    const RX = /\b(OUTPUT|INPUT|HIGH|LOW|digitalWrite|digitalRead|analogRead|pinMode)\b|(<=|>=|==|<|>)(?= \d)|(?<=[<>=] )\d+(?=\))/g; let fin = false;
+    lines.forEach((l, i) => { if (/^long medir/.test(l)) fin = true; if (fin || /^\s*\/\//.test(l) || /^#|^Servo|^const|^int /.test(l)) return; RX.lastIndex = 0; let m; while ((m = RX.exec(l))) cand.push({ i, a: m.index, b: m.index + m[0].length, ans: m[0] }); });
+    const [nh, esc] = RD().HUECOS[st.curso] || [5, 0], k = Math.min(cand.length, nh), pick = []; for (let j = 0; j < k; j++) { const ix = k === 1 ? 0 : Math.round(j * (cand.length - 1) / (k - 1)); if (!pick.includes(cand[ix])) pick.push(cand[ix]); }
+    const OPT = { OUTPUT: ['OUTPUT', 'INPUT', 'HIGH'], INPUT: ['INPUT', 'OUTPUT', 'LOW'], HIGH: ['HIGH', 'LOW', 'OUTPUT'], LOW: ['LOW', 'HIGH', 'INPUT'], digitalWrite: ['digitalWrite', 'digitalRead', 'analogWrite'], digitalRead: ['digitalRead', 'digitalWrite', 'analogRead'], analogRead: ['analogRead', 'digitalRead', 'analogWrite'], pinMode: ['pinMode', 'digitalWrite', 'Serial'] };
+    const opts = a => OPT[a] || (/^\d+$/.test(a) ? [...new Set([a, String(Number(a) * 2), String(Math.max(1, Math.round(Number(a) / 2)))])] : [...new Set([a, '<', '>', '=='])]);
+    return { code, lines, holes: pick.map((c, j) => Object.assign({}, c, { j, typed: esc === 1 || (esc === 0.5 && j % 2 === 1), opts: mez(opts(c.ans), p.id + j) })) };
+  }
+  // ---------- básquet ----------
+  nuevoBasket() { clearInterval(this._bk); this.setState({ bk: { pos: 0, dir: 1, turno: 0, n: [0, 0], pts: [0, 0], msg: '', fin: false, vel: 0.9 } }); this._bk = setInterval(() => { const b = this.state.bk; if (!b || b.fin) return; let pos = b.pos + b.dir * b.vel * 0.016, dir = b.dir; if (pos > 1) { pos = 1; dir = -1; } if (pos < 0) { pos = 0; dir = 1; } this.setState({ bk: Object.assign({}, b, { pos, dir }) }); }, 16); }
+  tiro(j) { const b = this.state.bk; if (!b || b.fin || j !== b.turno) return; const d = Math.abs(b.pos - 0.5), pts = d < 0.045 ? 3 : d < 0.14 ? 2 : 0, P2 = b.pts.slice(), N2 = b.n.slice(); P2[j] += pts; N2[j]++; const fin = N2[0] >= 5 && N2[1] >= 5; this.sfx(pts > 0);
+    this.setState({ bk: Object.assign({}, b, { pts: P2, n: N2, turno: 1 - j, msg: pts === 3 ? '¡TRIPLE! +3' : pts ? '¡Canasta! +2' : 'Falló…', fin, vel: b.vel + 0.06 }) }); }
+
+  // ---------- conexiones (SVG) ----------
+  svgCon(p, ui) {
+    const h = React.createElement, C = X().COMP, PWM = X().PWM, DP = ['D13', 'D12', 'D11', 'D10', 'D9', 'D8', 'D7', 'D6', 'D5', 'D4', 'D3', 'D2'], AP = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5'], pos = {};
+    DP.forEach((n, k) => { pos[n] = [86 + k * 30, 96]; }); pos['5V'] = [96, 404]; pos['GND'] = [136, 404]; AP.forEach((n, k) => { pos[n] = [212 + k * 34, 404]; });
+    const colP = n => n === '5V' ? '#e53935' : n === 'GND' ? '#263238' : n[0] === 'A' ? '#1e88e5' : PWM.includes(n) ? '#fb8c00' : '#43a047';
+    const els = [], comps = []; let y = 20;
+    p.inst.forEach(it => { const pins = C[it.c].pins, hh = 44 + pins.length * 32; comps.push({ it, y, hh, pins }); y += hh + 14; });
+    const H = Math.max(470, y + 10), cx = 640;
+    els.push(h('rect', { key: 'pcb', x: 40, y: 60, width: 440, height: 380, rx: 16, fill: '#0b5f8a', stroke: '#063a56', strokeWidth: 3 }));
+    els.push(h('rect', { key: 'usb', x: 22, y: 150, width: 48, height: 56, rx: 4, fill: '#b9c2cc', stroke: '#6b7682' }), h('rect', { key: 'pw', x: 26, y: 290, width: 40, height: 46, rx: 4, fill: '#1b1f24' }), h('rect', { key: 'chip', x: 220, y: 230, width: 170, height: 52, rx: 4, fill: '#16191d' }), h('text', { key: 'ct', x: 305, y: 262, textAnchor: 'middle', fill: '#9fb0ba', fontSize: 13, fontFamily: 'monospace' }, 'ATmega328P'), h('text', { key: 'tt', x: 150, y: 190, fill: '#fff', fontSize: 26, fontWeight: 800, fontFamily: 'Arial' }, 'ARDUINO'), h('text', { key: 't2', x: 152, y: 214, fill: '#9fe6f5', fontSize: 15, fontFamily: 'monospace' }, 'UNO'));
+    els.push(h('rect', { key: 'hd1', x: 70, y: 84, width: 372, height: 24, rx: 3, fill: '#111' }), h('rect', { key: 'hd2', x: 80, y: 392, width: 72, height: 24, rx: 3, fill: '#111' }), h('rect', { key: 'hd3', x: 196, y: 392, width: 208, height: 24, rx: 3, fill: '#111' }));
+    const wires = [];
+    comps.forEach(({ it, y: y0, hh, pins }) => { els.push(h('rect', { key: 'b' + it.i, x: cx, y: y0, width: 330, height: hh, rx: 12, fill: '#ffffff', stroke: '#9aa6c4', strokeWidth: 2 }), h('text', { key: 'bt' + it.i, x: cx + 16, y: y0 + 28, fill: '#0a1a3a', fontSize: 17, fontWeight: 800, fontFamily: 'IBM Plex Sans,Arial' }, it.lab));
+      pins.forEach(([pl, rol], k) => { const key = it.i + '.' + k, py = y0 + 54 + k * 32, sel = ui.pk === key, er = ui.errK && ui.errK[key], c = ui.con[key];
+        if (c && c.to && pos[c.to]) { const [ax, ay] = pos[c.to], top = ay < 200, c1x = cx - 170, c2y = top ? ay - 120 : ay + 120, mx = (cx + 3 * c1x + 3 * ax + ax) / 8, my = (py + 3 * py + 3 * c2y + ay) / 8; wires.push({ key, d: 'M ' + cx + ' ' + py + ' C ' + c1x + ' ' + py + ', ' + ax + ' ' + c2y + ', ' + ax + ' ' + ay, col: colP(c.to), mx, my, r: c.r || '' }); }
+        els.push(h('g', { key: 'p' + key, style: { cursor: 'pointer' }, onClick: () => this.setUi({ pk: sel ? null : key, info: it.lab + ' · ' + pl + ' — ' + (RD().PINF[rol] || '') + (c && c.to ? '. Ahora está en ' + c.to + (c.r ? ' con ' + (c.r === '220' ? '220 Ω' : '10 kΩ') : '') + '.' : '. Toquen ahora un pin del Arduino.') }) },
+          h('circle', { cx, cy: py, r: sel ? 13 : 10, fill: sel ? '#f0c419' : '#c9a227', stroke: er ? '#e53935' : '#0a1a3a', strokeWidth: er ? 4 : 2 }), h('text', { x: cx + 22, y: py + 5, fill: er ? '#c62828' : '#22324f', fontSize: 16, fontWeight: 600, fontFamily: 'IBM Plex Sans,Arial' }, pl))); }); });
+    wires.forEach(w => { els.push(h('path', { key: 'wo' + w.key, d: w.d, fill: 'none', stroke: '#0a1a3a', strokeWidth: 8, strokeLinecap: 'round', opacity: 0.35 }), h('path', { key: 'w' + w.key, d: w.d, fill: 'none', stroke: w.col, strokeWidth: 5, strokeLinecap: 'round' }));
+      els.push(h('g', { key: 'r' + w.key, style: { cursor: 'pointer' }, onClick: () => { const c = ui.con[w.key], nx = { '': '220', '220': '10k', '10k': '' }[c.r || '']; this.setUi({ con: Object.assign({}, ui.con, { [w.key]: { to: c.to, r: nx } }), errK: {}, info: nx ? 'Pusieron una resistencia de ' + (nx === '220' ? '220 Ω (para LED)' : '10 kΩ (pulsador o LDR)') + ' en este cable.' : 'Este cable ahora no tiene resistencia.' }); } },
+        h('rect', { x: w.mx - 30, y: w.my - 12, width: 60, height: 24, rx: 6, fill: w.r ? '#e8d5a0' : '#ffffff', stroke: w.r ? '#8a6d2a' : '#9aa6c4', strokeWidth: 2, strokeDasharray: w.r ? '' : '4 3' }),
+        w.r ? h('g', null, h('rect', { x: w.mx - 14, y: w.my - 12, width: 5, height: 24, fill: w.r === '220' ? '#c62828' : '#6d4c41' }), h('rect', { x: w.mx - 5, y: w.my - 12, width: 5, height: 24, fill: w.r === '220' ? '#c62828' : '#111' }), h('rect', { x: w.mx + 4, y: w.my - 12, width: 5, height: 24, fill: w.r === '220' ? '#6d4c41' : '#ef6c00' })) : null,
+        h('text', { x: w.mx, y: w.my + 30, textAnchor: 'middle', fontSize: 11, fontWeight: 700, fill: '#22324f', fontFamily: 'IBM Plex Sans,Arial' }, w.r ? (w.r === '220' ? '220 Ω' : '10 kΩ') : '+ R'))); });
+    Object.keys(pos).forEach(n => { const [x, y0] = pos[n], top = y0 < 200, act = !!ui.pk;
+      els.push(h('g', { key: 'a' + n, style: { cursor: 'pointer' }, onClick: () => { if (ui.pk) { const c = ui.con[ui.pk] || {}; this.setUi({ con: Object.assign({}, ui.con, { [ui.pk]: { to: n, r: c.r || '' } }), pk: null, errK: {}, info: 'Cable conectado a ' + n + '. Si este cable necesita resistencia, toquen su chip «+ R».' }); } else this.setUi({ info: 'Pin ' + n + ': ' + (n === '5V' ? 'positivo, alimenta los módulos (5 voltios).' : n === 'GND' ? 'tierra (0 V): aquí van todos los negativos.' : n[0] === 'A' ? 'pin analógico: lee voltajes de 0 a 5 V como números de 0 a 1023.' : 'pin digital: da o lee 5 V / 0 V (HIGH / LOW).' + (PWM.includes(n) ? ' Tiene ~: puede dar PWM para un servo.' : '')) }); } },
+        h('rect', { x: x - 10, y: y0 - 10, width: 20, height: 20, rx: 3, fill: act ? '#2b3a4a' : '#222', stroke: act ? '#f0c419' : '#555', strokeWidth: act ? 2 : 1 }), h('circle', { cx: x, cy: y0, r: 4, fill: '#c9a227' }),
+        h('text', { x, y: top ? y0 + 30 : y0 - 18, textAnchor: 'middle', fontSize: 12, fontWeight: 700, fill: colP(n) === '#263238' ? '#fff' : '#fff', fontFamily: 'monospace' }, (PWM.includes(n) ? '~' : '') + n))); });
+    return h('svg', { viewBox: '0 -40 1000 ' + (H + 60), style: { width: '100%', height: 'auto', display: 'block', maxHeight: '62vh' } }, ...els);
+  }
+  fichaHTML() {
+    const st = this.state.st, p = this.P(), D = X(), d = st.d || {}, e = x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), pins = this.pinsDe();
+    let code = ''; try { code = D.codigo(p, D.sol(p), pins, {}); } catch (x) {}
+    const th = 'border:1px solid #999;padding:5px 7px;background:#e8eefb;text-align:left', td = 'border:1px solid #999;padding:5px 7px', tb = (H, R) => '<table style="border-collapse:collapse;width:100%;font-size:10.5pt;margin:6px 0"><tr>' + H.map(x => '<th style="' + th + '">' + e(x) + '</th>').join('') + '</tr>' + R.map(r => '<tr>' + r.map(x => '<td style="' + td + '">' + e(x) + '</td>').join('') + '</tr>').join('') + '</table>', h2 = t => '<h2 style="font-size:13pt;color:#0a1a3a;border-bottom:2px solid #2456b8;margin:14px 0 6px">' + t + '</h2>';
+    const conex = []; p.inst.forEach(it => D.COMP[it.c].pins.forEach(([pl], k) => { const c = (d.con || {})[it.i + '.' + k] || {}; conex.push([it.lab, pl, c.to || '—', c.r ? (c.r === '220' ? '220 Ω' : '10 kΩ') : '—']); }));
+    let b = '<div style="border-bottom:3px solid #0a1a3a;padding-bottom:8px"><div style="font-size:10pt;letter-spacing:.08em">U. E. P. «LA PROVIDENCIA» · ROBÓTICA · MISIÓN APAGÓN</div><div style="font-size:18pt;font-weight:800">FICHA TÉCNICA DEL PROYECTO</div></div>';
+    b += tb(['Proyecto', 'Lugar', 'Integrantes', 'Curso', 'Fecha', 'Nota'], [[p.n, p.lugar, st.integrantes, st.par, new Date().toLocaleDateString('es-EC'), this.nota().toFixed(2)]]);
+    b += h2('1. Problema') + '<p>' + e(p.historia) + '</p>' + h2('2. Objetivo') + '<p>' + e(p.objetivo) + '</p>' + h2('3. ¿Por qué es importante?') + '<p>' + e((d.fi || {}).imp) + '</p>';
+    b += h2('4. Componentes') + tb(['Componente', 'Tipo', 'Ubicación'], p.inst.map(it => [it.lab, D.COMP[it.c].k === 'E' ? 'Entrada' : 'Salida', (p.spots.find(x => x.id === it.spot) || {}).lab || '']));
+    b += h2('5. Conexiones') + tb(['Componente', 'Pata', 'Pin', 'Resistencia'], conex) + h2('6. Diagrama de flujo') + '<ol><li>INICIO</li>' + p.flujo.map(f => '<li>' + e(f[1]) + '</li>').join('') + '</ol>';
+    b += h2('7. Código') + '<pre style="font-family:Consolas,monospace;font-size:9pt;background:#f4f6fa;border:1px solid #ccc;padding:8px;white-space:pre-wrap">' + e(code) + '</pre>';
+    b += h2('8. Pruebas') + tb(['Situación', 'Resultado', '¿Funciona?'], D.probar(p, D.sol(p)).map(r => [r.txt, String(r.sal), 'Sí'])) + h2('9. Conclusiones') + '<p>' + e((d.fi || {}).con) + '</p>' + h2('10. Mejoras') + '<p>' + e((d.fi || {}).mej) + '</p>';
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ficha técnica</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;max-width:760px;margin:20px auto">' + b + '</body></html>';
+  }
+  descargar() { const st = this.state.st; if (!st || !st.proy) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + this.fichaHTML()], { type: 'application/msword' })); a.download = 'Ficha tecnica - ' + this.P().n + ' - ' + st.id + '.doc'; document.body.appendChild(a); a.click(); a.remove(); }
+
+  renderVals() {
+    const s = this.state, f = s.f, out = {};
+    out.vLogin = s.vista === 'login'; out.vJuego = s.vista === 'juego'; out.f = f; out.refHost = this.refHost;
+    out.esNuevo = s.tab === 'nuevo'; out.esSeguir = s.tab === 'seguir'; out.tabBg1 = s.tab === 'nuevo' ? '#fff' : 'transparent'; out.tabBg2 = s.tab === 'seguir' ? '#fff' : 'transparent';
+    out.tabNuevo = () => this.setState({ tab: 'nuevo', msg: '' }); out.tabSeguir = () => this.setState({ tab: 'seguir', msg: '' });
+    ['j1', 'j2', 'par', 'pc', 'ses', 'cod'].forEach(k => { out['set' + k[0].toUpperCase() + k.slice(1)] = e => this.setF(k, e.target.value); });
+    out.cursos = CURSOS.map(([k, t]) => ({ t, go: () => this.setF('curso', k), bg: f.curso === k ? '#0a1a3a' : '#fff', fg: f.curso === k ? '#f0c419' : '#0a1a3a', bd: f.curso === k ? '#0a1a3a' : '#c5ccdb' }));
+    out.entrar = () => this.entrar(); out.seguir = () => this.seguir(); out.btnEntrar = s.cargando ? 'Verificando…' : 'ENTRAR A LA MISIÓN →'; out.btnSeguir = s.cargando ? 'Buscando…' : 'CONTINUAR →';
+    out.msg = s.msg; out.msgVis = !!s.msg; out.err3d = s.err3d; out.err3dVis = !!s.err3d;
+    const st = s.st, R = RD() && RD().ROOMS, D = X(); out.hud = { pareja: '', cod: '', sala: '', paso: '', obj: '', nota: '0.00', kdVis: false, kd: [], kdTxt: '', ayBg: '#2456b8', ayTxt: '✋ Pedir ayuda' }; out.inv = []; out.vOv = false; out.promptVis = false; out.toastVis = !!s.toast; out.toast = s.toast || '';
+    if (!st || !R || !D) return Object.assign(out, this.vacios());
+    const p = this.P(), e0 = Math.min(st.est, 8);
+    out.hud.pareja = st.integrantes + ' · ' + st.par + ' · PC ' + st.pc; out.hud.cod = st.id; out.hud.nota = this.nota().toFixed(2);
+    const enSala = s.room; out.hud.sala = R[enSala] ? R[enSala].n : ''; out.hud.paso = st.done ? 'MISIÓN CUMPLIDA' : 'SALA ' + Math.min(st.est, 7) + ' DE 7';
+    out.hud.obj = !st.proy ? 'Elijan su proyecto en el tablero del vestíbulo.' : st.done ? 'El colegio tiene energía. Vayan a la CANCHA: junto al aro, presionen E o ENTER.' : enSala < st.est ? '➜ Avancen hasta ' + R[st.est].n + ' siguiendo la flecha azul.' : st.fase === 'llave' ? '🔑 Busquen la LLAVE dorada escondida en ' + R[st.est].n + '.' : st.fase === 'lock' ? '🔒 Lleven la llave a la TERMINAL del candado (los dos juntos).' : '🧩 Vayan a la MESA DE TRABAJO: ' + R[st.est].obj;
+    out.hud.kdVis = !!st.proy && !st.done && st.fase === 'llave' && enSala === st.est && s.kd != null; out.hud.kd = [1, 2, 3, 4, 5].map(i => i <= (s.kd || 0) ? (s.kd >= 4 ? '#7fe0a0' : '#ffd166') : 'rgba(255,255,255,.18)'); out.hud.kdTxt = s.kd >= 5 ? '¡Está aquí! E / ENTER' : s.kd >= 4 ? 'Muy cerca' : s.kd >= 3 ? 'Cerca' : 'Lejos';
+    out.inv = [1, 2, 3, 4, 5, 6, 7].map(i => { const ok = (st.pz[i] || {}).ok, cur = i === st.est && !st.done, kk = (st.ll[i] || {}).ok || (cur && st.fase !== 'llave'); return { ico: R[i].ico, n: R[i].pieza, key: kk ? '🔑' : '', bd: ok ? '#f0c419' : cur ? '#5fd0e8' : 'rgba(255,255,255,.15)', bg: ok ? 'rgba(240,196,25,.18)' : cur ? 'rgba(95,208,232,.12)' : 'rgba(255,255,255,.04)', fg: ok ? '#f0c419' : cur ? '#9fe6f5' : '#8a98ab', op: ok || cur ? 1 : 0.55, anim: cur ? 'rpulse 2s infinite' : 'none' }; });
+    out.ayuda = () => { this.guardar({ pedirAyuda: true }); this.toast('✋ Se avisó al docente. Mientras tanto, revisen la teoría del panel «Aprende».'); };
+    out.salir = () => { this.guardar({}); this.toast('Progreso guardado. Su código es ' + st.id + '. Anótenlo.', 7000); };
+    const n = s.near; if (n && !s.ov) { const T2 = { llave: '🔑 Recoger la llave (E / ENTER)', terminal: n.ok ? '🔒 Abrir el candado (E / ENTER)' : '🔒 Los DOS junto a la terminal', mesa: n.ok ? '🧩 Trabajar en la mesa (E / ENTER)' : '🧩 Los DOS junto a la mesa', tablero: st.proy ? '📋 Ver mi proyecto (E / ENTER)' : '📋 Elegir proyecto (E / ENTER)', cancha: st.done ? '🏀 Jugar básquet (E / ENTER)' : '🔒 La cancha se abre al final' }; out.promptVis = true; out.prompt = { t: T2[n.tipo] || '', bg: n.both && !n.ok ? '#f0a726' : '#f0c419', fg: '#1a1004' }; } else out.prompt = { t: '', bg: '', fg: '' };
+    Object.assign(out, this.vacios()); out.cerrarOv = () => this.cerrarOv();
+    if (s.ov) this.vistaOv(out, st, p);
+    return out;
+  }
+  vacios() { return { ov: { ico: '', kick: '', tit: '', teoBtnVis: false, teoBtn: '', teoTog: () => {}, cerrable: true }, v: {}, pr: { lista: [], selVis: false, obj: '', confirmar: () => {} }, ac: { cat: '', cont: '', q: '', visVis: false, vis: '', gridVis: false, grid: [], keypad: false, inpTxt: '', teclas: [], optsVis: false, opts: [], fbVis: false, fbBg: '', fbBd: '', fbT: '', fbEx: '', pista: () => {}, pistaTxt: '' }, pz: { obj: '', lugar: '', hist: '' }, cp: { cards: [] }, ub: { filas: [] }, cn: { svg: null, info: '', quitarVis: false, quitar: () => {} }, fl: { bloques: [] }, pg: { paso0: false, paso1: false, slots: [], prev: '', ayuda: '', lines: [], consola: [], conCol: '' }, pb: { filas: [], sit: '', lect: '', outs: [], fallaVis: false, fSin: '', fPreg: '', fOps: [] }, fi: { campos: [], word: () => this.descargar() }, fn: { quien: '', proy: '', nota: '', np: '', nl: '', filas: [] }, bk: { p1: 0, p2: 0, t1: '', t2: '', turno: '', pos: '0%', msg: '', otra: () => {}, otraTxt: '' }, pzFb: { vis: false, bg: '', bd: '', col: '', t: '', lista: [] }, pzBtns: false, pzCheck: () => {}, pzCheckTxt: '', pzPista: () => {}, teoVis: false, teo: { lineas: [], compVis: false, comps: [] } }; }
+  vistaOv(out, st, p) {
+    const s = this.state, ui = s.ui, R = RD().ROOMS, D = X(), C = D.COMP, est = Math.min(st.est, 7), ov = s.ov; out.vOv = true;
+    const pzv = ov === 'pieza' ? est : 0; out.v = { proyecto: ov === 'proyecto', llave: ov === 'llave', comp: pzv === 1, ubi: pzv === 2, con: pzv === 3, flujo: pzv === 4, prog: pzv === 5, prueba: pzv === 6, ficha: pzv === 7, fin: ov === 'fin', cancha: ov === 'cancha' };
+    const conTeo = ov === 'llave' || ov === 'pieza';
+    out.ov = { ico: ov === 'proyecto' ? '📋' : ov === 'llave' ? '🔒' : ov === 'fin' ? '⚡' : ov === 'cancha' ? '🏀' : R[est].ico, kick: ov === 'proyecto' ? 'VESTÍBULO · ELIJAN SU MISIÓN' : ov === 'fin' ? 'MISIÓN CUMPLIDA' : ov === 'cancha' ? 'CANCHA · MINIJUEGO' : R[est].n + ' · SALA ' + est + ' DE 7', tit: ov === 'proyecto' ? 'Elijan su proyecto' : ov === 'llave' ? 'Candado de la sala · ' + (ui.r ? ui.r.length > 1 ? 'doble candado' : 'acertijo' : '') : ov === 'fin' ? '¡El colegio vuelve a la vida!' : ov === 'cancha' ? 'Básquet de precisión' : 'Pieza: ' + R[est].pieza, teoBtnVis: conTeo, teoBtn: s.teo ? 'Ocultar teoría' : '📖 Aprende', teoTog: () => this.setState({ teo: !s.teo }), cerrable: !(ov === 'proyecto' && !st.proy) };
+    if (p) { out.pz = { obj: p.objetivo, lugar: p.lugar, hist: p.historia }; }
+    if (conTeo && s.teo) { out.teoVis = true; out.teo.lineas = ov === 'llave' ? ['Lean la pregunta completa dos veces.', PISTAC[(ui.r && ui.r[ui.k] && ui.r[ui.k].cat) || 'Lógica'] || '', 'Escriban sus cálculos o ideas en una hoja antes de responder.', 'Cada error resta un poco a la llave de esta sala; la explicación aparece después del segundo intento.'] : (RD().TEO[est] || []);
+      if (ov === 'pieza' && p && est <= 3) { out.teo.compVis = true; const cs = est === 1 ? (ui.cards || []) : [...new Set(p.inst.map(i => i.c))]; out.teo.comps = (est === 1 ? cs.filter(c => (ui.sel || {})[c]) : cs).map(c => { const F = RD().FICHA[RD().FK(c)]; return { svg: svgEl(RD().svgComp(c), 34), n: C[c].n, t: F ? F[3] : C[c].q }; }); if (!out.teo.comps.length) out.teo.comps = [{ svg: svgEl(RD().svgComp('led_r'), 34), n: 'Toquen un componente', t: 'Al seleccionarlo, aquí aparecen sus datos técnicos.' }]; } }
+    if (ov === 'proyecto') { const sel = ui.sel; out.pr.lista = D.P.map(q => ({ ico: q.ico, n: q.n, lugar: q.lugar.toUpperCase(), h: q.historia.length > 120 ? q.historia.slice(0, 118) + '…' : q.historia, go: () => this.setUi({ sel: q.id }), bd: sel === q.id ? '#f0c419' : '#d3dbe8', bg: sel === q.id ? '#fff8dc' : '#fff' }));
+      const q = sel && D.P.find(x => x.id === sel); out.pr.selVis = !!q; out.pr.obj = q ? q.objetivo : ''; out.pr.confirmar = () => { this.upd({ proy: sel, abiertas: 1, est: 1, fase: 'llave', keySpot: Math.floor(rngS(st.id + 'k1')() * 4) }, () => { this.cerrarOv(); this.toast('Proyecto: ' + q.n + '. Crucen la puerta verde hacia el LABORATORIO y busquen la primera llave 🔑.', 6500); }); }; }
+    if (ov === 'llave' && ui.r) { const q = ui.r[ui.k]; out.ac = Object.assign(out.ac, { cat: (q.cat || '').toUpperCase(), cont: ui.r.length > 1 ? 'Candado ' + (ui.k + 1) + ' de ' + ui.r.length : '', q: q.q, visVis: !!q.vis, vis: q.vis || '', gridVis: !!q.grid, keypad: !!q.keypad, inpTxt: ui.inp || '_', optsVis: !!q.opts });
+      if (q.grid) out.ac.grid = q.grid.map(t => ({ t, bg: t === '?' ? '#f0c419' : '#13233d', fg: t === '?' ? '#1a1004' : '#fff', fs: t.length > 3 ? '20px' : t.length > 1 ? '26px' : '44px' }));
+      if (q.keypad) out.ac.teclas = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '⌫', '0', '✓'].map(k => ({ t: k, go: () => this.kp(k), bg: k === '✓' ? '#1f9d55' : k === '⌫' ? '#7a2a2a' : '#2b3442', fg: '#fff' }));
+      if (q.opts) out.ac.opts = q.opts.map(o => ({ t: o, go: () => this.responder(o), bd: '#c5ccdb', bg: '#fff', fs: o.length <= 2 ? '34px' : '17px' }));
+      const fb = ui.fb; out.ac.fbVis = !!fb; if (fb) { out.ac.fbBg = fb.ok ? '#e3f6ea' : '#fde8e6'; out.ac.fbBd = fb.ok ? '#1f9d55' : '#e57368'; out.ac.fbT = fb.t; out.ac.fbEx = fb.ex || ''; }
+      out.ac.pistaTxt = ui.pista ? '💡 ' + (PISTAC[q.cat] || PISTAC['Lógica']) : '💡 Pista (resta un poco)'; out.ac.pista = () => { if (ui.pista) return; const L = Object.assign({ w: 0, pi: 0 }, st.ll[est] || {}); L.pi++; this.upd({ ll: Object.assign({}, st.ll, { [est]: L }) }); this.setUi({ pista: true }); }; }
+    if (ov === 'pieza' && p) { out.pzBtns = !(est === 6 && (ui.run || ui.falla)) ; out.pzCheck = () => this.comprobar(); out.pzPista = () => this.pista(); out.pzCheckTxt = est === 6 ? '▶ Probar el sistema' : est === 5 && ui.paso === 1 ? '⚙ Compilar y subir' : est === 7 ? '📄 Entregar la ficha' : 'Comprobar ✓';
+      const fb = ui.fb; if (fb) out.pzFb = { vis: true, bg: fb.ok ? '#e3f6ea' : '#fde8e6', bd: fb.ok ? '#1f9d55' : '#e57368', col: fb.ok ? '#17663a' : '#9b2d25', t: fb.t, lista: fb.lista || [] };
+      if (est === 1) out.cp.cards = (ui.cards || []).map(c => { const on = !!ui.sel[c], k = ui.cls[c]; return { svg: svgEl(RD().svgComp(c), 52), n: C[c].n, q: C[c].q, on, bd: on ? '#2456b8' : '#d3dbe8', bg: on ? '#eef3fd' : '#fff', tog: () => this.setUi({ sel: Object.assign({}, ui.sel, { [c]: !on }), fb: null }), setE: () => this.setUi({ cls: Object.assign({}, ui.cls, { [c]: 'E' }) }), setS: () => this.setUi({ cls: Object.assign({}, ui.cls, { [c]: 'S' }) }), eBg: k === 'E' ? '#1f9d55' : '#fff', eFg: k === 'E' ? '#fff' : '#1f9d55', sBg: k === 'S' ? '#c8413a' : '#fff', sFg: k === 'S' ? '#fff' : '#c8413a' }; });
+      if (est === 2) out.ub.filas = p.inst.map(it => { const v = ui.ub[it.i], mal = ui.fb && !ui.fb.ok && v && v !== it.spot, sp = v && p.spots.find(x => x.id === v); return { svg: svgEl(RD().svgComp(it.c), 40), lab: it.lab, bd: mal ? '#e57368' : v ? '#2456b8' : '#d3dbe8', msgVis: !!mal, msgCol: '#9b2d25', msg: mal ? (sp.mal || 'Este lugar no es el mejor.') : '', ops: (ui.ops || []).map(id => { const x = p.spots.find(y => y.id === id); return { t: x.lab, go: () => this.setUi({ ub: Object.assign({}, ui.ub, { [it.i]: id }) }), bd: v === id ? '#2456b8' : '#d3dbe8', bg: v === id ? '#dbe6fb' : '#fff' }; }) }; });
+      if (est === 3) { out.cn = { svg: this.svgCon(p, ui), info: ui.info || '', quitarVis: !!(ui.pk && ui.con[ui.pk]), quitar: () => { const c = Object.assign({}, ui.con); delete c[ui.pk]; this.setUi({ con: c, pk: null, info: 'Cable quitado.' }); } }; }
+      if (est === 4) { const shp = k => k === 'leer' ? 'io' : /^preg/.test(k) ? 'rombo' : 'rect'; const B = [{ k: '_i', t: 'INICIO', fixed: true, sh: 'oval' }].concat(p.flujo.map(([k, txt, d]) => ({ k, sh: shp(k), ops: mez([txt].concat(d), st.id + k), t: ui.fl[k] })));
+        out.fl.bloques = B.map((b, i) => { const sh = b.sh, sel = ui.ab === b.k; return { flecha: i > 0, pre: /^si/.test(b.k) ? 'SÍ' : /^no/.test(b.k) ? 'NO' : '', preCol: /^si/.test(b.k) ? '#1f9d55' : '#c8413a', t: b.t || (b.fixed ? 'INICIO' : '? toquen para elegir'), w: sh === 'rombo' ? '320px' : sh === 'oval' ? '180px' : '360px', h: sh === 'rombo' ? '130px' : '52px', bg: b.fixed ? '#0a1a3a' : b.t ? (sh === 'rombo' ? '#f0c419' : sh === 'io' ? '#5fd0e8' : '#dbe6fb') : (sel ? '#c9d7f2' : '#dfe6f3'), fg: b.fixed ? '#fff' : '#0a1a3a', clip: sh === 'rombo' ? 'polygon(50% 0,100% 50%,50% 100%,0 50%)' : sh === 'io' ? 'polygon(8% 0,100% 0,92% 100%,0 100%)' : 'none', rad: sh === 'oval' ? '999px' : sh === 'rect' ? '10px' : '0', pad: sh === 'rombo' ? '20px 64px' : '10px 28px', ol: sel ? '3px solid #2456b8' : b.t || b.fixed ? 'none' : '2px dashed #9aa6c4', abierto: sel, go: () => { if (!b.fixed) this.setUi({ ab: sel ? null : b.k }); }, ops: (b.ops || []).map(t => ({ t, go: () => this.setUi({ fl: Object.assign({}, ui.fl, { [b.k]: t }), ab: null, fb: null }) })) }; }); }
+      if (est === 5) { out.pg.paso0 = ui.paso === 0; out.pg.paso1 = ui.paso === 1;
+        if (ui.paso === 0) { out.pg.slots = Object.keys(p.slots).map(k => { const v = ui.sl[k]; return { n: SLOTN[k] || k, bd: v != null ? '#2456b8' : '#d3dbe8', ops: p.slots[k][0].map(o => ({ t: String(o), go: () => this.setUi({ sl: Object.assign({}, ui.sl, { [k]: String(o) }), fb: null }), bd: String(v) === String(o) ? '#0a1a3a' : '#c5ccdb', bg: String(v) === String(o) ? '#0a1a3a' : '#fff', fg: String(v) === String(o) ? '#f0c419' : '#0a1a3a' })) }; });
+          const g = k => ui.sl[k] != null ? ui.sl[k] : '?', sn = (p.sen && p.sen.n) || (p.a && p.b ? p.a.n + ' / ' + p.b.n : 'sensor');
+          out.pg.prev = p.tipo === 'tramos' ? 'si (' + sn + ' < ' + g('n1') + ')  →  ' + g('c1') + '\nsi no, si (' + sn + ' < ' + g('n2') + ')  →  ' + g('c2') + '\nsi no  →  ' + g('c3') : p.tipo === 'dos' ? 'si (' + p.a.n + ' ' + g('lg') + ' ' + (p.b.dig ? p.b.n : p.b.n + ' ' + g('op') + ' ' + g('n')) + ')\n   →  ' + g('si') + '\nsi no\n   →  ' + g('no') : p.tipo === 'contador' ? 'contador empieza en ' + g('ini') + '\nentra → ' + g('e') + ' · sale → ' + g('s') + '\nsi (contador ' + g('op') + ' ' + g('n') + ')  →  ' + g('si') + '\nsi no  →  ' + g('no') : 'si (' + sn + ' ' + (p.dig ? '= ' + g('n') : g('op') + ' ' + g('n')) + ')\n   →  ' + g('si') + '\nsi no\n   →  ' + g('no'); }
+        else { const H = this.huecos(), cd = ui.cd, mk = ui.cons && !ui.cons.ok, by = {}; H.holes.forEach(x => { (by[x.i] = by[x.i] || []).push(x); });
+          out.pg.lines = H.lines.map((l, i) => { const parts = [], hs = (by[i] || []).sort((a, b) => a.a - b.a), col = /^\s*\/\//.test(l) ? '#7fd18b' : /^#|^Servo/.test(l) ? '#c792ea' : '#dfe8f5'; let c = 0;
+            hs.forEach(x => { if (x.a > c) parts.push({ txt: true, sel: false, inp: false, t: l.slice(c, x.a), col }); const val = String(cd[x.j] == null ? '' : cd[x.j]); parts.push({ txt: false, sel: !x.typed, inp: x.typed, val, bd: mk && val ? (val.trim() === x.ans ? '#1f9d55' : '#ff6b6b') : '#ffd166', w: (x.ans.length + 3) + 'ch', opts: x.opts, set: e => this.setUi({ cd: Object.assign({}, this.state.ui.cd, { [x.j]: e.target.value }) }) }); c = x.b; });
+            parts.push({ txt: true, sel: false, inp: false, t: l.slice(c) || ' ', col }); return { n: String(i + 1), parts }; });
+          out.pg.ayuda = H.holes.some(x => x.typed) ? 'En los huecos para escribir, cuidado con las mayúsculas.' : 'Elijan la palabra correcta en cada hueco.'; out.pg.consola = ui.cons ? ui.cons.l : ['Completen los ' + H.holes.length + ' huecos y compilen.']; out.pg.conCol = ui.cons ? (ui.cons.ok ? '#7fe0a0' : '#ff8a80') : '#c9d6f2'; } }
+      if (est === 6) { const res = ui.res || [], ti = ui.ti, u = p.u ? ' ' + p.u : '';
+        const val = r => r.t ? (r.t.v != null ? (p.dig ? (r.t.v ? 'SÍ' : 'NO') : r.t.v + u) : (p.a ? p.a.n + ': ' + (r.t.a ? 'sí' : 'no') + ' · ' + p.b.n + ': ' + (p.b.dig ? (r.t.b ? 'sí' : 'no') : r.t.b + (p.b.u ? ' ' + p.b.u : '')) : '')) : (r.seq ? r.seq.map(x => x === 'e' ? '↑' : '↓').join('') : '');
+        out.pb.filas = res.map((r, i) => ({ ic: i < ti || (i === ti && !ui.run) || (ti >= res.length - 1 && !ui.run && ti >= 0) ? '✓' : i === ti ? '▶' : '·', txt: r.txt, val: i <= ti ? val(r) : '', sal: i <= ti ? String(r.sal) : '', bg: i === ti && ui.run ? '#fff8dc' : i <= ti ? '#e3f6ea' : '#fff', bd: i === ti && ui.run ? '#f0c419' : i <= ti ? '#9ad7a8' : '#e3e7f2' }));
+        const cur = ti >= 0 ? res[Math.min(ti, res.length - 1)] : null, map = cur && p.salida ? (p.salida[cur.sal] || {}) : {};
+        out.pb.sit = cur ? cur.txt : 'Esperando…'; out.pb.lect = cur ? val(cur) || '—' : '—';
+        const LCC = { led_r: '#ff3b30', led_a: '#ffc531', led_v: '#2ee86d', led_b: '#f5f7ff' };
+        out.pb.outs = p.inst.filter(it => C[it.c].k === 'S').map(it => { const v = map[it.i], on = !!v, led = /^led/.test(it.c), servo = it.c === 'servo';
+          return { n: it.lab, led, servo, otro: !led && !servo, col: on ? LCC[it.c] || '#fff' : '#2a2f38', glow: on ? '0 0 22px 6px ' + (LCC[it.c] || '#fff') : 'none', ang: servo ? (typeof v === 'number' ? v : 0) - 90 : 0, ico: it.c === 'buzzer' ? '🔊' : /^rele/.test(it.c) ? '⚡' : '⚙️', op: on ? 1 : 0.3, fil: on ? 'drop-shadow(0 0 8px #ffd166)' : 'grayscale(1)', st: servo ? (v || 0) + '°' : on ? 'ENCENDIDO' : 'apagado', stCol: on || (servo && v) ? '#7fe0a0' : '#8a98ab' }; });
+        const FD = ui.falla; out.pb.fallaVis = !!FD; if (FD) { const paso = ui.fstep, lista = paso ? FD.arreglos : FD.causas, ok = lista[0]; out.pb.fSin = FD.sin; out.pb.fPreg = paso ? '2 · ¿CÓMO LO REPARAN?' : '1 · ¿CUÁL ES LA CAUSA?';
+          out.pb.fOps = mez(lista, st.id + paso).map(t => ({ t, go: () => { if (t !== ok) return this.fallo('Esa no es la respuesta', ['Lean el síntoma otra vez: ¿qué parte del sistema no responde como debería?']); if (!paso) { this.sfx(true); return this.setUi({ fstep: 1, fb: { ok: true, t: 'Correcto: esa es la causa. ¿Cómo lo reparan?' } }); } this.completar({ falla: FD.t }); } })); } }
+      if (est === 7) { const m = RD().MINTXT[st.curso] || [50, 60, 40], camp = (k, n, ay, ph, mn) => { const l = String(ui.fi[k] || '').trim().length; return { n, ay, ph, v: ui.fi[k] || '', set: e => this.setUi({ fi: Object.assign({}, this.state.ui.fi, { [k]: e.target.value }) }), cnt: l + ' / ' + mn + ' letras', cc: l >= mn ? '#1f9d55' : '#a8650a', bd: ui.fb && !ui.fb.ok && l < mn ? '#e57368' : '#dde3f0' }; };
+        out.fi.campos = [camp('imp', '1 · ¿Por qué es importante para el colegio?', 'A quién ayuda y qué problema resuelve.', 'Este sistema ayuda a…', m[0]), camp('con', '2 · Conclusiones', '¿Funcionó? ¿Qué aprendieron? ¿Qué fue lo más difícil y cómo lo resolvieron?', 'Concluimos que…', m[1]), camp('mej', '3 · Mejoras para una versión 2', '¿Qué le agregarían o cambiarían?', 'Le agregaríamos…', m[2])]; } }
+    if (ov === 'fin' && p) { let a = 0, b = 0; for (let i = 1; i <= 7; i++) { a += this.pzPts(i); b += this.llPts(i); } out.fn = { quien: st.integrantes, proy: p.n, nota: this.nota().toFixed(2), np: r2(a).toFixed(2), nl: r2(b * 3 / 7).toFixed(2), filas: [1, 2, 3, 4, 5, 6, 7].map(i => ({ sala: R[i].n, pieza: R[i].ico + ' ' + R[i].pieza, ll: Math.round(this.llPts(i) * 100) + ' %', pz: Math.round(this.pzPts(i) * 100) + ' %' })) }; }
+    if (ov === 'cancha' && s.bk) { const b = s.bk; out.bk = { p1: b.pts[0], p2: b.pts[1], t1: b.n[0] + ' / 5 tiros', t2: b.n[1] + ' / 5 tiros', turno: b.fin ? (b.pts[0] === b.pts[1] ? '¡EMPATE!' : '¡GANA ' + (b.pts[0] > b.pts[1] ? 'J1' : 'J2') + '!') : 'Turno de ' + (b.turno ? 'J2 (ENTER)' : 'J1 (E)'), pos: 'calc(' + (b.pos * 100) + '% - 4px)', msg: b.msg, otra: () => this.nuevoBasket(), otraTxt: b.fin ? 'Jugar otra vez' : 'Reiniciar' }; }
+  }
+}
+</script>
+</body>
+</html>

@@ -92,13 +92,13 @@
   A.AREAS = ['Verbal', 'Series', 'Numérico', 'Abstracto', 'Lógico', 'Datos'];
   A.ROOMS = [
     { id: 'inicio', n: 'VESTÍBULO', tema: 'backrooms' },
-    { id: 'lab', n: 'LABORATORIO', pieza: 'Razonamiento verbal', ico: '📖', obj: 'Resuelvan la terminal de razonamiento verbal: sinónimos, antónimos, analogías y lectura.', area: 'Verbal' },
-    { id: 'pasillo', n: 'PASILLO', pieza: 'Series', ico: '🔢', obj: 'Resuelvan la terminal de series numéricas, de letras y alfanuméricas.', area: 'Series' },
-    { id: 'aula', n: 'AULA', pieza: 'Razonamiento numérico', ico: '➗', obj: 'Resuelvan la terminal de problemas: porcentajes, proporciones, edades y planteamiento.', area: 'Numérico' },
-    { id: 'banos', n: 'BAÑOS', pieza: 'Razonamiento abstracto', ico: '🔷', obj: 'Resuelvan la terminal de figuras: matrices, rotaciones y analogías gráficas.', area: 'Abstracto' },
-    { id: 'bar', n: 'BAR', pieza: 'Razonamiento lógico', ico: '⚖️', obj: 'Resuelvan la terminal de lógica: proposiciones, silogismos y negaciones.', area: 'Lógico' },
-    { id: 'patio', n: 'PATIO', pieza: 'Orden y datos', ico: '🧩', obj: 'Resuelvan la terminal de ordenamientos, posiciones, calendarios y parentescos.', area: 'Datos' },
-    { id: 'final', n: 'SALA DE MÁQUINAS', pieza: 'Simulacro de admisión', ico: '🎓', obj: 'Simulacro final: 20 preguntas con tiempo, como el examen real. Luego, su plan de ingreso.' },
+    { id: 'lab', n: 'LABORATORIO', tema: 'lab', pieza: 'Razonamiento verbal', ico: '📖', obj: 'Resuelvan la terminal de razonamiento verbal: sinónimos, antónimos, analogías y lectura.', area: 'Verbal' },
+    { id: 'pasillo', n: 'PASILLO', tema: 'pasillo', pieza: 'Series', ico: '🔢', obj: 'Resuelvan la terminal de series numéricas, de letras y alfanuméricas.', area: 'Series' },
+    { id: 'aula', n: 'AULA', tema: 'aula', pieza: 'Razonamiento numérico', ico: '➗', obj: 'Resuelvan la terminal de problemas: porcentajes, proporciones, edades y planteamiento.', area: 'Numérico' },
+    { id: 'banos', n: 'BAÑOS', tema: 'banos', pieza: 'Razonamiento abstracto', ico: '🔷', obj: 'Resuelvan la terminal de figuras: matrices, rotaciones y analogías gráficas.', area: 'Abstracto' },
+    { id: 'bar', n: 'BAR', tema: 'bar', pieza: 'Razonamiento lógico', ico: '⚖️', obj: 'Resuelvan la terminal de lógica: proposiciones, silogismos y negaciones.', area: 'Lógico' },
+    { id: 'patio', n: 'PATIO', tema: 'patio', pieza: 'Orden y datos', ico: '🧩', obj: 'Resuelvan la terminal de ordenamientos, posiciones, calendarios y parentescos.', area: 'Datos' },
+    { id: 'final', n: 'SALA DE MÁQUINAS', tema: 'final', pieza: 'Simulacro de admisión', ico: '🎓', obj: 'Simulacro final: 20 preguntas con tiempo, como el examen real. Luego, su plan de ingreso.' },
     { id: 'cancha', n: 'CANCHA', tema: 'cancha' }
   ];
   A.TEO = {

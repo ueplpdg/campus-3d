@@ -59,7 +59,7 @@
 </div>
 <div style="position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none">
 <sc-if value="{{ hud.cerca }}" hint-placeholder-val="{{ false }}"><div style="background:#2456b8;color:#fff;font-weight:700;font-size:18px;padding:12px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:t3pulse 1.6s infinite">{{ hud.cercaTxt }}</div></sc-if>
-<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">J1: W A S D · J2: flechas · Entrar: J1 E o J2 ENTER · Ganen retos para jugar en la cancha 🎮</div>
+<div style="background:rgba(10,26,58,.85);color:#fff;font-size:14px;padding:8px 16px;border-radius:999px">J1: W A S D · J2: flechas · Entrar: J1 E o J2 ENTER · {{ hud.minisTip }}</div>
 </div>
 </sc-if>
 
@@ -78,6 +78,18 @@
 <sc-if value="{{ pz.banner }}" hint-placeholder-val="{{ false }}"><div style="background:#f0a726;color:#1a1004;font-weight:700;padding:10px 16px;font-size:15px">{{ pz.bannerTxt }}</div></sc-if>
 <div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;animation:t3in .3s ease-out" key="{{ pz.key }}">
 
+<sc-if value="{{ ph.llVis }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;background:#0a1a3a;color:#fff;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;border:3px solid #f0a726;box-shadow:0 0 0 4px rgba(240,167,38,.18)">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="font-size:26px">🔑</div><div style="flex:1;min-width:0;font-size:12px;letter-spacing:.12em;font-weight:800;color:#ffd166">LLAVE {{ ph.llNum }} DE 7 · ÁBRANLA PARA ENTRAR A LA FASE</div></div>
+<div style="background:#fffbea;color:#0a1a3a;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:5px"><div style="font-size:11px;letter-spacing:.1em;font-weight:800;color:#a8650a">📖 LEAN ANTES DE RESPONDER</div><sc-for list="{{ ph.llTeo }}" as="x" hint-placeholder-count="3"><div style="display:flex;gap:7px;font-size:14px;line-height:1.45"><div style="color:#a8650a;font-weight:800">›</div><div>{{ x }}</div></div></sc-for></div>
+<div style="font-size:18px;font-weight:800;line-height:1.35;text-wrap:pretty">{{ ph.llQ }}</div>
+<sc-if value="{{ ph.llCtxVis }}" hint-placeholder-val="{{ false }}"><div style="background:rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:14px">{{ ph.llCtx }}</div></sc-if>
+<sc-for list="{{ ph.llOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.go }}" style="text-align:left;background:{{ o.bg }};color:#0a1a3a;border:2px solid {{ o.bd }};border-radius:10px;padding:11px 14px;font-size:15px;font-weight:700;cursor:pointer;line-height:1.35;font-family:inherit">{{ o.t }}</button></sc-for>
+<sc-if value="{{ ph.llFbVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fff1ef;color:#8a2a22;border-radius:8px;padding:8px 10px;font-size:14px;line-height:1.4;font-weight:600">{{ ph.llFb }}</div></sc-if>
+<div style="font-size:12px;color:#c9d6f2;line-height:1.4">Llave a la primera = punto completo · con un error = medio punto. Las llaves valen el 30 % de la nota.</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ ph.teoVis }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;background:#fffbea;border:2px solid #f0a726;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px">
 <button onClick="{{ ph.teoTog }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a;font-family:inherit"><span style="font-size:20px">📘</span><span style="flex:1;font-weight:800;font-size:15px">{{ ph.teoTit }}</span><span style="font-weight:700;color:#a8650a;font-size:13px;white-space:nowrap">{{ ph.teoBtn }}</span></button>
@@ -92,6 +104,18 @@
 </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ ph.bibVis }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;background:#eef3fd;border:2px solid #2456b8;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ ph.bibTog }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:#0a1a3a;font-family:inherit"><span style="font-size:20px">📚</span><span style="flex:1;font-weight:800;font-size:15px">Biblioteca técnica de este proyecto</span><span style="font-weight:700;color:#2456b8;font-size:13px;white-space:nowrap">{{ ph.bibBtn }}</span></button>
+<sc-if value="{{ ph.bibOpen }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12px;color:#4a5878">Datos reales de cada componente. Léanlos para razonar las llaves y las fases.</div>
+<sc-for list="{{ ph.bib }}" as="b" hint-placeholder-count="4">
+<div style="background:#fff;border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start"><div style="font-size:24px;flex:none;line-height:1">{{ b.ico }}</div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><div style="font-weight:800;font-size:14px">{{ b.n }}</div><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:{{ b.col }}">{{ b.rol }}</div></div><div style="font-size:13px;line-height:1.45;color:#0a1a3a">{{ b.t }}</div></div></div>
+</sc-for>
+</sc-if>
+</div>
+</sc-if>
+
 <sc-if value="{{ ph.mision }}" hint-placeholder-val="{{ false }}">
 <div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;border-left:6px solid #2456b8">
 <div style="font-size:12px;letter-spacing:.1em;font-weight:700;color:#2456b8">LA MISIÓN</div>
@@ -311,7 +335,7 @@
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Minijuegos</div><button onClick="{{ dcf.togMinis }}" style="background:{{ dcf.minisBg }};color:#fff;border:none;border-radius:999px;padding:7px 12px;font-weight:700;cursor:pointer">{{ dcf.minisTxt }}</button><sc-for list="{{ dcf.minis }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.go }}" style="background:{{ m.bg }};border:2px solid {{ m.bd }};border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ m.t }}</button></sc-for></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Tiempo por reto</div><sc-for list="{{ dcf.segs }}" as="g" hint-placeholder-count="4"><button onClick="{{ g.go }}" style="background:{{ g.bg }};border:2px solid #f0a726;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer;color:#1a1004">{{ g.t }}</button></sc-for><div style="font-size:12px;color:#4a5878">de minijuegos que gana la pareja por cada reto superado</div></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><div style="font-weight:700;font-size:14px;min-width:120px">Retos abiertos</div><button onClick="{{ dcf.retosTodos }}" style="background:#0a1a3a;color:#fff;border:none;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer">Abrir todos</button><sc-for list="{{ dcf.retos }}" as="r" hint-placeholder-count="10"><button onClick="{{ r.go }}" style="background:{{ r.bg }};border:2px solid {{ r.bd }};border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:#0a1a3a;white-space:nowrap">{{ r.t }}</button></sc-for></div>
-<div style="font-size:12px;color:#4a5878;line-height:1.4">Nota final = 50 % retos (10 por nivel, cada uno vale 7 · 8,5 · 10 según el nivel alcanzado) + 50 % proyecto (10 fases). Los minijuegos no dan nota: se ganan con retos.</div>
+<div style="font-size:12px;color:#4a5878;line-height:1.4"><b>Proyecto con llaves (1 clase):</b> nota = 70 % proyecto (10 fases) + 30 % llaves (7 mini-retos, uno al inicio de cada fase) + 0,5 por cada proyecto extra. Al entregar el proyecto se abre la cancha con 10 min de minijuegos. <b>Otras fases:</b> 50 % retos + 50 % proyecto. Los minijuegos no dan nota: se ganan con retos.</div>
 </div>
 
 <div style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
@@ -413,9 +437,9 @@
 <img src="./logo-providencia.png" alt="La Providencia" style="height:70px;width:auto">
 <div style="font-size:13px;letter-spacing:.14em;font-weight:700">U. E. P. «LA PROVIDENCIA» · ROBÓTICA</div>
 <div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1.1">EQUIPO TÉCNICO CERTIFICADO</div>
-<div style="font-size:17px">Por restaurar todos los sistemas del colegio:</div>
+<div style="font-size:17px">{{ fin.por }}</div>
 <div style="font-size:20px;font-weight:800">{{ fin.quien }}</div>
-<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">DESAFÍOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.r }}</div></div><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">PROYECTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.p }}</div></div><div style="background:#0a1a3a;color:#fff;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.nota }}</div></div></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">{{ fin.rt }}</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.r }}</div></div><div style="background:#e8eefb;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">{{ fin.pt }}</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.p }}</div></div><div style="background:#0a1a3a;color:#fff;border-radius:10px;padding:10px 16px"><div style="font-size:12px;font-weight:700">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px">{{ fin.nota }}</div></div></div>
 <button onClick="{{ fin.ok }}" style="background:#1f9d55;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:17px;cursor:pointer">¡Ir a la cancha a jugar! 🎮</button>
 </div>
 </div>
@@ -476,7 +500,36 @@ const TEORIA = [
   ['La ficha técnica', ['Es el documento que permite que OTRA persona construya o repare su proyecto.', 'La parte técnica ya está lista con su trabajo. Ustedes explican el PORQUÉ: la importancia, lo que aprendieron y cómo lo mejorarían.', 'Escriban con oraciones completas y ejemplos del colegio.'], 'Conclusión de ejemplo: «Aprendimos que la ubicación del sensor cambia todo: al sol medía 40 °C y en la sombra 26 °C».']
 ];
 const RESIS = [['LED (cualquier color)', '220 Ω', 'Limita la corriente para que el LED no se queme. Una por cada LED.'], ['Pulsador', '10 kΩ', 'Resistencia «pull-down»: hace que el pin lea 0 cuando nadie presiona (si no, lee valores al azar).'], ['Fotorresistencia LDR', '10 kΩ', 'Forma un «divisor de voltaje» para que el Arduino pueda medir cuánta luz hay.'], ['Módulos (PIR, ultrasónico, IR, humedad, LM35, UV, sonido, gas)', 'ninguna', 'Ya traen su propio circuito dentro de la placa del módulo.'], ['Servo, buzzer y relé', 'ninguna', 'Se conectan directo; el relé ya trae su circuito.']];
-const RETOS_N = { '8vo': ['orden', 'armar', 'decision', 'sigue', 'aparato', 'simon', 'laberinto', 'tangram', 'robots2', 'error'], '9no': ['vars', 'calculo', 'decision', 'master', 'reglas', 'interrog', 'sokoban', 'pacman', 'compuertas', 'balanza'], '10mo': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'], '3BGU': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'] };
+const FICHA = {
+  arduino: ['🟦', 'Arduino UNO (el cerebro)', 'PROCESO', 'Microcontrolador ATmega328P a 16 MHz. Pines digitales D0–D13: HIGH = 5 V, LOW = 0 V, máximo 20 mA cada uno. Los pines con ~ (D3, D5, D6, D9, D10, D11) dan PWM, para servos. Pines analógicos A0–A5: leen de 0 a 1023 (0 V a 5 V). Se alimenta por USB a 5 V.'],
+  led: ['💡', 'LED', 'SALIDA', 'Diodo que emite luz. Funciona con unos 2 V (rojo, amarillo) a 3 V (verde, blanco) y 10–20 mA. Pata LARGA = ánodo (+) hacia el pin; pata corta = cátodo (−) a GND. Siempre con resistencia de 220 Ω: R = (5 V − 2 V) ÷ 0,015 A = 200 Ω → 220 Ω. Se maneja con digitalWrite(pin, HIGH).'],
+  buzzer: ['🔊', 'Buzzer activo', 'SALIDA', 'Suena cuando recibe 5 V (HIGH): unos 2 300 Hz y 85 dB a 10 cm. Pata + a un pin digital y − a GND. Uso: alarmas y avisos.'],
+  servo: ['⚙️', 'Servomotor SG90', 'SALIDA', 'Gira a un ángulo exacto entre 0° y 180°. Cables: marrón = GND, rojo = 5 V, naranja = señal (pin con ~). Con la librería Servo: tapa.write(90). Fuerza 1,8 kg·cm; puede consumir hasta 650 mA, por eso conviene una fuente externa de 5 V.'],
+  rele: ['🔌', 'Módulo relé', 'SALIDA', 'Interruptor que el Arduino controla: con HIGH en IN cierra su contacto (se oye un «clic») y enciende un aparato de más potencia (bomba, ventilador, lámparas de 110 V). El aparato se conecta a los bornes COM y NO (normalmente abierto) con su propia fuente. ¡Nunca tocar los bornes de 110 V!'],
+  hc: ['📏', 'Ultrasónico HC-SR04', 'ENTRADA', 'Emite un sonido de 40 kHz (Trig) y mide cuánto tarda el eco en volver (Echo). Rango 2–400 cm, precisión 3 mm, cono de unos 15°. Distancia (cm) = tiempo del eco (µs) ÷ 58. Funciona a 5 V.'],
+  pir: ['🚶', 'Sensor de movimiento PIR', 'ENTRADA', 'Detecta el calor (infrarrojo) del cuerpo humano cuando se mueve. Alcance hasta 7 m, ángulo de 110°. Salida digital: HIGH = hay movimiento. Perilla Tx: cuánto dura la señal (3 s a 5 min); perilla Sx: sensibilidad. Al encender tarda 1 minuto en estabilizarse.'],
+  ir: ['📡', 'Sensor infrarrojo IR', 'ENTRADA', 'Emite luz infrarroja y detecta su reflejo: ve objetos a 2–30 cm (se ajusta con su perilla). Salida digital (sí / no). Funciona a 3,3–5 V.'],
+  ldr: ['☀️', 'Fotorresistencia LDR', 'ENTRADA', 'Su resistencia cambia con la luz: unos 1 MΩ en oscuridad y 1 kΩ a pleno sol. Con una resistencia de 10 kΩ (divisor de voltaje) va a un pin analógico: analogRead da 0 (oscuro) a 1023 (mucha luz). Referencias: noche < 200, aula iluminada 500–800.'],
+  hum: ['🌱', 'Sensor de humedad de suelo', 'ENTRADA', 'Dos puntas que miden cuánto conduce la tierra (el agua conduce). analogRead 0–1023 se convierte a %: 0 % seco, 100 % encharcado. Una maceta necesita riego cuando baja de 30–40 %. Se calibra con tierra seca y mojada.'],
+  son: ['🎤', 'Sensor de sonido', 'ENTRADA', 'Micrófono con amplificador: analogRead indica la intensidad del ruido y se calibra a decibeles (dB). Referencias: biblioteca 40 dB, conversación 60 dB, aula ruidosa 80 dB. Según la OMS, más de 85 dB por mucho tiempo daña el oído.'],
+  uv: ['🌞', 'Sensor de radiación UV', 'ENTRADA', 'Mide la radiación ultravioleta del sol como índice UV (OMS): 0–2 bajo, 3–5 moderado, 6–7 alto, 8–10 muy alto, 11 o más extremo. En Ecuador, sobre la línea equinoccial, a mediodía el índice suele llegar a 11 o más.'],
+  btn: ['🔘', 'Pulsador', 'ENTRADA', 'Conecta solo mientras se presiona. Necesita una resistencia de 10 kΩ (pull-down) para que el pin lea LOW cuando está suelto. digitalRead da HIGH al presionar.'],
+  lm35: ['🌡️', 'Sensor de temperatura LM35', 'ENTRADA', 'Entrega 10 mV por cada °C (25 °C → 0,25 V). Rango −55 °C a 150 °C, precisión ±0,5 °C. En Arduino: °C = analogRead × 0,488. Patas: VCC (5 V), salida (a un pin analógico) y GND.'],
+  tarjeta: ['💳', 'Lector de tarjeta RFID', 'ENTRADA', 'Lee el chip del carnet sin contacto (13,56 MHz, a 3–5 cm). En este proyecto el módulo compara el carnet con la lista de autorizados y da HIGH si es válido.'],
+  gas: ['💨', 'Sensor de humo y gas MQ-2', 'ENTRADA', 'Detecta humo, gas de cocina (GLP) y alcohol. Tiene un calentador interno: necesita 1–2 minutos para calentarse. analogRead: aire limpio 100–200; con humo, más de 400.'],
+  agua_s: ['💧', 'Sensor de agua', 'ENTRADA', 'Pistas metálicas: cuando el agua las une, conduce y el valor sube. analogRead: seco 0–100, unas gotas unos 300, charco más de 500. Con el tiempo se oxida.'],
+  res: ['〰️', 'Resistencias', 'COMPONENTE', '220 Ω (rojo-rojo-café): una por cada LED, limita la corriente. 10 kΩ (café-negro-naranja): para el pulsador (pull-down) y la LDR (divisor de voltaje). Los módulos con placa (PIR, HC-SR04, relé, sensores con AO) ya traen sus resistencias.']
+};
+const FK = c => /^led/.test(c) ? 'led' : /^rele/.test(c) ? 'rele' : c;
+const LLTEO = { 1: ['ENTRADA = sensor: MIDE algo del ambiente (luz, distancia, temperatura, movimiento, humedad, ruido, UV, humo, agua, un carnet) y le avisa al Arduino.', 'SALIDA = actuador: HACE algo (LED, buzzer, servomotor, relé con bomba, ventilador o lámpara).', 'Pregúntense: ¿este componente recibe información del mundo o actúa sobre él? Revisen la biblioteca técnica de abajo.'],
+  2: ['Un sensor debe ir donde ocurre lo que mide, apuntando hacia ahí y sin interferencias: sol directo, calor de motores, CPU o proyector, agua, golpes, objetos que tapan.', 'Un actuador va donde se necesita su efecto (la luz donde se ve, la alarma donde se escucha, el servo junto al mecanismo).', 'Lo que funciona con 110 V (relé de lámparas) va dentro del tablero eléctrico, nunca expuesto.'],
+  3: ['LED: pata LARGA (+) al pin, pasando por una resistencia de 220 Ω; pata corta (−) a GND. Al revés no prende.', 'GND (tierra) es 0 V: todos los negativos se unen ahí. 5V es el positivo que alimenta los módulos.', 'Ley de Ohm: R = V ÷ I. El Arduino da 5 V, el LED usa 2 V y 0,015 A → R = 3 ÷ 0,015 = 200 Ω → se usa 220 Ω.'],
+  4: ['Todo algoritmo de control repite 3 pasos: 1) LEER la entrada (el sensor), 2) DECIDIR con una pregunta (rombo), 3) ACTUAR con la salida.', 'No se puede decidir sin datos: por eso, después de INICIO, siempre se lee primero el sensor.', 'Al final, la flecha vuelve a leer: el sistema funciona para siempre (loop).'],
+  5: ['Para seguir un diagrama: 1) tomen la lectura del sensor, 2) respondan la pregunta del rombo con Sí o No, 3) sigan esa flecha hasta la acción.', 'Ojo con los signos: 3 < 3 es FALSO (3 no es menor que 3). 3 ≥ 3 es VERDADERO.', 'Si hay dos rombos, respondan el primero; si es No, pasen al segundo.'],
+  6: ['El rombo traduce el objetivo a una pregunta con un signo y un límite.', '«mayor a 28» → > 28 · «menor a 3» → < 3 · «28 o más» → ≥ 28 · «3 o menos» → ≤ 3.', 'El límite y el signo deben ser EXACTAMENTE los del objetivo: si cambian uno, el sistema se activa cuando no debe.'],
+  7: ['setup() { } se ejecuta UNA vez al encender: ahí va pinMode(pin, OUTPUT) para salidas e INPUT para sensores digitales.', 'loop() { } se repite para siempre: leer → decidir (if) → actuar.', 'digitalWrite(pin, HIGH) manda 5 V (enciende); LOW manda 0 V (apaga). digitalRead lee sí/no; analogRead lee 0–1023.', 'Un = guarda un valor (x = 5); == compara (if (x == 5)). Cada instrucción termina en ;']
+};
+const RETOS_N = { '8vo': ['orden', 'armar', 'decision', 'sigue', 'aparato', 'simon', 'laberinto', 'tangram', 'robots2', 'error'], '9no': ['vars', 'calculo', 'decision', 'master', 'reglas', 'interrog', 'sokoban', 'pacman', 'tuberias', 'error'], '10mo': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'], '3BGU': ['sistema', 'robots2', 'tuberias', 'einstein', 'raven', 'wcst', 'rutas', 'tetris', 'crucigrama', 'galleta'] };
 const RINFO = { orden: ['🔢', 'Ordenar los pasos', 'SECUENCIAS'], armar: ['🧱', 'Armar el diagrama', 'DIAGRAMAS DE FLUJO'], decision: ['🔷', 'Decisiones (rombo)', 'CONDICIONES'], sigue: ['👉', 'Seguir el diagrama', 'LECTURA DE ALGORITMOS'], aparato: ['🔌', 'Del diagrama al aparato', 'ENTRADAS Y SALIDAS'], error: ['🐞', 'Encontrar el error', 'DEPURACIÓN'], simon: ['🎵', 'Simón dice', 'MEMORIA'], laberinto: ['🌀', 'Laberinto', 'COORDINACIÓN'], tangram: ['🔺', 'Tangram', 'GEOMETRÍA'], robots2: ['🤖', 'Robot programable', 'PENSAMIENTO COMPUTACIONAL'], vars: ['📦', 'Variables y operadores', 'PROGRAMACIÓN'], calculo: ['⚡', 'Cálculo relámpago', 'CÁLCULO MENTAL'], master: ['🎯', 'Mastermind', 'PROBAR HIPÓTESIS'], reglas: ['🔐', 'Cerradura de reglas', 'RAZONAMIENTO INDUCTIVO'], interrog: ['🕵', 'Sala de interrogatorio', 'DEDUCCIÓN LÓGICA'], sokoban: ['📦', 'Sokoban (cajas)', 'PLANIFICACIÓN'], pacman: ['👾', 'Pac-Man programable', 'ALGORITMOS'], compuertas: ['🔀', 'Compuertas lógicas', 'LÓGICA DIGITAL'], balanza: ['⚖', 'Balanza', 'ECUACIONES'], sistema: ['🧭', 'Planificar el sistema', 'DISEÑO DE SISTEMAS'], tuberias: ['🚰', 'Tuberías', 'RAZONAMIENTO ESPACIAL'], einstein: ['🧠', 'Rejilla de Einstein', 'DEDUCCIÓN CON PISTAS'], raven: ['🔳', 'Matriz de Raven', 'RAZONAMIENTO ABSTRACTO'], wcst: ['🃏', 'La regla cambió', 'FLEXIBILIDAD MENTAL'], rutas: ['🗺', 'Rutas de la ciudad', 'GRAFOS'], tetris: ['🧩', 'Tetris en equipo', 'VISIÓN ESPACIAL'], crucigrama: ['✏', 'Crucigrama', 'VOCABULARIO TÉCNICO'], galleta: ['🥠', 'Galleta (adivinanzas)', 'PENSAMIENTO LATERAL'] };
 const RPOS = [[-18.6, -6], [-18.6, -1.2], [-18.6, 4], [18, -6], [18, -1.2], [18, 4], [-15.5, 7.6], [-5.5, 7.6], [5.5, 7.6], [15.5, 7.6]];
 const MPOS = { futbol: [-7, -4.5], tenis: [-7, 3.5], basket: [7, -4.5], penales: [7, 3.5], paintball: [0, -5.5], esfero: [0, 3.8] };
@@ -547,6 +600,43 @@ class Component extends DCLogic {
   }
   datos(v) { const p = this.P(v.p); return v.modo === 'jug' ? this.pj(v.p) : this.solucion(p); }
   notaFinal(st) { const req = (X().CURSO[st.curso] || {}).req || 1, all = Object.values(st.proj || {}), ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; let s = 0; for (let i = 0; i < req; i++) s += ns[i] || 0; return r2(Math.min(10, s / req + Math.max(0, dn - req) * 0.5)); }
+  hudLL(st) { const b = this.mejorPj(st), x = b ? b.x : null, F = x ? (x.done ? 10 : (x.f || 0) + 1) : 0, nll = x ? Object.values(x.ll || {}).filter(c => c.ok).length : 0, el = st.t0 ? (Date.now() - st.t0) / 60000 : 0, idl = Math.min(10, Math.max(1, Math.floor(el / 5) + 1));
+    return 'Fase ' + F + '/10 · 🔑 ' + nll + '/7' + (x && x.done ? ' · ✓' : st.t0 ? ' · ⏱ meta ' + idl : '') + (this.nProy(st) > 1 ? ' · +' + (this.nProy(st) - 1) : '') + ' · 🎮 ' + mmss(st.mt || 0); }
+  modoLL() { return this.cfg().fase === 'llaves'; }
+  llave(p, F, id) {
+    const D = X(), C = D.COMP, n = c => (C[c] || {}).n || c, sd = Math.abs(hsh(id + ':' + F + ':' + ((this.state.st || {}).id || ''))), uniq = a => [...new Set(a.filter(Boolean))];
+    const B3 = [{ q: 'La pata más larga del LED es…', ans: 'El ánodo (+): va al pin, con su resistencia de 220 Ω', o: ['El cátodo (−): va directo a GND', 'Da igual: el LED funciona en cualquier sentido'], ex: 'El LED deja pasar corriente en un solo sentido: pata larga (+) hacia el pin con la resistencia, pata corta (−) a GND.' },
+      { q: '¿Para qué sirve la resistencia de 220 Ω junto a un LED?', ans: 'Limita la corriente para que el LED no se queme', o: ['Hace que el LED brille más', 'Guarda energía como una batería'], ex: 'Sin resistencia pasa demasiada corriente y el LED (y el pin) se dañan.' },
+      { q: '¿A qué pin del Arduino van los cables negativos (−) de todos los componentes?', ans: 'GND (tierra, 0 V)', o: ['5V', 'A0'], ex: 'Todos los componentes comparten la tierra: GND. El 5V es el positivo.' }];
+    const B7 = [{ q: '¿En qué parte del programa va pinMode(…)?', ans: 'En setup(): se ejecuta una sola vez al encender', o: ['En loop(): se repite siempre', 'Fuera de las llaves { }'], ex: 'Configurar los pines se hace una sola vez, al encender: por eso va en setup().' },
+      { q: '¿Qué hace la instrucción digitalWrite(13, HIGH); ?', ans: 'Enciende lo conectado al pin 13 (manda 5 V)', o: ['Lee el valor del pin 13', 'Apaga el pin 13'], ex: 'digitalWrite escribe (manda) una señal; HIGH = encendido (5 V), LOW = apagado (0 V).' },
+      { q: 'Para COMPARAR si dos valores son iguales, en Arduino se escribe…', ans: '==', o: ['=', '=>'], ex: 'Un solo = guarda un valor en una variable; == compara.' }];
+    let Q = null;
+    if (F === 1) { const se = p.inst.filter(i => (C[i.c] || {}).k === 'E'), sa = uniq(p.inst.filter(i => (C[i.c] || {}).k === 'S').map(i => n(i.c)).concat((p.dist || []).filter(c => (C[c] || {}).k === 'S').map(n)));
+      if (se.length && sa.length) Q = { q: '¿Cuál de estos componentes es una ENTRADA (un sensor) en «' + p.n + '»?', ans: n(se[0].c), o: sa.slice(0, 2), ex: 'Una entrada mide algo del ambiente y avisa al Arduino (' + n(se[0].c) + '). Las salidas (LED, buzzer, servo, relé) actúan.' }; }
+    if (F === 2) { const bad = p.spots.filter(x => x.mal), ok = p.spots.filter(x => !x.mal); if (bad.length && ok.length) { const b = bad[sd % bad.length]; Q = { q: 'En «' + p.n + '», ¿cuál de estos lugares es una MALA ubicación?', ans: b.lab, o: ok.slice(0, 2).map(x => x.lab), ex: b.mal }; } }
+    if (F === 3) Q = B3[sd % B3.length];
+    if (F === 4) { const f0 = p.flujo[0]; Q = { q: 'Después de INICIO, ¿cuál es el primer paso del algoritmo de «' + p.n + '»?', ans: f0[1], o: f0[2], ex: 'Antes de decidir, el sistema siempre lee la entrada: primero entrada, luego proceso (la pregunta) y luego salida.' }; }
+    if (F === 5) { try { const sol = Object.fromEntries(Object.entries(D.sol(p)).map(([k, v]) => [k, String(v)])), res = D.probar(p, sol), i = sd % res.length, r = res[i], t = p.tests[i] || {}, esp = this.txtSal(r.esp), otros = uniq(res.map(x => this.txtSal(x.esp)).filter(x => x !== esp));
+      if (otros.length) Q = { q: 'Sigan el diagrama: «' + r.txt + '». ¿Qué debe hacer el sistema?', ctx: 'Objetivo: ' + p.objetivo + '  →  ' + (t.v != null ? 'Lectura del sensor: ' + t.v + (p.u ? ' ' + p.u : '') : p.a ? p.a.n + ': ' + (t.a ? 'sí' : 'no') + ' · ' + p.b.n + ': ' + t.b + (p.b.u ? ' ' + p.b.u : '') : ''), ans: esp, o: otros.slice(0, 2), ex: 'Comparen la lectura con el límite del rombo y sigan la flecha Sí o No: esa es la salida.' }; } catch (e) {} }
+    if (F === 6) { const pr = p.flujo.find(x => x[0] === 'preg'); if (pr) Q = { q: 'El objetivo dice: «' + p.objetivo + '» ¿Qué pregunta va en el ' + (p.tipo === 'tramos' ? 'PRIMER rombo (el primero que encuentra el sistema)' : 'rombo') + '?', ans: pr[1], o: pr[2], ex: 'El rombo hace la pregunta que separa los caminos Sí y No; debe decir exactamente lo mismo que el objetivo (mismo signo y mismo límite).' }; }
+    if (F === 7) Q = B7[sd % B7.length];
+    if (!Q) Q = B3[sd % B3.length];
+    const wr = uniq(Q.o).filter(x => x !== Q.ans).slice(0, this.apoyo() ? 1 : 2);
+    return Object.assign({}, Q, { opts: mez([Q.ans].concat(wr), id + 'll' + F) });
+  }
+  llaveVista(ph, out, p, pj, id, F) {
+    const Q = this.llave(p, F, id), L0 = (pj.ll || {})[F] || {}, fb = this.state.llfb && this.state.llfb.k === id + F ? this.state.llfb : null, cur = (this.state.st || {}).curso, menor = cur === '8vo' || cur === '9no' || this.apoyo();
+    ['elegir', 'ubicar', 'conectar', 'diagrama', 'bloques', 'ajustar', 'codigoF', 'probar', 'ficha'].forEach(k => { ph[k] = false; }); ph.teoVis = menor || (L0.n || 0) >= 1;
+    if (out.pz) { out.pz.acciones = false; out.pz.pistaVis = false; }
+    Object.assign(ph, { llTeo: LLTEO[F] || [], llVis: true, llNum: String(F), llQ: Q.q, llCtx: Q.ctx || '', llCtxVis: !!Q.ctx, llFbVis: !!fb, llFb: fb ? fb.t : '',
+      llOpts: Q.opts.map(t => ({ t, bg: fb && fb.sel === t ? '#ffd9d4' : '#fff', bd: fb && fb.sel === t ? '#c8413a' : '#c5ccdb', go: () => {
+        const ll = Object.assign({}, (this.pj(id).ll || {})), c = ll[F] || {}, nn = (c.n || 0) + 1;
+        if (t === Q.ans) { ll[F] = { ok: true, n: nn }; this.snd('ok'); this.setPj(id, { ll }); this.setState({ llfb: null, fb: { ok: true, t: '🔑 ¡Llave ' + F + ' abierta' + (nn === 1 ? ' a la primera!' : '!') + ' ' + Q.ex } }); }
+        else { ll[F] = { ok: false, n: nn }; this.snd('err'); this.setPj(id, { ll }); this.setState({ llfb: { k: id + F, sel: t, t: menor || nn >= 2 ? 'No es esa. Pista: ' + Q.ex : 'No es esa. Lean la teoría de arriba y vuelvan a intentar.' } }); } } })) });
+  }
+  notaLlaves(pj) { let s = 0; for (let k = 1; k <= 7; k++) { const c = ((pj || {}).ll || {})[k]; if (c && c.ok) s += c.n <= 1 ? 1 : 0.5; } return r2(s / 7 * 10); }
+  mejorPj(st) { const all = Object.values(st.proj || {}); if (!all.length) return null; return all.map(x => ({ x, n: x.done ? x.nota : this.notaProy(x) })).sort((a, b) => b.n - a.n)[0]; }
   nAj() { return this.curso().ops === 2 || this.apoyo() ? 2 : 3; }
   notaProy(pj) { const ap = this.apoyo(), reach = pj.done ? 10 : (pj.max || 0); let s = 0, b = 0; for (let k = 0; k < reach; k++) { s += (pj.pv && pj.pv[k] && !ap) ? 0.75 : 1; if (k >= 1 && !(pj.pf || {})[k]) b += 0.1; } if (pj.fallaOk && !pj.fallaErr) b += 0.2; return r2(Math.min(10, s + b)); }
   insignias(pj) { const reach = pj.done ? 10 : (pj.max || 0), o = []; let n = 0; for (let k = 1; k < reach; k++) if (!(pj.pf || {})[k]) n++; if (n) o.push('🎯 Primer intento en ' + n + ' fase' + (n > 1 ? 's' : '') + ' (+' + (n * 0.1).toFixed(1) + ')'); if (pj.fallaOk && !pj.fallaErr) o.push('🕵 Detective: falla resuelta al primer intento (+0,2)'); if (pj.done && !pj.pistas) o.push('🧠 Sin pistas'); if (pj.done) o.push('📄 Documentador: ficha técnica entregada'); return o; }
@@ -623,8 +713,8 @@ class Component extends DCLogic {
       [['imp', '¿Por qué es importante?', m[0]], ['con', 'Conclusiones', m[2]], ['mej', 'Mejoras', m[1]]].forEach(([k, n, mn]) => { const l = String(fi[k] || '').trim().length; if (l < mn) err.push(n + ': escriban al menos ' + mn + ' letras (llevan ' + l + ').'); });
       if (String(pj.refl || '').trim().length < 20) err.push('Reflexión: escriban al menos 20 letras.');
       if (err.length) return this.setState({ fb: { ok: false, t: 'La ficha todavía no está completa', lista: err } });
-      const nota = this.notaProy(Object.assign({}, pj, { done: true })); this.setPj(id, { done: true, nota: Math.max(pj.done ? pj.nota || 0 : 0, nota), max: 9 }, () => this.guardar({}));
-      return this.setState({ fb: { ok: true, t: '¡Proyecto entregado! Nota: ' + nota.toFixed(2) + '. Descarguen la ficha y evalúen a otra pareja.' } }); }
+      const nota = this.notaProy(Object.assign({}, pj, { done: true })); const ya = pj.done; this.setPj(id, { done: true, nota: Math.max(pj.done ? pj.nota || 0 : 0, nota), max: 9 }, () => { if (this.modoLL() && !ya) this.setState(s => ({ st: Object.assign({}, s.st, { mt: Math.max(s.st.mt || 0, 600) }) }), () => this.guardar({})); else this.guardar({}); });
+      return this.setState({ fb: { ok: true, t: '¡Proyecto entregado! Nota del proyecto: ' + nota.toFixed(2) + '.' + (this.modoLL() ? ' 🏀 Se abrió la cancha: 10 min de minijuegos. ¿Puntos extra? Hagan un segundo proyecto (+0,5).' : ' Descarguen la ficha y evalúen a otra pareja.') } }); }
   }
   inEstado(p, t, c) { if (p.tipo === 'contador') return { c }; if (p.tipo === 'dos') return { in: { a: t.a, b: t.b } }; return { in: { v: t.v } }; }
   correr(id, sl, solo) {
@@ -728,13 +818,13 @@ class Component extends DCLogic {
   }
 
   // ---------- v3: retos, minijuegos y consola ----------
-  cfg() { const d = { fase: 'ambas', minisOn: true, minis: {}, seg: 60, retosAb: null, pausa: false }; let c = this.state.cfg || (this.state.doc && this.state.doc.ses && this.state.doc.ses.cfg); if (!URL_() && !c) { try { c = JSON.parse(localStorage.getItem('campusmision_demo_cfg') || 'null'); } catch (e) {} } return Object.assign(d, c || {}); }
+  cfg() { const d = { fase: 'llaves', minisOn: true, minis: {}, seg: 60, retosAb: null, pausa: false }; let c = this.state.cfg || (this.state.doc && this.state.doc.ses && this.state.doc.ses.cfg); if (!URL_() && !c) { try { c = JSON.parse(localStorage.getItem('campusmision_demo_cfg') || 'null'); } catch (e) {} } return Object.assign(d, c || {}); }
   setCfg(ch) { const c = Object.assign({}, this.cfg(), ch); this.setState({ cfg: c }); if (!URL_()) { try { localStorage.setItem('campusmision_demo_cfg', JSON.stringify(c)); } catch (e) {} return; } this.adm({ accion: 'cfg', cfg: c }); }
   retosCurso() { const c = (this.state.st && this.state.st.curso) || '9no'; return RETOS_N[c] || RETOS_N['9no']; }
   rInfo(id) { const r = RINFO[id] || ['🧩', id, '']; return { ico: r[0], n: r[1], hab: r[2] }; }
   notaRetos(st) { const L = RETOS_N[st.curso] || RETOS_N['9no'], R = st.retos || {}; return r2(L.reduce((a, id) => a + [0, 7, 8.5, 10][(R[id] || {}).best || 0], 0) / L.length); }
   notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = all.filter(x => x.done).length; return r2(Math.min(10, ns[0] + Math.max(0, dn - 1) * 0.5)); }
-  notaFinal(st) { return r2(Math.min(10, this.notaRetos(st) * 0.5 + this.notaProyecto(st) * 0.5)); }
+  notaFinal(st) { if (this.modoLL()) { const b = this.mejorPj(st); if (!b) return 0; return r2(Math.min(10, b.n * 0.7 + this.notaLlaves(b.x) * 0.3 + Math.max(0, this.nProy(st) - 1) * 0.5)); } return r2(Math.min(10, this.notaRetos(st) * 0.5 + this.notaProyecto(st) * 0.5)); }
   toast(t) { this.setState({ tst: t }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ tst: '' }), 3800); }
   snd(t) { try { const A = this._ac || (this._ac = new (window.AudioContext || window.webkitAudioContext)()), o = A.createOscillator(), g = A.createGain(), n = A.currentTime; o.type = 'triangle'; o.frequency.setValueAtTime(t === 'err' ? 220 : t === 'ok' ? 880 : 520, n); g.gain.setValueAtTime(0.05, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.2); o.connect(g); g.connect(A.destination); o.start(n); o.stop(n + 0.22); } catch (e) {} }
   estacion(id) { if (/^r:/.test(id)) return this.abrirReto(id.slice(2)); if (/^m:/.test(id)) return this.abrirMini(id.slice(2)); if (this.cfg().fase === 'retos') return this.toast('El docente todavía no abre los proyectos: primero resuelvan los retos.'); this.abrir(id); }
@@ -744,7 +834,7 @@ class Component extends DCLogic {
     this.snd('ok'); const st = Object.assign({}, s.st), R = Object.assign({}, st.retos || {}), cur = R[rt.id] || { best: 0, n: 0 }, gana = this.cfg().seg || 60; R[rt.id] = { best: Math.max(cur.best || 0, rt.tier), n: (cur.n || 0) + 1 }; st.retos = R; st.mt = Math.min(900, (st.mt || 0) + gana);
     this.setState({ st, rt: Object.assign({}, rt, { estado: 'gano', fb: { ok: true, t: (txt || '¡Reto superado!') + '  +' + gana + ' s de minijuegos 🎮' } }) }, () => this.guardar()); }
   retoErr(t) { const rt = this.state.rt; if (rt) this.setState({ rt: Object.assign({}, rt, { fb: { ok: false, t } }) }); }
-  abrirMini(id) { const c = this.cfg(), st = this.state.st; if (!c.minisOn || c.minis[id] === false) return this.toast('El docente tiene cerrado este minijuego por ahora.'); if ((st.mt || 0) < 20) return this.toast('Necesitan al menos 20 s de minijuegos. Ganen retos para conseguir tiempo 🎮');
+  abrirMini(id) { const c = this.cfg(), st = this.state.st; if (!c.minisOn || c.minis[id] === false) return this.toast('El docente tiene cerrado este minijuego por ahora.'); if ((st.mt || 0) < 20) return this.toast((this.modoLL() ? 'La cancha se abre al entregar su proyecto 🎮' : 'Necesitan al menos 20 s de minijuegos. Ganen retos para conseguir tiempo 🎮'));
     if (id === 'esfero') return this.setState({ mn: { id, d2: true, nonce: 0 } }, () => this.relojMini());
     const ctrl = window.V3_MINI && window.V3_MINI.crear(id, { onHud: h => this.setState({ mnHud: h }), onEnd: r => this.finMini(r) }); if (!ctrl || !this.api) return; this.api.mini(ctrl); this.setState({ mn: { id }, mnHud: null }, () => this.relojMini()); }
   relojMini() { clearInterval(this._mr); this._mr = setInterval(() => { const s = this.state; if (!s.mn || !s.st) return clearInterval(this._mr); if (this.cfg().pausa) return; const mt = Math.max(0, (s.st.mt || 0) - 1); this.setState({ st: Object.assign({}, s.st, { mt }) }); if (mt <= 0) this.finMini({ msg: 'Se acabó su tiempo de minijuegos. ¡Ganen más retos!' }); }, 1000); }
@@ -754,7 +844,7 @@ class Component extends DCLogic {
     Object.keys(MPOS).forEach(id => { const on = c.minisOn && c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; out.push({ id: 'm:' + id, x: MPOS[id][0], z: MPOS[id][1], c: on ? '#ff8fd0' : '#7a7a7a', lab: (on ? '' : '🔒 ') + I.ico + ' ' + I.n, bg: 'rgba(60,10,40,.88)' }); }); return out; }
   vistaV3(out) { const s = this.state, c = this.cfg(), st = s.st, MC = window.ESC_MENTE && window.ESC_MENTE.make(React), V = window.V3_RETOS && window.V3_RETOS.make(React), M = MINFO_();
     out.tstVis = !!s.tst; out.tst = s.tst || '';
-    if (out.hud) { if (st) { const R = st.retos || {}; out.hud.retosTit = 'RETOS DE ' + (((X().CURSO[st.curso] || {}).nombre) || st.curso).toUpperCase() + ' · ' + this.retosCurso().filter(id => (R[id] || {}).best).length + '/' + this.retosCurso().length; out.hud.retosL = this.retosCurso().map(id => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { ico: ab ? I.ico : '🔒', n: I.n, st: b ? '★'.repeat(b) : '—', bg: b >= 3 ? '#fff6d6' : b ? '#e3f6ea' : '#f3f6fb', op: ab ? 1 : 0.5, ir: () => this.abrirReto(id) }; }); } else { out.hud.retosTit = ''; out.hud.retosL = []; } }
+    if (out.hud) { if (st) { const R = st.retos || {}; out.hud.retosTit = this.modoLL() ? (() => { const b = this.mejorPj(st); return '🔑 LLAVES ' + (b ? Object.values(b.x.ll || {}).filter(c => c.ok).length : 0) + '/7 · PROYECTO ' + (b ? (b.x.done ? 'ENTREGADO ✓' : 'FASE ' + ((b.x.f || 0) + 1) + '/10') : 'SIN ELEGIR'); })() : 'RETOS DE ' + (((X().CURSO[st.curso] || {}).nombre) || st.curso).toUpperCase() + ' · ' + this.retosCurso().filter(id => (R[id] || {}).best).length + '/' + this.retosCurso().length; out.hud.retosL = this.retosCurso().map(id => { const I = this.rInfo(id), b = (R[id] || {}).best || 0, ab = c.fase !== 'proyecto' && (!c.retosAb || c.retosAb.includes(id)); return { ico: ab ? I.ico : '🔒', n: I.n, st: b ? '★'.repeat(b) : '—', bg: b >= 3 ? '#fff6d6' : b ? '#e3f6ea' : '#f3f6fb', op: ab ? 1 : 0.5, ir: () => this.abrirReto(id) }; }); } else { out.hud.retosTit = ''; out.hud.retosL = []; } }
     out.vPausaDoc = s.vista === 'juego' && !!c.pausa;
     out.vReto = !!s.rt && s.vista === 'juego';
     if (s.rt && st) { const rt = s.rt, I = this.rInfo(rt.id), key = rt.id + '|' + rt.tier + '|' + rt.nonce; if (this._rk !== key) { this._rk = key; this._rh = HH(RNG((Math.abs(hsh(key + st.id)) % 2147483646) + 1)); }
@@ -767,7 +857,7 @@ class Component extends DCLogic {
     out.mnh = { n: MI ? MI.n : '', ico: MI ? MI.ico : '', a: hd.a || 0, b: hd.b || 0, msg: hd.msg || 'Cargando…', extra: hd.extra || '', ctrl: MI ? MI.ctrl : '', t: mmss((st && st.mt) || 0), salir: () => this.finMini({}), el: null };
     if (mn && mn.d2 && MC) { const key = 'esf' + mn.nonce; if (this._ek !== key) { this._ek = key; this._eh = HH(RNG(Date.now() % 100000 + 7)); } out.mnh.el = React.createElement(MC, { key, id: 'esferos', tier: 2, fin: false, h: this._eh, snd: t => this.snd(t), onFin: (ok, e, t) => { this.toast(t || '¡Fin de la carrera!'); this.setState({ mn: Object.assign({}, this.state.mn, { nonce: mn.nonce + 1 }) }); }, onErr: t => this.toast(t) }); }
     if (s.vista === 'doc' && s.doc) { const T = (k, v) => () => this.setCfg({ [k]: v }), all = [...new Set([].concat(...Object.values(RETOS_N)))];
-      out.dcf = { fases: [['retos', 'Solo retos (clase 1)'], ['proyecto', 'Solo proyecto (clase 2)'], ['ambas', 'Retos y proyecto']].map(([k, t]) => ({ t, bg: c.fase === k ? '#2456b8' : '#fff', fg: c.fase === k ? '#fff' : '#0a1a3a', go: T('fase', k) })),
+      out.dcf = { fases: [['llaves', '🔑 Proyecto con llaves (1 clase)'], ['retos', 'Solo retos (clase 1)'], ['proyecto', 'Solo proyecto (clase 2)'], ['ambas', 'Retos y proyecto']].map(([k, t]) => ({ t, bg: c.fase === k ? '#2456b8' : '#fff', fg: c.fase === k ? '#fff' : '#0a1a3a', go: T('fase', k) })),
         minisTxt: c.minisOn ? '🟢 Minijuegos abiertos' : '🔴 Minijuegos cerrados', minisBg: c.minisOn ? '#1f9d55' : '#c8413a', togMinis: T('minisOn', !c.minisOn),
         minis: Object.keys(MPOS).map(id => { const on = c.minis[id] !== false, I = M[id] || { n: id, ico: '🎮' }; return { t: I.ico + ' ' + I.n, bg: on ? '#e3f6ea' : '#fff', bd: on ? '#1f9d55' : '#c5ccdb', go: () => this.setCfg({ minis: Object.assign({}, c.minis, { [id]: !on }) }) }; }),
         segs: [30, 60, 90, 120].map(n => ({ t: n + ' s', bg: c.seg === n ? '#f0a726' : '#fff', go: T('seg', n) })),
@@ -776,17 +866,17 @@ class Component extends DCLogic {
     } else out.dcf = { fases: [], minis: [], segs: [], retos: [] };
   }
   // ---------- Modo Misión ----------
-  misiones(st) { const L = (RETOS_N[(st && st.curso) || '9no'] || RETOS_N['9no']), m = []; ['lab', 'pasillo', 'aula', 'bar', 'patio'].forEach((z, i) => { m.push({ t: 'reto', id: L[i * 2], z, k: 0 }, { t: 'reto', id: L[i * 2 + 1], z, k: 1 }); if (z === 'pasillo') m.push({ t: 'proy', n: 1, z }); if (z === 'bar') m.push({ t: 'proy', n: 2, z }); }); m.push({ t: 'reto', id: 'ohm', z: 'final', k: 0 }, { t: 'reto', id: 'energia', z: 'final', k: 1 }); return m; }
+  misiones(st) { if (this.modoLL()) return [{ t: 'proy', n: 1, z: 'lab' }]; const L = (RETOS_N[(st && st.curso) || '9no'] || RETOS_N['9no']), m = []; ['lab', 'pasillo', 'aula', 'bar', 'patio'].forEach((z, i) => { m.push({ t: 'reto', id: L[i * 2], z, k: 0 }, { t: 'reto', id: L[i * 2 + 1], z, k: 1 }); if (z === 'pasillo') m.push({ t: 'proy', n: 1, z }); if (z === 'bar') m.push({ t: 'proy', n: 2, z }); }); m.push({ t: 'reto', id: 'ohm', z: 'final', k: 0 }, { t: 'reto', id: 'energia', z: 'final', k: 1 }); return m; }
   retosCurso() { return this.misiones(this.state.st).filter(M => M.t === 'reto').map(M => M.id); }
   nProy(st) { return Object.values(st.proj || {}).filter(x => x.done).length; }
   hecho(st, M) { return M.t === 'reto' ? !!(((st.retos || {})[M.id] || {}).best) : this.nProy(st) >= M.n; }
   actual(st) { const ms = this.misiones(st), i = ms.findIndex(M => !this.hecho(st, M)); return { ms, i, M: i < 0 ? null : ms[i] }; }
   zonaHecha(st, z) { return this.misiones(st).filter(M => M.z === z && M.t === 'reto').every(M => this.hecho(st, M)); }
-  zonaAbierta(st, z) { const zi = ZONAS.indexOf(z); for (let k = 0; k < zi; k++) if (!this.zonaHecha(st, ZONAS[k])) return false; return z !== 'final' || this.nProy(st) >= 2; }
+  zonaAbierta(st, z) { if (this.modoLL()) return z !== 'final' || this.nProy(st) >= 1; const zi = ZONAS.indexOf(z); for (let k = 0; k < zi; k++) if (!this.zonaHecha(st, ZONAS[k])) return false; return z !== 'final' || this.nProy(st) >= 2; }
   zonaDe(id) { const M = this.misiones(this.state.st).find(x => x.id === id); return M ? M.z : 'patio'; }
   anclas() { if (!this._anc && this.api && this.api.anclas) this._anc = this.api.anclas(); return this._anc || {}; }
   abierto(id) { const a = this.state.abiertos; if (a && !a.includes(id)) return false; const st = this.state.st, an = this.anclas()[id]; return !(st && an) || this.zonaAbierta(st, ZK[an.e] || 'patio'); }
-  notaRetos(st) { const L = this.misiones(st).filter(M => M.t === 'reto'), R = st.retos || {}; return r2(L.reduce((a, M) => a + [0, 7, 8.5, 10][(R[M.id] || {}).best || 0], 0) / L.length); }
+  notaRetos(st) { const L = this.misiones(st).filter(M => M.t === 'reto'), R = st.retos || {}; return L.length ? r2(L.reduce((a, M) => a + [0, 7, 8.5, 10][(R[M.id] || {}).best || 0], 0) / L.length) : 0; }
   notaProyecto(st) { const all = Object.values(st.proj || {}); if (!all.length) return 0; const ns = all.map(x => x.done ? x.nota : this.notaProy(x)).sort((a, b) => b - a), dn = this.nProy(st); return r2(Math.min(10, ((ns[0] || 0) + (ns[1] || 0)) / 2 + Math.max(0, dn - 2) * 0.5)); }
   abrirReto(id) { const st = this.state.st, z = this.zonaDe(id); if (!this.zonaAbierta(st, z)) return this.toast('Esa zona todavía está bloqueada. Sigan la misión de la barra de arriba.'); const c = this.cfg(); if (c.retosAb && !c.retosAb.includes(id)) return this.toast('Ese reto está cerrado por el docente.');
     const b = ((st.retos || {})[id] || {}).best || 0, ini = st.curso === '3BGU' ? 2 : 1; this._prog = Date.now(); this.setState({ rt: { id, tier: b ? Math.min(3, b + 1) : ini, nonce: 0, estado: 'jugando', fb: null }, hint: '' }); }
@@ -810,10 +900,10 @@ class Component extends DCLogic {
     const sig = A.i + '|' + Object.values(st.proj || {}).map(x => x.max || 0).join(','); if (this._psig !== sig) { this._psig = sig; this._prog = Date.now(); if (s.hint) setTimeout(() => this.setState({ hint: '' }), 0); }
     if (!this._hintT) this._hintT = setInterval(() => { const S = this.state; if (!S.st || S.vista !== 'juego' || S.hint || this.cfg().pausa) return; if (Date.now() - (this._prog || Date.now()) > 120000) this.setState({ hint: this.hintTxt() }); }, 5000);
     out.vIntro = !st.intro; out.empezar = () => this.setState({ st: Object.assign({}, st, { intro: true }) }, () => { this._prog = Date.now(); this.guardar(); });
-    out.vMis = !!st.intro && !s.rt && !s.mn;
-    out.mis = { n: M ? 'MISIÓN ' + (A.i + 1) + ' DE ' + A.ms.length : 'MISIÓN CUMPLIDA', zona: M ? ZN[M.z].toUpperCase() : 'COLEGIO RESTAURADO', txt: !M ? 'Restauraron todo el colegio. ¡La cancha es libre! 🎮' : M.t === 'reto' ? (M.z === 'final' ? 'Reactiven el sistema principal: ' : 'Descifren: ') + this.rInfo(M.id).ico + ' ' + this.rInfo(M.id).n : 'Proyecto ' + M.n + ' de 2: elijan un proyecto en cualquier zona abierta y completen sus 10 fases',
+    out.vMis = !!st.intro && !s.rt && !s.mn && !s.cur;
+    out.mis = { n: M ? 'MISIÓN ' + (A.i + 1) + ' DE ' + A.ms.length : 'MISIÓN CUMPLIDA', zona: M ? ZN[M.z].toUpperCase() : 'COLEGIO RESTAURADO', txt: !M ? 'Restauraron todo el colegio. ¡La cancha es libre! 🎮' : M.t === 'reto' ? (M.z === 'final' ? 'Reactiven el sistema principal: ' : 'Descifren: ') + this.rInfo(M.id).ico + ' ' + this.rInfo(M.id).n : this.modoLL() ? 'Elijan UN proyecto en cualquier zona y completen sus 10 fases (abran las 7 llaves 🔑). Un segundo proyecto suma +0,5.' : 'Proyecto ' + M.n + ' de 2: elijan un proyecto en cualquier zona abierta y completen sus 10 fases',
       dots: A.ms.map((m, i) => ({ bg: this.hecho(st, m) ? '#21d07a' : i === A.i ? '#5fe8ff' : 'rgba(255,255,255,.22)', w: m.t === 'proy' ? '22px' : '12px' })) };
-    out.vFin = !M && !st.finVisto; out.fin = { nota: this.notaFinal(st).toFixed(2), r: this.notaRetos(st).toFixed(2), p: this.notaProyecto(st).toFixed(2), quien: st.integrantes, ok: () => this.setState({ st: Object.assign({}, st, { finVisto: true }) }, () => this.guardar()) }; }
+    out.vFin = !M && !st.finVisto; const LL = this.modoLL(), bj = LL ? this.mejorPj(st) : null; out.fin = { nota: this.notaFinal(st).toFixed(2), rt: LL ? '🔑 LLAVES (30 %)' : 'DESAFÍOS', pt: LL ? 'PROYECTO (70 %)' : 'PROYECTOS', por: LL ? 'Por diseñar, programar y documentar un sistema para el colegio:' : 'Por restaurar todos los sistemas del colegio:', r: (LL ? (bj ? this.notaLlaves(bj.x) : 0) : this.notaRetos(st)).toFixed(2), p: (LL ? (bj ? bj.n : 0) : this.notaProyecto(st)).toFixed(2), quien: st.integrantes, ok: () => this.setState({ st: Object.assign({}, st, { finVisto: true }) }, () => this.guardar()) }; }
   // ---------- 3D sync ----------
   sync3d(force) {
     const A = this.api; if (!A) return; const v = this.vista(), s = this.state, pid = v ? v.p : null;
@@ -840,12 +930,12 @@ class Component extends DCLogic {
     const fb = s.fb; out.fb = { vis: !!fb, bg: fb && fb.ok ? '#e3f6ea' : '#fde8e6', fg: fb && fb.ok ? '#14532d' : '#8a1f17', tit: fb ? fb.t : '', lista: (fb && fb.lista) || [] };
     // hud
     if (st && D) { const req = (D.CURSO[st.curso] || {}).req || 3, done = Object.values(st.proj || {}).filter(x => x.done).length;
-      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, completos: 'Retos ' + this.retosCurso().filter(id => ((st.retos || {})[id] || {}).best).length + '/' + this.retosCurso().length + ' · Proy. ' + Math.min(2, this.nProy(st)) + '/2 · 🎮 ' + mmss(st.mt || 0), nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
+      out.hud = { pareja: st.integrantes + ' · ' + st.par + ' · PC ' + st.pc + ' · código ' + st.id, minisTip: this.modoLL() ? 'Entreguen el proyecto para abrir la cancha 🎮' : 'Ganen retos para jugar en la cancha 🎮', completos: this.modoLL() ? this.hudLL(st) : 'Retos ' + this.retosCurso().filter(id => ((st.retos || {})[id] || {}).best).length + '/' + this.retosCurso().length + ' · Proy. ' + Math.min(2, this.nProy(st)) + '/2 · 🎮 ' + mmss(st.mt || 0), nota: this.notaFinal(st).toFixed(2), ayudaTxt: st.ayuda ? '✋ Ayuda pedida' : '✋ Pedir ayuda', ayudaBg: st.ayuda ? '#c8413a' : '#2456b8',
         ayuda: () => { const on = !st.ayuda; this.setState({ st: Object.assign({}, st, { ayuda: on }) }, () => this.guardar(on ? { pedirAyuda: true } : { cancelarAyuda: true })); },
         cerrar: () => { if (!window.confirm('Anoten su código para continuar la próxima clase:\n\n' + st.id + '\n\n¿Cerrar la sesión?')) return; this.guardar(); clearInterval(this._poll); try { localStorage.removeItem(LS); } catch (e) {} this.setState({ st: null, cur: null, vista: 'login', tab: 'seguir', lg: Object.assign({}, s.lg, { rid: '', cod: '' }) }); },
         cerca: !!s.cerca, cercaTxt: s.cerca ? (/^r:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + this.rInfo(s.cerca.slice(2)).ico + ' ' + this.rInfo(s.cerca.slice(2)).n : /^m:/.test(s.cerca) ? 'J1 E · J2 ENTER → ' + ((MINFO_()[s.cerca.slice(2)] || {}).n || 'Minijuego') + ' (🎮 ' + mmss(st.mt || 0) + ')' : this.abierto(s.cerca) ? 'J1 E · J2 ENTER → ' + this.P(s.cerca).n : '🔒 ' + this.P(s.cerca).n + ' (cerrada)') : '',
         lista: D.P.map(p => { const pj = (st.proj || {})[p.id], ab = this.abierto(p.id); return { ico: p.ico, n: p.n, lugar: p.lugar, estado: !ab ? 'cerrada' : pj && pj.done ? '✓ nota ' + pj.nota : pj ? 'en paso ' + (pj.f + 1) + ' de 10' : 'nueva', bg: pj && pj.done ? '#e3f6ea' : pj ? '#fff6e3' : '#f3f4f8', op: ab ? 1 : 0.5, ir: () => this.abrir(p.id) }; }) };
-    } else out.hud = { pareja: '', completos: '', nota: '', lista: [], cerca: false, cercaTxt: '', ayudaTxt: '', ayudaBg: '#2456b8', ayuda: () => {}, cerrar: () => {} };
+    } else out.hud = { minisTip: '', pareja: '', completos: '', nota: '', lista: [], cerca: false, cercaTxt: '', ayudaTxt: '', ayudaBg: '#2456b8', ayuda: () => {}, cerrar: () => {} };
     // panel
     out.pz = { pasos: [], ico: '', n: '', lugar: '', key: '', acciones: false, esDoc: false }; out.ph = {};
     if (v) {
@@ -919,6 +1009,10 @@ class Component extends DCLogic {
           campo('mej', '3 · Mejoras para una versión 2', '¿Qué le agregarían o cambiarían?', 'Le agregaríamos…', m[1], fi.mej, setF('mej')),
           campo('refl', '4 · Reflexión: ' + (p.reflex || ''), 'Respondan con sus palabras.', 'Pensamos que…', 20, pj.refl, e => upd({ refl: e.target.value }))];
         ph.word = () => this.descargar(id, 'doc'); ph.pdf = () => this.descargar(id, 'pdf'); ph.hecho = !ro && !!pj.done; ph.nota = (pj.nota || 0).toFixed(2); ph.ins = this.insignias(pj); ph.insVis = ph.ins.length > 0; }
+      { const cs = [...new Set(p.inst.map(i => FK(i.c)))], bk = 'bib:' + id, bo = (s.teo || {})[bk] != null ? s.teo[bk] : (F >= 1 && F <= 3), RC = { ENTRADA: '#1f9d55', SALIDA: '#c8413a', PROCESO: '#2456b8', COMPONENTE: '#a8650a' };
+        ph.bibVis = F >= 1 && F <= 7; ph.bibOpen = bo; ph.bibBtn = bo ? 'Ocultar ▲' : 'Abrir ▼'; ph.bibTog = () => this.setState({ teo: Object.assign({}, this.state.teo, { [bk]: !bo }) });
+        ph.bib = ['arduino'].concat(cs.filter(c => FICHA[c]), Object.keys(p.res || {}).some(r => p.res[r]) || cs.includes('led') || cs.includes('ldr') || cs.includes('btn') ? ['res'] : []).map(c => { const f = FICHA[c]; const extra = /^rele/.test(c) ? '' : ''; const oculto = this.modoLL() && v.modo === 'jug' && !((pj.ll || {})[1] || {}).ok && c !== 'arduino'; return { ico: f[0], n: f[1], rol: oculto ? '' : f[2], col: RC[f[2]] || '#2456b8', t: f[3] + extra }; }); }
+      if (v.modo === 'jug' && this.modoLL() && F >= 1 && F <= 7 && !((pj.ll || {})[F] || {}).ok) this.llaveVista(ph, out, p, pj, id, F);
       out.ph = ph;
     }
     // docente

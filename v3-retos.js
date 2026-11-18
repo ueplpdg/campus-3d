@@ -16,7 +16,7 @@
     const rnd = p => p.h || { int: (a, b) => a + Math.floor(Math.random() * (b - a + 1)), pick: a => a[Math.floor(Math.random() * a.length)], shuffle: a => a.slice().sort(() => Math.random() - 0.5) };
 
     // ---------- Diagramas de flujo ----------
-    const PA = () => (window.ESC_FLUJO && window.ESC_FLUJO.PA) || [];
+    const PA = () => ((window.ESC_FLUJO && window.ESC_FLUJO.PA) || []).filter(x => x && x.v && !x.v.bool && x.v.u != null && x.op && x.k != null);
     const pasosDe = x => [['oval', 'INICIO'], ['rect', x.set], ['io', x.leer], ['rombo', '¿' + x.v.n + ' ' + x.op + ' ' + x.k + ' ' + x.v.u + '?'], ['rect', 'SÍ → ' + x.si], ['rect', 'NO → ' + x.no], ['oval', 'Volver a leer (para siempre)']];
     const FORMA = { oval: { r: 999, bg: '#1d2f3d', tag: 'INICIO / FIN' }, rect: { r: 6, bg: '#13283a', tag: 'ACCIÓN' }, io: { r: 6, bg: '#251d3a', tag: 'LEER DATO' }, rombo: { r: 6, bg: '#3a2a12', tag: 'PREGUNTA' } };
     const Bloque = (f, t, st, extra) => D(Object.assign({ background: FORMA[f].bg, border: '2px solid ' + (f === 'rombo' ? AM : f === 'io' ? '#b8a4ff' : f === 'oval' ? J1 : '#5d8fb5'), borderRadius: FORMA[f].r, padding: f === 'rombo' ? '12px 34px' : '10px 16px', clipPath: f === 'rombo' ? 'polygon(8% 0,92% 0,100% 50%,92% 100%,8% 100%,0 50%)' : 'none', textAlign: 'center', fontWeight: 700, fontSize: 15, color: TX, minWidth: 200 }, st || {}), D({ fontSize: 10, letterSpacing: '.12em', color: MU, marginBottom: 3 }, FORMA[f].tag), t, extra || null);

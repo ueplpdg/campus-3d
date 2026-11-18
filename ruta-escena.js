@@ -2,7 +2,7 @@
 (function () {
   async function crear(cont, o) {
     const T = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
-    const RD = window.RUTA_DATOS, ROOMS = RD.ROOMS, SP = 16, RW = 12, RL = 10, HH = 3.2, NR = ROOMS.length;
+    const RD = window.RUTA_DATOS, ROOMS = o.rooms || RD.ROOMS, SP = 16, RW = 12, RL = 10, HH = 3.2, NR = ROOMS.length;
     const ren = new T.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     ren.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); ren.outputColorSpace = T.SRGBColorSpace; ren.toneMapping = T.ACESFilmicToneMapping; ren.toneMappingExposure = 0.92;
     ren.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;outline:none;touch-action:none'; cont.appendChild(ren.domElement);

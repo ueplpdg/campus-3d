@@ -18,6 +18,7 @@
 <script src="./taller3d-extra.js"></script>
 <script src="./taller3d-campus.js"></script>
 <script src="./ruta-datos.js"></script>
+<script src="./ruta-admision.js"></script>
 <script src="./ruta-escena.js"></script>
 </helmet>
 <div style="position:fixed;inset:0;background:#07101f;color:#0a1a3a;overflow:hidden">
@@ -70,6 +71,7 @@
 <div style="position:absolute;right:14px;top:14px;display:flex;gap:8px;align-items:stretch">
 <div style="background:rgba(7,16,31,.82);backdrop-filter:blur(6px);border:1px solid rgba(240,196,25,.35);border-radius:14px;padding:6px 14px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:11px;letter-spacing:.14em;color:#c9d6f2;font-weight:700">NOTA</div><div style="font-family:'Archivo Black',sans-serif;font-size:24px;color:#f0c419;line-height:1.1">{{ hud.nota }}</div></div>
 <button onClick="{{ ayuda }}" style="background:{{ hud.ayBg }};color:#fff;border:none;border-radius:14px;padding:0 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap">{{ hud.ayTxt }}</button>
+<sc-if value="{{ hud.fichaVis }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fichaDl }}" style="background:#f0c419;color:#0a1a3a;border:none;border-radius:14px;padding:0 14px;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap">{{ hud.fichaTxt }}</button></sc-if>
 <button onClick="{{ salir }}" style="background:rgba(7,16,31,.82);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:0 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap">Guardar y salir</button>
 </div>
 
@@ -239,6 +241,55 @@
 <button onClick="{{ fi.word }}" style="align-self:flex-start;background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer">⬇ Descargar la ficha (Word)</button>
 </sc-if>
 
+<sc-if value="{{ v.examen }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ ex.barVis }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ ex.avisoVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fff6e3;border:2px solid #f0a726;border-radius:12px;padding:10px 14px;font-size:15px;line-height:1.45;color:#5a3a06;font-weight:600">{{ ex.aviso }}</div></sc-if>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div style="background:#0a1a3a;color:#f0c419;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;letter-spacing:.1em">{{ ex.cat }}</div><div style="font-size:13px;color:#2456b8;font-weight:700">{{ ex.sub }}</div><div style="flex:1"></div><sc-if value="{{ ex.tVis }}" hint-placeholder-val="{{ false }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:{{ ex.tCol }};white-space:nowrap">{{ ex.tTxt }}</div></sc-if><div style="font-size:13px;color:#4a5878;font-weight:700;white-space:nowrap">{{ ex.cont }}</div></div>
+<div style="display:flex;gap:5px;flex-wrap:wrap"><sc-for list="{{ ex.dots }}" as="d" hint-placeholder-count="6"><button onClick="{{ d.go }}" style="width:32px;height:32px;border-radius:8px;border:2px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};font-weight:800;font-size:13px;cursor:pointer">{{ d.t }}</button></sc-for></div>
+<sc-if value="{{ ex.lectVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border-left:5px solid #2456b8;border-radius:10px;padding:12px 16px;font-size:16px;line-height:1.6;color:#22324f;font-family:Georgia,serif">{{ ex.lect }}</div></sc-if>
+<div style="font-size:21px;font-weight:700;line-height:1.4;color:#0a1a3a;text-wrap:pretty">{{ ex.q }}</div>
+<sc-if value="{{ ex.visVis }}" hint-placeholder-val="{{ false }}"><div style="background:#0a1a3a;color:#fff;border-radius:14px;padding:18px;font-family:'IBM Plex Mono',monospace;font-size:clamp(22px,2.8vw,36px);font-weight:700;text-align:center;letter-spacing:.06em">{{ ex.vis }}</div></sc-if>
+<sc-if value="{{ ex.gridVis }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;display:grid;grid-template-columns:repeat(3,96px);gap:6px;background:#0a1a3a;padding:10px;border-radius:14px"><sc-for list="{{ ex.grid }}" as="g" hint-placeholder-count="9"><div style="height:96px;border-radius:8px;background:{{ g.bg }};color:{{ g.fg }};display:flex;align-items:center;justify-content:center;font-size:{{ g.fs }};font-weight:700;text-align:center;line-height:1;word-break:break-all;padding:4px">{{ g.t }}</div></sc-for></div></sc-if>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px"><sc-for list="{{ ex.opts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.go }}" style="border:2px solid {{ o.bd }};background:{{ o.bg }};border-radius:12px;padding:12px 14px;cursor:pointer;color:#0a1a3a;display:flex;align-items:center;gap:12px;text-align:left"><div style="flex:none;width:32px;height:32px;border-radius:8px;background:#0a1a3a;color:#f0c419;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">{{ o.l }}</div><div style="font-size:{{ o.fs }};font-weight:700;line-height:1.3">{{ o.t }}</div></button></sc-for></div>
+<sc-if value="{{ ex.fbVis }}" hint-placeholder-val="{{ false }}"><div style="background:{{ ex.fbBg }};border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5;color:#0a1a3a;border:2px solid {{ ex.fbBd }}"><b>{{ ex.fbT }}</b> {{ ex.fbEx }}</div></sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<sc-if value="{{ ex.sigVis }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ex.sig }}" style="background:#0a1a3a;color:#f0c419;border:none;border-radius:12px;padding:13px 22px;font-family:'Archivo Black',sans-serif;font-size:17px;cursor:pointer">{{ ex.sigTxt }}</button></sc-if>
+<sc-if value="{{ ex.pistaVis }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ex.pista }}" style="background:#fff;color:#a8650a;border:2px solid #f0a726;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;text-align:left;line-height:1.35">{{ ex.pistaTxt }}</button></sc-if>
+<sc-if value="{{ ex.entVis }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ex.entregar }}" style="background:#c8413a;color:#fff;border:none;border-radius:12px;padding:13px 20px;font-weight:800;font-size:15px;cursor:pointer">{{ ex.entTxt }}</button></sc-if>
+<div style="font-size:13px;color:#4a5878;font-weight:600">{{ ex.meta }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ex.revVis }}" hint-placeholder-val="{{ false }}">
+<div style="background:linear-gradient(135deg,#0a1a3a,#163a7a);color:#fff;border-radius:16px;padding:18px 20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+<div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px"><div style="font-family:'Archivo Black',sans-serif;font-size:24px;color:#f0c419">SIMULACRO ENTREGADO</div><div style="font-size:15px;line-height:1.45">Tiempo usado: {{ ex.tiempo }}. Revisen cada error con calma: entender por qué fallaron es lo que más sube el puntaje en el examen real.</div></div>
+<div style="text-align:center"><div style="font-size:12px;letter-spacing:.14em;font-weight:700;color:#c9d6f2">ACIERTOS</div><div style="font-family:'Archivo Black',sans-serif;font-size:52px;color:#f0c419;line-height:1">{{ ex.score }}</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px"><sc-for list="{{ ex.areas }}" as="a" hint-placeholder-count="6"><div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:5px"><div style="font-weight:800;font-size:14px">{{ a.ico }} {{ a.n }}</div><div style="height:8px;border-radius:4px;background:#e3e7f2;overflow:hidden"><div style="height:100%;width:{{ a.w }};background:{{ a.col }}"></div></div><div style="font-size:12px;color:#4a5878">Terminal {{ a.t }} · Simulacro {{ a.s }}</div></div></sc-for></div>
+<div style="font-size:15px;color:#0a1a3a"><b>Sus 3 áreas más débiles:</b> {{ ex.debiles }}</div>
+<sc-if value="{{ ex.errVis }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;letter-spacing:.12em;font-weight:800;color:#c8413a">REVISIÓN DE ERRORES</div>
+<sc-for list="{{ ex.errores }}" as="x" hint-placeholder-count="3"><div style="background:#fff;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:5px;border-left:5px solid #c8413a"><div style="font-size:12px;font-weight:800;color:#2456b8">{{ x.n }}</div><div style="font-size:15px;font-weight:700;line-height:1.4">{{ x.q }}</div><div style="font-size:14px;display:flex;gap:14px;flex-wrap:wrap"><span style="color:#c8413a">Su respuesta: <b>{{ x.tu }}</b></span><span style="color:#1f9d55">Correcta: <b>{{ x.ok }}</b></span></div><div style="font-size:14px;line-height:1.45;color:#22324f">{{ x.ex }}</div></div></sc-for></sc-if>
+<button onClick="{{ ex.aPlan }}" style="align-self:flex-start;background:#f0c419;color:#1a1004;border:none;border-radius:12px;padding:13px 22px;font-family:'Archivo Black',sans-serif;font-size:17px;cursor:pointer">Continuar: mi plan de ingreso →</button>
+</sc-if>
+
+<sc-if value="{{ ex.planVis }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:16px;line-height:1.5;color:#22324f">Con sus resultados, escriban su <b>plan de ingreso</b>. Este documento se guarda en el Drive del docente y lo pueden descargar en Word. <b>Áreas más débiles:</b> {{ ex.debiles }}</div>
+<sc-for list="{{ ex.campos }}" as="c" hint-placeholder-count="4"><div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;border:2px solid #dde3f0"><div style="font-size:15px;font-weight:800">{{ c.n }}</div><div style="font-size:13px;color:#4a5878;line-height:1.4">{{ c.ay }}</div><textarea value="{{ c.v }}" onChange="{{ c.set }}" rows="3" placeholder="{{ c.ph }}" style="border:1px solid #9aa6c4;border-radius:8px;padding:8px;font-size:15px;resize:vertical;font-family:inherit"></textarea><div style="font-size:12px;color:{{ c.cc }};text-align:right">{{ c.cnt }}</div></div></sc-for>
+<sc-if value="{{ ex.pfVis }}" hint-placeholder-val="{{ false }}"><div style="background:#fde8e6;border:2px solid #e57368;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px"><div style="font-weight:800">{{ ex.pfT }}</div><sc-for list="{{ ex.pfL }}" as="x" hint-placeholder-count="1"><div style="font-size:14px">• {{ x }}</div></sc-for></div></sc-if>
+<button onClick="{{ ex.enviar }}" style="align-self:flex-start;background:#0a1a3a;color:#f0c419;border:none;border-radius:12px;padding:13px 22px;font-family:'Archivo Black',sans-serif;font-size:17px;cursor:pointer">📄 Entregar mi plan de ingreso</button>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ v.finAdm }}" hint-placeholder-val="{{ false }}">
+<div style="background:linear-gradient(135deg,#0a1a3a,#163a7a);color:#fff;border-radius:16px;padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px"><div style="font-family:'Archivo Black',sans-serif;font-size:28px;color:#f0c419">¡RUTA DE ADMISIÓN COMPLETA!</div><div style="font-size:16px;line-height:1.45">{{ fa.quien }} superaron las 6 terminales, el simulacro y entregaron su plan de ingreso. La cancha está abierta.</div></div>
+<div style="text-align:center"><div style="font-size:12px;letter-spacing:.14em;font-weight:700;color:#c9d6f2">NOTA FINAL</div><div style="font-family:'Archivo Black',sans-serif;font-size:56px;color:#f0c419;line-height:1">{{ fa.nota }}</div><div style="font-size:12px;color:#c9d6f2">Terminales {{ fa.nt }}/4 · Llaves {{ fa.nl }}/1 · Simulacro {{ fa.ns }}/4 ({{ fa.sOk }}) · Plan {{ fa.np }}/1</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px"><sc-for list="{{ fa.areas }}" as="a" hint-placeholder-count="6"><div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:5px"><div style="font-weight:800;font-size:14px">{{ a.ico }} {{ a.n }}</div><div style="height:8px;border-radius:4px;background:#e3e7f2;overflow:hidden"><div style="height:100%;width:{{ a.w }};background:{{ a.col }}"></div></div><div style="font-size:12px;color:#4a5878">Terminal {{ a.t }} · Simulacro {{ a.s }}</div></div></sc-for></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ fi.word }}" style="background:#fff;color:#2456b8;border:2px solid #2456b8;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer">⬇ Plan de ingreso (Word)</button><button onClick="{{ cerrarOv }}" style="background:#f0c419;color:#1a1004;border:none;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer">🏀 Ir a la cancha</button></div>
+<div style="font-size:14px;color:#4a5878">Su código para continuar o revisar: <b style="font-family:'IBM Plex Mono',monospace;color:#0a1a3a">{{ hud.cod }}</b></div>
+</sc-if>
+
 <sc-if value="{{ v.fin }}" hint-placeholder-val="{{ false }}">
 <div style="background:linear-gradient(135deg,#0a1a3a,#163a7a);color:#fff;border-radius:16px;padding:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">
 <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px"><div style="font-family:'Archivo Black',sans-serif;font-size:28px;color:#f0c419">¡ENERGÍA RESTAURADA!</div><div style="font-size:16px;line-height:1.45">{{ fn.quien }} completaron el proyecto <b>{{ fn.proy }}</b>. El colegio vuelve a la vida y la cancha está abierta.</div></div>
@@ -297,7 +348,7 @@ class Component extends DCLogic {
   state = { vista: 'login', tab: 'nuevo', f: { j1: '', j2: '', curso: '', par: '', pc: '', ses: '', cod: '' }, msg: '', cargando: false, st: null, ov: null, ui: {}, near: null, room: 0, kd: null, toast: null, teo: true, err3d: '', bk: null };
   refHost = React.createRef();
   componentDidMount() { try { const g = JSON.parse(localStorage.getItem(KEY) || 'null'); if (g && g.id) this.setState({ f: Object.assign({}, this.state.f, { cod: g.id }), tab: 'seguir' }); } catch (e) {} this.kh = e => this.tecla(e); window.addEventListener('keydown', this.kh); }
-  componentWillUnmount() { window.removeEventListener('keydown', this.kh); clearInterval(this._ti); clearInterval(this._bk); clearTimeout(this._tt); if (this.api) this.api.destruir(); }
+  componentWillUnmount() { clearInterval(this._sim); window.removeEventListener('keydown', this.kh); clearInterval(this._ti); clearInterval(this._bk); clearTimeout(this._tt); if (this.api) this.api.destruir(); }
   setF(k, v) { this.setState({ f: Object.assign({}, this.state.f, { [k]: v }), msg: '' }); }
   async getJ(q) { const u = URL_(); const r = await fetch(u + (u.includes('?') ? '&' : '?') + q + '&t=' + Date.now()); return JSON.parse(await r.text()); }
   post(b) { const u = URL_(); if (!u) return; fetch(u, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(b) }).catch(() => {}); }
@@ -305,6 +356,93 @@ class Component extends DCLogic {
   toast(t, ms) { clearTimeout(this._tt); this.setState({ toast: t }); this._tt = setTimeout(() => this.setState({ toast: null }), ms || 4500); }
   P() { const st = this.state.st; return st && st.proy ? X().P.find(p => p.id === st.proy) : null; }
 
+  // ---------- 3ro BGU · Ruta de Admisión ----------
+  adm() { const st = this.state.st; return !!st && st.curso === '3BGU' && !!window.RUTA_ADM; }
+  RM() { return this.adm() ? window.RUTA_ADM.ROOMS : RD().ROOMS; }
+  simQs() { const st = this.state.st; if (!this._simQ || this._simQ.id !== st.id) this._simQ = { id: st.id, q: window.RUTA_ADM.simulacro(rngS(st.id + ':sim')) }; return this._simQ.q; }
+  simRest() { const Z = (this.state.st.pz || {})[7] || {}, sm = Z.sim, M = window.RUTA_ADM.SIM_MIN * 60; return sm ? Math.max(0, Math.round(M - (Date.now() - sm.t0) / 1000)) : M; }
+  abrirEx() {
+    const st = this.state.st, s = st.est, A = window.RUTA_ADM, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {});
+    if (s <= 6) { const cur = Z.cur || { att: Z.att || 0, k: 0, resp: [] }, qs = A.terminal(s, rngS(st.id + ':t' + s + ':' + cur.att)), k = Math.min(cur.k, qs.length - 1);
+      return { modo: 'term', qs, k, resp: cur.resp.slice(0, k), att: cur.att, sel: null, fb: null, pista: false, aviso: cur.att ? 'Intento ' + (cur.att + 1) + ': esta terminal tiene preguntas NUEVAS. Necesitan al menos 4 aciertos de 6.' : '' }; }
+    if (Z.simDone) return { modo: 'rev', fb: null };
+    if (!Z.sim) { Z.sim = { t0: Date.now(), resp: Array(20).fill(null) }; this.upd({ pz: Object.assign({}, st.pz, { [7]: Z }) }); }
+    const k = Z.sim.resp.findIndex(x => x == null); return { modo: 'sim', k: k < 0 ? 0 : k, conf: false };
+  }
+  exResp(o) {
+    const ui = this.state.ui, st = this.state.st, s = st.est;
+    if (ui.modo === 'sim') { if (this.simRest() <= 0) return this.simEntregar(true); const Z = Object.assign({}, st.pz[7]), sm = Object.assign({}, Z.sim), r = sm.resp.slice(); r[ui.k] = o; sm.resp = r; Z.sim = sm;
+      this.upd({ pz: Object.assign({}, st.pz, { [7]: Z }) }); let nx = r.findIndex((x, i) => x == null && i > ui.k); if (nx < 0) nx = r.findIndex(x => x == null); return this.setUi({ k: nx >= 0 ? nx : ui.k, conf: false }); }
+    if (ui.fb || ui.modo !== 'term') return; const q = ui.qs[ui.k], ok = o === q.ans, resp = ui.resp.concat([ok ? 1 : 0]); this.sfx(ok);
+    const Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); Z.cur = { att: ui.att, k: ui.k + 1, resp }; if (!ok) Z.err++;
+    this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) });
+    this.setUi({ resp, sel: o, aviso: '', fb: { ok, t: ok ? '¡Correcto!' : 'Incorrecto. La respuesta correcta es: ' + q.ans + '.', ex: q.ex } });
+  }
+  exSig() {
+    const ui = this.state.ui, st = this.state.st, s = st.est, n = ui.qs.length;
+    if (ui.k + 1 < n) return this.setUi({ k: ui.k + 1, sel: null, fb: null, pista: false });
+    const ac = ui.resp.reduce((a, b) => a + b, 0), Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {});
+    Z.best = Math.max(Z.best || 0, r2(Math.max(0, ac / n * (1 - 0.1 * ui.att)))); Z.bestAc = Math.max(Z.bestAc || 0, ac); Z.hist = (Z.hist || []).concat([ac]); Z.cur = null;
+    if (ac >= 4) { this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) }, () => this.completar({})); return; }
+    Z.att = ui.att + 1; this.sfx(false); this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) });
+    this.setUi({ qs: window.RUTA_ADM.terminal(s, rngS(st.id + ':t' + s + ':' + Z.att)), k: 0, resp: [], att: Z.att, sel: null, fb: null, pista: false, aviso: 'Obtuvieron ' + ac + ' de ' + n + '. Necesitan al menos 4 para abrir la puerta. Lean el panel «Aprende» y resuelvan esta NUEVA terminal (otras preguntas).' });
+  }
+  simEntregar(force) {
+    const st = this.state.st, Z = Object.assign({}, st.pz[7] || {}), sm = Z.sim; if (!sm || Z.simDone) return;
+    const qs = this.simQs(), sin = sm.resp.filter(x => x == null).length;
+    if (!force && sin && !this.state.ui.conf) return this.setUi({ conf: true });
+    clearInterval(this._sim); Z.simDone = true; Z.simOk = qs.filter((q, i) => sm.resp[i] === q.ans).length; Z.simT = Math.min(window.RUTA_ADM.SIM_MIN * 60, Math.round((Date.now() - sm.t0) / 1000));
+    this.sfx(true); this.upd({ pz: Object.assign({}, st.pz, { [7]: Z }) }, () => this.guardar({})); this.setUi({ modo: 'rev', conf: false });
+    if (force && sin) this.toast('⏰ Se terminó el tiempo. El simulacro se entregó automáticamente.', 6000);
+  }
+  planEnviar() {
+    const fi = this.state.ui.fi || {}, err = [];
+    [['meta', 'Mi meta', 15], ['err', 'Mis errores más frecuentes', 40], ['plan', 'Mi plan de 2 semanas', 80], ['est', 'La estrategia que más me sirvió', 30]].forEach(([k, n, m]) => { const l = String(fi[k] || '').trim().length; if (l < m) err.push(n + ': escriban al menos ' + m + ' letras (llevan ' + l + ').'); });
+    if (err.length) { this.sfx(false); return this.setUi({ fb: { ok: false, t: 'El plan todavía no está completo', lista: err } }); }
+    this.completar({ plan: Object.assign({}, fi) });
+  }
+  areas() {
+    const st = this.state.st, A = window.RUTA_ADM, Z7 = (st.pz || {})[7] || {}, qs = Z7.simDone ? this.simQs() : [], resp = Z7.sim ? Z7.sim.resp : [];
+    return A.AREAS.map((a, i) => { const Z = (st.pz || {})[i + 1] || {}, t = Z.bestAc != null ? Z.bestAc / 6 : null, sq = qs.map((q, j) => ({ q, j })).filter(x => x.q.cat === a), so = sq.filter(x => resp[x.j] === x.q.ans).length, s = sq.length ? so / sq.length : null, v = [t, s].filter(x => x != null);
+      return { a, n: A.ROOMS[i + 1].pieza, ico: A.ROOMS[i + 1].ico, t, so, sn: sq.length, p: v.length ? v.reduce((x, y) => x + y, 0) / v.length : 0 }; });
+  }
+  areasVis() { return this.areas().map(a => ({ ico: a.ico, n: a.n, t: a.t == null ? '—' : Math.round(a.t * 100) + ' %', s: a.sn ? a.so + '/' + a.sn : '—', w: Math.round(a.p * 100) + '%', col: a.p >= 0.7 ? '#1f9d55' : a.p >= 0.5 ? '#f0a726' : '#c8413a' })); }
+  debiles() { return this.areas().slice().sort((x, y) => x.p - y.p).slice(0, 3).map(a => a.ico + ' ' + a.n + ' (' + Math.round(a.p * 100) + ' %)').join(' · '); }
+  vistaEx(out, st, est) {
+    const ui = this.state.ui, md = ui.modo, E = out.ex, LET = ['A', 'B', 'C', 'D'];
+    E.barVis = md === 'term' || md === 'sim'; E.revVis = md === 'rev'; E.planVis = md === 'plan';
+    out.ov.tit = md === 'term' ? 'Terminal de examen · ' + this.RM()[est].pieza : md === 'sim' ? 'Simulacro de admisión · 20 preguntas' : md === 'rev' ? 'Resultados del simulacro' : 'Mi plan de ingreso';
+    if (E.barVis) { const sim = md === 'sim', qs = sim ? this.simQs() : ui.qs, q = qs[ui.k], resp = sim ? st.pz[7].sim.resp : null, mine = sim ? resp[ui.k] : ui.sel;
+      Object.assign(E, { cat: q.cat.toUpperCase(), sub: q.sub, cont: 'Pregunta ' + (ui.k + 1) + ' de ' + qs.length, q: q.q, lectVis: !!q.lect, lect: q.lect || '', visVis: !!q.vis, vis: q.vis || '', gridVis: !!q.grid, avisoVis: !sim && !!ui.aviso, aviso: ui.aviso || '' });
+      if (q.grid) E.grid = q.grid.map(t => ({ t, bg: t === '?' ? '#f0c419' : '#13233d', fg: t === '?' ? '#1a1004' : '#fff', fs: t.length > 3 ? '20px' : t.length > 1 ? '26px' : '44px' }));
+      E.opts = q.opts.map((o, i) => { let bd = '#c5ccdb', bg = '#fff'; if (sim) { if (mine === o) { bd = '#2456b8'; bg = '#e8eefb'; } } else if (ui.fb) { if (o === q.ans) { bd = '#1f9d55'; bg = '#e3f6ea'; } else if (o === mine) { bd = '#e57368'; bg = '#fde8e6'; } } return { l: LET[i] || '', t: o, go: () => this.exResp(o), bd, bg, fs: o.length <= 3 ? '28px' : o.length <= 10 ? '19px' : '16px' }; });
+      if (sim) { const rest = this.simRest(), sin = resp.filter(x => x == null).length; E.tVis = true; E.tTxt = '⏱ ' + Math.floor(rest / 60) + ':' + String(rest % 60).padStart(2, '0'); E.tCol = rest < 120 ? '#c8413a' : '#0a1a3a';
+        E.dots = qs.map((x, i) => ({ t: String(i + 1), go: () => this.setUi({ k: i, conf: false }), bd: i === ui.k ? '#f0a726' : '#c5ccdb', bg: resp[i] != null ? '#2456b8' : '#fff', fg: resp[i] != null ? '#fff' : '#0a1a3a' }));
+        E.entVis = true; E.entTxt = ui.conf ? '⚠ Quedan ' + sin + ' sin responder. Pulsen otra vez para entregar' : '📤 Entregar simulacro (' + (20 - sin) + '/20)'; E.entregar = () => this.simEntregar(false); E.meta = 'Toquen un número para ir a esa pregunta. Pueden cambiar su respuesta hasta entregar.'; }
+      else { E.dots = qs.map((x, i) => ({ t: String(i + 1), go: () => {}, bd: i === ui.k ? '#f0a726' : '#c5ccdb', bg: i < ui.resp.length ? (ui.resp[i] ? '#1f9d55' : '#c8413a') : '#fff', fg: i < ui.resp.length ? '#fff' : '#0a1a3a' }));
+        E.fbVis = !!ui.fb; if (ui.fb) { E.fbBg = ui.fb.ok ? '#e3f6ea' : '#fde8e6'; E.fbBd = ui.fb.ok ? '#1f9d55' : '#e57368'; E.fbT = ui.fb.t; E.fbEx = ui.fb.ex; }
+        E.sigVis = !!ui.fb; E.sigTxt = ui.k + 1 < qs.length ? 'Siguiente pregunta →' : 'Ver resultado de la terminal →'; E.sig = () => this.exSig();
+        E.pistaVis = !ui.fb; E.pistaTxt = ui.pista ? '💡 ' + (PISTAC[q.cat] || PISTAC['Lógica']) : '💡 Pista (resta un poco)';
+        E.pista = () => { if (ui.pista) return; const Z = Object.assign({ err: 0, pi: 0 }, st.pz[est] || {}); Z.pi++; this.upd({ pz: Object.assign({}, st.pz, { [est]: Z }) }); this.setUi({ pista: true }); };
+        E.meta = 'Aciertos: ' + ui.resp.reduce((a, b) => a + b, 0) + ' · Necesitan 4 de 6' + (ui.att ? ' · Intento ' + (ui.att + 1) : ''); } }
+    if (md === 'rev' || md === 'plan') { const Z7 = st.pz[7] || {}; E.score = (Z7.simOk || 0) + ' / 20'; E.areas = this.areasVis(); E.debiles = this.debiles();
+      if (md === 'rev') { const qs = this.simQs(), resp = Z7.sim.resp; E.errores = qs.map((q, i) => ({ q, i })).filter(x => resp[x.i] !== x.q.ans).map(x => ({ n: 'P' + (x.i + 1) + ' · ' + x.q.cat + ' · ' + x.q.sub, q: (x.q.vis ? x.q.vis + '  —  ' : '') + x.q.q, tu: resp[x.i] == null ? 'Sin responder' : resp[x.i], ok: x.q.ans, ex: x.q.ex }));
+        E.errVis = E.errores.length > 0; E.tiempo = Math.floor((Z7.simT || 0) / 60) + ' min ' + ((Z7.simT || 0) % 60) + ' s'; E.aPlan = () => this.setUi({ modo: 'plan', fb: null, fi: Object.assign({ meta: '', err: '', plan: '', est: '' }, (this.state.st.d || {}).plan || {}) }); }
+      if (md === 'plan') { const fi = ui.fi || {}, camp = (k, n, ay, ph, mn) => { const l = String(fi[k] || '').trim().length; return { n, ay, ph, v: fi[k] || '', set: e => this.setUi({ fi: Object.assign({}, this.state.ui.fi, { [k]: e.target.value }) }), cnt: l + ' / ' + mn + ' letras', cc: l >= mn ? '#1f9d55' : '#a8650a' }; };
+        E.campos = [camp('meta', '1 · Mi meta', '¿Qué carrera quieren estudiar y en qué universidad?', 'Queremos estudiar… en la Universidad de…', 15), camp('err', '2 · Mis errores más frecuentes', 'Revisen sus resultados: ¿en qué tipo de pregunta se equivocaron y por qué?', 'Nos equivocamos en… porque…', 40), camp('plan', '3 · Mi plan de 2 semanas', 'Qué área practicarán cada día, cuánto tiempo y con qué recurso. Empiecen por: ' + E.debiles, 'Lunes: 30 min de series con…', 80), camp('est', '4 · La estrategia que más me sirvió', '¿Qué método del panel «Aprende» les funcionó mejor?', 'Nos sirvió…', 30)];
+        E.enviar = () => this.planEnviar(); E.pfVis = !!(ui.fb && !ui.fb.ok); E.pfT = ui.fb ? ui.fb.t : ''; E.pfL = ui.fb && ui.fb.lista ? ui.fb.lista : []; } }
+  }
+  informeHTML() {
+    const st = this.state.st, pl = (st.d || {}).plan || {}, Z7 = st.pz[7] || {}, e = x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), ar = this.areas();
+    const th = 'border:1px solid #999;padding:5px 7px;background:#e8eefb;text-align:left', td = 'border:1px solid #999;padding:5px 7px;vertical-align:top', tb = (H, R) => '<table style="border-collapse:collapse;width:100%;font-size:10.5pt;margin:6px 0"><tr>' + H.map(x => '<th style="' + th + '">' + e(x) + '</th>').join('') + '</tr>' + R.map(r => '<tr>' + r.map(x => '<td style="' + td + '">' + e(x) + '</td>').join('') + '</tr>').join('') + '</table>', h2 = t => '<h2 style="font-size:13pt;color:#0a1a3a;border-bottom:2px solid #2456b8;padding-bottom:3px;margin:16px 0 6px">' + t + '</h2>', p = t => '<p style="line-height:1.45;margin:4px 0">' + e(t) + '</p>';
+    let b = '<div style="border-bottom:3px solid #0a1a3a;padding-bottom:8px"><div style="font-size:10pt;letter-spacing:.08em">U. E. P. «LA PROVIDENCIA» · ROBÓTICA · 3RO BGU · PENSAMIENTO LÓGICO</div><div style="font-size:18pt;font-weight:800">PLAN DE INGRESO A LA UNIVERSIDAD</div></div>';
+    b += tb(['Integrantes', 'Curso', 'Fecha', 'Simulacro', 'Nota'], [[st.integrantes, st.par, new Date().toLocaleDateString('es-EC'), (Z7.simOk || 0) + ' / 20', this.nota().toFixed(2)]]);
+    b += h2('1. Resultados por área') + tb(['Área', 'Terminal (mejor intento)', 'Simulacro', 'Dominio'], ar.map(a => [a.n, a.t == null ? '—' : Math.round(a.t * 100) + ' %', a.sn ? a.so + ' / ' + a.sn : '—', Math.round(a.p * 100) + ' %']));
+    b += p('Áreas más débiles: ' + this.debiles());
+    b += h2('2. Mi meta') + p(pl.meta) + h2('3. Mis errores más frecuentes') + p(pl.err) + h2('4. Mi plan de 2 semanas') + p(pl.plan) + h2('5. La estrategia que más me sirvió') + p(pl.est);
+    if (Z7.simDone) { const qs = this.simQs(), resp = Z7.sim.resp, er = qs.map((q, i) => ({ q, i })).filter(x => resp[x.i] !== x.q.ans); b += h2('6. Revisión de errores del simulacro') + (er.length ? tb(['N.º', 'Área', 'Pregunta', 'Su respuesta', 'Correcta', 'Explicación'], er.map(x => [x.i + 1, x.q.cat, (x.q.vis ? x.q.vis + ' — ' : '') + x.q.q, resp[x.i] == null ? 'Sin responder' : resp[x.i], x.q.ans, x.q.ex])) : p('¡Ningún error en el simulacro!')); }
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plan de ingreso</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;max-width:760px;margin:20px auto">' + b + '</body></html>';
+  }
   // ---------- ingreso ----------
   async entrar() {
     const f = this.state.f, j1 = f.j1.trim(), j2 = f.j2.trim(), par = f.par.trim().toUpperCase(), pc = String(f.pc).trim(), ses = f.ses.trim();
@@ -317,8 +455,8 @@ class Component extends DCLogic {
     try { if (URL_()) { const r = await this.getJ('t3ds=' + encodeURIComponent(ses)); if (!r.ok) { this.setState({ cargando: false, msg: r.abierta ? 'El código de clase no es correcto.' : 'La sesión todavía no está abierta. Esperen al docente.' }); return; } } else if (ses !== '1234') { this.setState({ cargando: false, msg: 'Modo demostración: el código de clase es 1234.' }); return; } }
     catch (e) { this.setState({ cargando: false, msg: 'No hay conexión con el servidor. Revisen el internet.' }); return; }
     const id = 'RT-' + Array.from({ length: 5 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
-    const st = { ruta: 1, id, curso: f.curso, par: f.curso + ' ' + par, pc, integrantes: j1 + ' / ' + j2, ses, t0: Date.now(), proy: null, abiertas: 0, est: 1, fase: 'llave', keySpot: 0, ll: {}, pz: {}, d: {}, done: false };
-    this.setState({ st, vista: 'juego', cargando: false }, () => { this.guardar(); this.montar(); this.abrirOv('proyecto'); });
+    const st = { ruta: 1, id, curso: f.curso, par: f.curso + ' ' + par, pc, integrantes: j1 + ' / ' + j2, ses, t0: Date.now(), proy: f.curso === '3BGU' ? 'admision' : null, abiertas: f.curso === '3BGU' ? 1 : 0, est: 1, fase: 'llave', keySpot: f.curso === '3BGU' ? Math.floor(rngS(id + 'k1')() * 4) : 0, ll: {}, pz: {}, d: {}, done: false };
+    this.setState({ st, vista: 'juego', cargando: false }, () => { this.guardar(); this.montar(); if (this.adm()) this.toast('🎓 RUTA DE ADMISIÓN: crucen la puerta verde hacia el LABORATORIO y busquen la primera llave 🔑. En cada sala hay una terminal tipo examen de ingreso.', 8000); else this.abrirOv('proyecto'); });
   }
   async seguir() {
     const cod = this.state.f.cod.trim().toUpperCase(); if (!/^RT-[A-Z0-9]{5}$/.test(cod)) return this.setState({ msg: 'El código tiene la forma RT-XXXXX.' });
@@ -326,11 +464,11 @@ class Component extends DCLogic {
     try { const g = JSON.parse(localStorage.getItem(KEY) || 'null'); if (g && g.id === cod) st = g; } catch (e) {}
     if (!st && URL_()) { try { const r = await this.getJ('t3did=' + encodeURIComponent(cod)); if (r && r.data && r.data.ruta) st = r.data; } catch (e) {} }
     if (!st) return this.setState({ cargando: false, msg: 'No se encontró ese código. Revisen que esté bien escrito.' });
-    this.setState({ st, vista: 'juego', cargando: false }, () => { this.montar(); if (!st.proy) this.abrirOv('proyecto'); else this.toast('¡Bienvenidos de vuelta! Continúen en ' + RD().ROOMS[Math.min(st.est, 8)].n + '.'); });
+    this.setState({ st, vista: 'juego', cargando: false }, () => { this.montar(); if (st.done) setTimeout(() => this.subirFicha(false), 800); if (!st.proy) this.abrirOv('proyecto'); else this.toast('¡Bienvenidos de vuelta! Continúen en ' + this.RM()[Math.min(st.est, 8)].n + '.'); });
   }
   montar() {
-    const go = () => { const host = this.refHost.current; if (!host || !window.RUTA_ESCENA || !window.RUTA_DATOS || !window.T3D_DATOS) { setTimeout(go, 120); return; }
-      window.RUTA_ESCENA.crear(host, { onNear: n => this.setState({ near: n }), onAccion: n => this.accion(n), onRoom: r => this.setState({ room: r }), onToast: t => this.toast(t, 3000),
+    const go = () => { const host = this.refHost.current; if (!host || !window.RUTA_ESCENA || !window.RUTA_DATOS || !window.T3D_DATOS || (this.state.st && this.state.st.curso === '3BGU' && !window.RUTA_ADM)) { setTimeout(go, 120); return; }
+      window.RUTA_ESCENA.crear(host, { rooms: this.RM(), onNear: n => this.setState({ near: n }), onAccion: n => this.accion(n), onRoom: r => this.setState({ room: r }), onToast: t => this.toast(t, 3000),
         onKeyDist: d => { const b = d == null ? null : d < 2 ? 5 : d < 3.5 ? 4 : d < 5.5 ? 3 : d < 8 ? 2 : 1; if (b !== this.state.kd) this.setState({ kd: b }); } })
         .then(api => { this.api = api; const st = this.state.st; api.setMundo(this.mundo()); api.spawn(st.done ? 7 : st.proy ? st.est : 0); if (this.state.ov) api.pausa(true); })
         .catch(e => this.setState({ err3d: 'No se pudo iniciar el 3D en esta computadora: ' + (e && e.message) })); };
@@ -340,12 +478,12 @@ class Component extends DCLogic {
   upd(ch, cb) { const st = Object.assign({}, this.state.st, ch); this.setState({ st }, () => { this.guardar(); if (this.api) this.api.setMundo(this.mundo()); cb && cb(); }); }
   guardar(extra) {
     const st = this.state.st; if (!st) return; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
-    clearTimeout(this._sv); this._sv = setTimeout(() => { const s = this.state.st, R = RD().ROOMS, n = Object.values(s.pz).filter(x => x.ok).length, p = this.P();
-      this.post(Object.assign({ modo: 't3d', id: s.id, curso: s.curso, par: s.par, pc: s.pc, integrantes: s.integrantes, actual: 'Ruta · ' + (p ? p.n : 'sin proyecto'), fase: s.done ? 'Terminado' : R[Math.min(s.est, 8)].n + ' · ' + s.fase, completos: n + '/7', nota: this.nota(), detalle: 'Llaves ' + Object.values(s.ll).filter(x => x.ok).length + '/7 · Piezas ' + n + '/7', fallos: Object.values(s.pz).reduce((a, x) => a + (x.err || 0), 0) + Object.values(s.ll).reduce((a, x) => a + (x.w || 0), 0), pistas: Object.values(s.pz).concat(Object.values(s.ll)).reduce((a, x) => a + (x.pi || 0), 0), json: JSON.stringify(s) }, extra || {})); }, extra ? 10 : 1500);
+    clearTimeout(this._sv); this._sv = setTimeout(() => { const s = this.state.st, R = this.RM(), n = Object.values(s.pz).filter(x => x.ok).length, p = this.P();
+      this.post(Object.assign({ modo: 't3d', id: s.id, curso: s.curso, par: s.par, pc: s.pc, integrantes: s.integrantes, actual: 'Ruta · ' + (p ? p.n : this.adm() ? 'Admisión' : 'sin proyecto'), fase: s.done ? 'Terminado' : R[Math.min(s.est, 8)].n + ' · ' + s.fase, completos: n + '/7', nota: this.nota(), detalle: 'Llaves ' + Object.values(s.ll).filter(x => x.ok).length + '/7 · ' + (this.adm() ? 'Terminales ' + Math.min(6, n) + '/6 · Simulacro ' + (((s.pz || {})[7] || {}).simOk || 0) + '/20' : 'Piezas ' + n + '/7'), fallos: Object.values(s.pz).reduce((a, x) => a + (x.err || 0), 0) + Object.values(s.ll).reduce((a, x) => a + (x.w || 0), 0), pistas: Object.values(s.pz).concat(Object.values(s.ll)).reduce((a, x) => a + (x.pi || 0), 0), json: JSON.stringify(s) }, extra || {})); }, extra ? 10 : 1500);
   }
   llPts(s) { const x = (this.state.st.ll || {})[s]; return x && x.ok ? Math.max(0.4, 1 - 0.3 * (x.w || 0) - 0.15 * (x.pi || 0)) : 0; }
-  pzPts(s) { const x = (this.state.st.pz || {})[s]; return x && x.ok ? Math.max(0.5, 1 - 0.12 * (x.err || 0) - 0.15 * (x.pi || 0)) : 0; }
-  nota() { let a = 0, b = 0; for (let s = 1; s <= 7; s++) { a += this.pzPts(s); b += this.llPts(s); } return r2(a + b * 3 / 7); }
+  pzPts(s) { const x = (this.state.st.pz || {})[s]; if (this.adm()) return x && x.ok && s <= 6 ? Math.max(0, (x.best || 0) - 0.05 * (x.pi || 0)) : 0; return x && x.ok ? Math.max(0.5, 1 - 0.12 * (x.err || 0) - 0.15 * (x.pi || 0)) : 0; }
+  nota() { if (this.adm()) { let a = 0, b = 0; for (let s = 1; s <= 6; s++) a += this.pzPts(s); for (let s = 1; s <= 7; s++) b += this.llPts(s); const st = this.state.st, Z = (st.pz || {})[7] || {}; return r2(a * 4 / 6 + b / 7 + (Z.simOk || 0) / 20 * 4 + ((st.d || {}).plan ? 1 : 0)); } let a = 0, b = 0; for (let s = 1; s <= 7; s++) { a += this.pzPts(s); b += this.llPts(s); } return r2(a + b * 3 / 7); }
 
   // ---------- acciones del mundo ----------
   accion(n) {
@@ -353,6 +491,7 @@ class Component extends DCLogic {
     if (n.tipo === 'llave' && st.fase === 'llave' && n.room === st.est) { this.sfx(true); this.upd({ fase: 'lock' }); this.toast('🔑 ¡Encontraron la LLAVE! Llévenla a la terminal del candado. Deben estar los DOS junto a ella.'); return; }
     if (n.tipo === 'terminal' && st.fase === 'lock') return this.abrirOv('llave');
     if (n.tipo === 'mesa' && st.fase === 'pieza') return this.abrirOv('pieza');
+    if (n.tipo === 'tablero' && this.adm()) return this.toast('🎓 Ruta de Admisión: 6 terminales tipo examen de ingreso (verbal, series, numérico, abstracto, lógico y datos) y un simulacro final de 20 preguntas con tiempo.', 7000);
     if (n.tipo === 'tablero') { if (!st.proy) return this.abrirOv('proyecto'); const p = this.P(); return this.toast('Su proyecto: ' + p.n + '. ' + p.objetivo, 6000); }
     if (n.tipo === 'cancha' && st.done) return this.abrirOv('cancha');
   }
@@ -360,7 +499,8 @@ class Component extends DCLogic {
     const st = this.state.st, s = st.est, p = this.P(); if (this.api) this.api.pausa(true);
     let ui = { fb: null };
     if (tipo === 'llave') { const prev = (st.ll[s] || {}); ui = { r: RD().acertijos(st.curso, s, rngS(st.id + ':' + s)), k: prev.k || 0, inp: '', fb: null, wrong: 0, pista: false }; }
-    if (tipo === 'pieza') { const d = st.d || {};
+    if (tipo === 'pieza' && this.adm()) { tipo = 'examen'; ui = this.abrirEx(); }
+    else if (tipo === 'pieza') { const d = st.d || {};
       if (s === 1) ui = { sel: {}, cls: {}, cards: mez([...new Set(p.inst.map(i => i.c))].concat((p.dist || []).filter(c => X().COMP[c])), st.id + 'c') };
       if (s === 2) ui = { ub: {}, ops: mez(p.spots.map(x => x.id), st.id + 'u') };
       if (s === 3) ui = { con: {}, pk: null, errK: {}, info: 'Toquen una pata de un componente (círculo de la derecha) para empezar.' };
@@ -370,9 +510,9 @@ class Component extends DCLogic {
       if (s === 7) ui = { fi: Object.assign({ imp: '', con: '', mej: '' }, d.fi || {}) };
       ui.fb = null; }
     if (tipo === 'cancha') { this.nuevoBasket(); }
-    this.setState({ ov: tipo, ui });
+    this.setState({ ov: tipo, ui }, () => { if (tipo === 'examen' && ui.modo === 'sim') { if (this.simRest() <= 0) return this.simEntregar(true); clearInterval(this._sim); this._sim = setInterval(() => { if (this.state.ov !== 'examen' || this.state.ui.modo !== 'sim') return clearInterval(this._sim); if (this.simRest() <= 0) this.simEntregar(true); else this.setState({ tick: Date.now() }); }, 1000); } });
   }
-  cerrarOv() { if (this.state.ov === 'proyecto' && !this.state.st.proy) return; clearInterval(this._ti); clearInterval(this._bk); this.setState({ ov: null, ui: {} }); if (this.api) this.api.pausa(false); }
+  cerrarOv() { if (this.state.ov === 'proyecto' && !this.state.st.proy) return; clearInterval(this._ti); clearInterval(this._bk); clearInterval(this._sim); this.setState({ ov: null, ui: {} }); if (this.api) this.api.pausa(false); }
   setUi(ch) { this.setState({ ui: Object.assign({}, this.state.ui, ch) }); }
   tecla(e) {
     const ov = this.state.ov, t = e.target, enInp = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT');
@@ -389,16 +529,16 @@ class Component extends DCLogic {
     if (!ok) { this.sfx(false); L.w++; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }) }); const w = ui.wrong + 1; return this.setUi({ wrong: w, inp: '', fb: { ok: false, t: 'Incorrecto.', ex: w >= 2 ? 'Razonamiento: ' + q.ex : 'Revisen otra vez. ' + (w === 1 ? 'Después de otro intento verán la explicación.' : '') } }); }
     this.sfx(true);
     if (ui.k + 1 < ui.r.length) { L.k = ui.k + 1; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }) }); return this.setUi({ k: ui.k + 1, inp: '', wrong: 0, pista: false, fb: { ok: true, t: '¡Correcto! Primer candado abierto.', ex: 'Falta el segundo.' } }); }
-    L.ok = true; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }), fase: 'pieza' }, () => { this.cerrarOv(); this.toast('🔓 ¡Candado abierto! Ahora vayan juntos a la MESA DE TRABAJO (' + RD().ROOMS[s].pieza + ').'); });
+    L.ok = true; this.upd({ ll: Object.assign({}, st.ll, { [s]: L }), fase: 'pieza' }, () => { this.cerrarOv(); this.toast('🔓 ¡Candado abierto! Ahora vayan juntos a la ' + (this.adm() ? 'TERMINAL DE EXAMEN' : 'MESA DE TRABAJO') + ' (' + this.RM()[s].pieza + ').'); });
   }
   // ---------- piezas ----------
   fallo(titulo, lista) { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); Z.err++; this.sfx(false); this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) }); this.setUi({ fb: { ok: false, t: titulo, lista } }); }
   completar(dch, msg) { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); Z.ok = true; this.sfx(true);
     const ch = { pz: Object.assign({}, st.pz, { [s]: Z }), d: Object.assign({}, st.d, dch || {}), est: s + 1, abiertas: s + 1, fase: 'llave', keySpot: Math.floor(rngS(st.id + 'k' + (s + 1))() * 4) };
     clearInterval(this._ti);
-    if (s === 7) { ch.done = true; this.setState({ ov: 'fin', ui: {} }, () => this.upd(ch, () => this.guardar({}))); return; }
+    if (s === 7) { ch.done = true; this.setState({ ov: 'fin', ui: {} }, () => this.upd(ch, () => { this.guardar({}); setTimeout(() => this.subirFicha(true), 400); })); return; }
     this.setState({ ov: null, ui: {} }, () => { if (this.api) this.api.pausa(false); });
-    this.upd(ch, () => { this.toast('🧩 Pieza «' + RD().ROOMS[s].pieza + '» lista. La puerta hacia ' + RD().ROOMS[s + 1].n + ' se abrió. ¡Busquen la siguiente llave!', 6000); }); }
+    this.upd(ch, () => { this.toast((this.adm() ? '🎓 Terminal «' : '🧩 Pieza «') + this.RM()[s].pieza + (this.adm() ? '» superada.' : '» lista.') + ' La puerta hacia ' + this.RM()[s + 1].n + ' se abrió. ¡Busquen la siguiente llave!', 6000); }); }
   pista() { const st = this.state.st, s = st.est, Z = Object.assign({ err: 0, pi: 0 }, st.pz[s] || {}); if (this.state.ui.pistaVista) return; Z.pi++; this.upd({ pz: Object.assign({}, st.pz, { [s]: Z }) }); this.setUi({ pistaVista: true }); }
   pinsDe() { const con = (this.state.st.d || {}).con || {}, o = {}; Object.keys(con).forEach(k => { o[k] = con[k].to; }); return o; }
   comprobar() {
@@ -468,6 +608,7 @@ class Component extends DCLogic {
     return h('svg', { viewBox: '0 -40 1000 ' + (H + 60), style: { width: '100%', height: 'auto', display: 'block', maxHeight: '62vh' } }, ...els);
   }
   fichaHTML() {
+    if (this.adm()) return this.informeHTML();
     const st = this.state.st, p = this.P(), D = X(), d = st.d || {}, e = x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), pins = this.pinsDe();
     let code = ''; try { code = D.codigo(p, D.sol(p), pins, {}); } catch (x) {}
     const th = 'border:1px solid #999;padding:5px 7px;background:#e8eefb;text-align:left', td = 'border:1px solid #999;padding:5px 7px', tb = (H, R) => '<table style="border-collapse:collapse;width:100%;font-size:10.5pt;margin:6px 0"><tr>' + H.map(x => '<th style="' + th + '">' + e(x) + '</th>').join('') + '</tr>' + R.map(r => '<tr>' + r.map(x => '<td style="' + td + '">' + e(x) + '</td>').join('') + '</tr>').join('') + '</table>', h2 = t => '<h2 style="font-size:13pt;color:#0a1a3a;border-bottom:2px solid #2456b8;margin:14px 0 6px">' + t + '</h2>';
@@ -481,7 +622,13 @@ class Component extends DCLogic {
     b += h2('8. Pruebas') + tb(['Situación', 'Resultado', '¿Funciona?'], D.probar(p, D.sol(p)).map(r => [r.txt, String(r.sal), 'Sí'])) + h2('9. Conclusiones') + '<p>' + e((d.fi || {}).con) + '</p>' + h2('10. Mejoras') + '<p>' + e((d.fi || {}).mej) + '</p>';
     return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ficha técnica</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#111;max-width:760px;margin:20px auto">' + b + '</body></html>';
   }
-  descargar() { const st = this.state.st; if (!st || !st.proy) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + this.fichaHTML()], { type: 'application/msword' })); a.download = 'Ficha tecnica - ' + this.P().n + ' - ' + st.id + '.doc'; document.body.appendChild(a); a.click(); a.remove(); }
+  subirFicha(forzar) {
+    const st = this.state.st; if (!st || !st.done || !st.proy || !URL_()) return; if (st.fichaDrive && !forzar) return;
+    let html = ''; try { html = this.fichaHTML(); } catch (e) { return; }
+    const p = this.P(); this.post({ modo: 't3dficha', id: st.id, curso: st.curso, par: st.par, integrantes: st.integrantes, proyecto: p ? p.n : this.adm() ? 'Plan de ingreso' : '', html });
+    if (!st.fichaDrive) this.upd({ fichaDrive: true }, () => { try { localStorage.setItem(KEY, JSON.stringify(this.state.st)); } catch (e) {} });
+  }
+  descargar() { const st = this.state.st; if (!st || !st.proy) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + this.fichaHTML()], { type: 'application/msword' })); a.download = (this.adm() ? 'Plan de ingreso - ' + st.integrantes.replace(/[\\/:*?"<>|]/g, '') : 'Ficha tecnica - ' + this.P().n) + ' - ' + st.id + '.doc'; document.body.appendChild(a); a.click(); a.remove(); }
 
   renderVals() {
     const s = this.state, f = s.f, out = {};
@@ -492,29 +639,30 @@ class Component extends DCLogic {
     out.cursos = CURSOS.map(([k, t]) => ({ t, go: () => this.setF('curso', k), bg: f.curso === k ? '#0a1a3a' : '#fff', fg: f.curso === k ? '#f0c419' : '#0a1a3a', bd: f.curso === k ? '#0a1a3a' : '#c5ccdb' }));
     out.entrar = () => this.entrar(); out.seguir = () => this.seguir(); out.btnEntrar = s.cargando ? 'Verificando…' : 'ENTRAR A LA MISIÓN →'; out.btnSeguir = s.cargando ? 'Buscando…' : 'CONTINUAR →';
     out.msg = s.msg; out.msgVis = !!s.msg; out.err3d = s.err3d; out.err3dVis = !!s.err3d;
-    const st = s.st, R = RD() && RD().ROOMS, D = X(); out.hud = { pareja: '', cod: '', sala: '', paso: '', obj: '', nota: '0.00', kdVis: false, kd: [], kdTxt: '', ayBg: '#2456b8', ayTxt: '✋ Pedir ayuda' }; out.inv = []; out.vOv = false; out.promptVis = false; out.toastVis = !!s.toast; out.toast = s.toast || '';
+    const st = s.st, R = RD() && this.RM(), D = X(); out.hud = { pareja: '', cod: '', sala: '', paso: '', obj: '', nota: '0.00', kdVis: false, kd: [], kdTxt: '', ayBg: '#2456b8', ayTxt: '✋ Pedir ayuda' }; out.inv = []; out.vOv = false; out.promptVis = false; out.toastVis = !!s.toast; out.toast = s.toast || '';
     if (!st || !R || !D) return Object.assign(out, this.vacios());
     const p = this.P(), e0 = Math.min(st.est, 8);
     out.hud.pareja = st.integrantes + ' · ' + st.par + ' · PC ' + st.pc; out.hud.cod = st.id; out.hud.nota = this.nota().toFixed(2);
     const enSala = s.room; out.hud.sala = R[enSala] ? R[enSala].n : ''; out.hud.paso = st.done ? 'MISIÓN CUMPLIDA' : 'SALA ' + Math.min(st.est, 7) + ' DE 7';
-    out.hud.obj = !st.proy ? 'Elijan su proyecto en el tablero del vestíbulo.' : st.done ? 'El colegio tiene energía. Vayan a la CANCHA: junto al aro, presionen E o ENTER.' : enSala < st.est ? '➜ Avancen hasta ' + R[st.est].n + ' siguiendo la flecha azul.' : st.fase === 'llave' ? '🔑 Busquen la LLAVE dorada escondida en ' + R[st.est].n + '.' : st.fase === 'lock' ? '🔒 Lleven la llave a la TERMINAL del candado (los dos juntos).' : '🧩 Vayan a la MESA DE TRABAJO: ' + R[st.est].obj;
+    out.hud.obj = !st.proy ? 'Elijan su proyecto en el tablero del vestíbulo.' : st.done ? 'El colegio tiene energía. Vayan a la CANCHA: junto al aro, presionen E o ENTER.' : enSala < st.est ? '➜ Avancen hasta ' + R[st.est].n + ' siguiendo la flecha azul.' : st.fase === 'llave' ? '🔑 Busquen la LLAVE dorada escondida en ' + R[st.est].n + '.' : st.fase === 'lock' ? '🔒 Lleven la llave a la TERMINAL del candado (los dos juntos).' : (this.adm() ? '🖥 Vayan a la TERMINAL DE EXAMEN (mesa brillante): ' : '🧩 Vayan a la MESA DE TRABAJO: ') + R[st.est].obj;
     out.hud.kdVis = !!st.proy && !st.done && st.fase === 'llave' && enSala === st.est && s.kd != null; out.hud.kd = [1, 2, 3, 4, 5].map(i => i <= (s.kd || 0) ? (s.kd >= 4 ? '#7fe0a0' : '#ffd166') : 'rgba(255,255,255,.18)'); out.hud.kdTxt = s.kd >= 5 ? '¡Está aquí! E / ENTER' : s.kd >= 4 ? 'Muy cerca' : s.kd >= 3 ? 'Cerca' : 'Lejos';
     out.inv = [1, 2, 3, 4, 5, 6, 7].map(i => { const ok = (st.pz[i] || {}).ok, cur = i === st.est && !st.done, kk = (st.ll[i] || {}).ok || (cur && st.fase !== 'llave'); return { ico: R[i].ico, n: R[i].pieza, key: kk ? '🔑' : '', bd: ok ? '#f0c419' : cur ? '#5fd0e8' : 'rgba(255,255,255,.15)', bg: ok ? 'rgba(240,196,25,.18)' : cur ? 'rgba(95,208,232,.12)' : 'rgba(255,255,255,.04)', fg: ok ? '#f0c419' : cur ? '#9fe6f5' : '#8a98ab', op: ok || cur ? 1 : 0.55, anim: cur ? 'rpulse 2s infinite' : 'none' }; });
     out.ayuda = () => { this.guardar({ pedirAyuda: true }); this.toast('✋ Se avisó al docente. Mientras tanto, revisen la teoría del panel «Aprende».'); };
+    out.hud.fichaVis = !!(st.done && st.proy); out.hud.fichaTxt = this.adm() ? '📄 Descargar plan de ingreso' : '📄 Descargar ficha técnica'; out.fichaDl = () => { this.descargar(); this.subirFicha(true); };
     out.salir = () => { this.guardar({}); this.toast('Progreso guardado. Su código es ' + st.id + '. Anótenlo.', 7000); };
-    const n = s.near; if (n && !s.ov) { const T2 = { llave: '🔑 Recoger la llave (E / ENTER)', terminal: n.ok ? '🔒 Abrir el candado (E / ENTER)' : '🔒 Los DOS junto a la terminal', mesa: n.ok ? '🧩 Trabajar en la mesa (E / ENTER)' : '🧩 Los DOS junto a la mesa', tablero: st.proy ? '📋 Ver mi proyecto (E / ENTER)' : '📋 Elegir proyecto (E / ENTER)', cancha: st.done ? '🏀 Jugar básquet (E / ENTER)' : '🔒 La cancha se abre al final' }; out.promptVis = true; out.prompt = { t: T2[n.tipo] || '', bg: n.both && !n.ok ? '#f0a726' : '#f0c419', fg: '#1a1004' }; } else out.prompt = { t: '', bg: '', fg: '' };
+    const n = s.near; if (n && !s.ov) { const T2 = { llave: '🔑 Recoger la llave (E / ENTER)', terminal: n.ok ? '🔒 Abrir el candado (E / ENTER)' : '🔒 Los DOS junto a la terminal', mesa: n.ok ? (this.adm() ? '🖥 Abrir la terminal de examen (E / ENTER)' : '🧩 Trabajar en la mesa (E / ENTER)') : '🧩 Los DOS junto a la mesa', tablero: this.adm() ? '🎓 Ver la ruta de admisión (E / ENTER)' : st.proy ? '📋 Ver mi proyecto (E / ENTER)' : '📋 Elegir proyecto (E / ENTER)', cancha: st.done ? '🏀 Jugar básquet (E / ENTER)' : '🔒 La cancha se abre al final' }; out.promptVis = true; out.prompt = { t: T2[n.tipo] || '', bg: n.both && !n.ok ? '#f0a726' : '#f0c419', fg: '#1a1004' }; } else out.prompt = { t: '', bg: '', fg: '' };
     Object.assign(out, this.vacios()); out.cerrarOv = () => this.cerrarOv();
     if (s.ov) this.vistaOv(out, st, p);
     return out;
   }
-  vacios() { return { ov: { ico: '', kick: '', tit: '', teoBtnVis: false, teoBtn: '', teoTog: () => {}, cerrable: true }, v: {}, pr: { lista: [], selVis: false, obj: '', confirmar: () => {} }, ac: { cat: '', cont: '', q: '', visVis: false, vis: '', gridVis: false, grid: [], keypad: false, inpTxt: '', teclas: [], optsVis: false, opts: [], fbVis: false, fbBg: '', fbBd: '', fbT: '', fbEx: '', pista: () => {}, pistaTxt: '' }, pz: { obj: '', lugar: '', hist: '' }, cp: { cards: [] }, ub: { filas: [] }, cn: { svg: null, info: '', quitarVis: false, quitar: () => {} }, fl: { bloques: [] }, pg: { paso0: false, paso1: false, slots: [], prev: '', ayuda: '', lines: [], consola: [], conCol: '' }, pb: { filas: [], sit: '', lect: '', outs: [], fallaVis: false, fSin: '', fPreg: '', fOps: [] }, fi: { campos: [], word: () => this.descargar() }, fn: { quien: '', proy: '', nota: '', np: '', nl: '', filas: [] }, bk: { p1: 0, p2: 0, t1: '', t2: '', turno: '', pos: '0%', msg: '', otra: () => {}, otraTxt: '' }, pzFb: { vis: false, bg: '', bd: '', col: '', t: '', lista: [] }, pzBtns: false, pzCheck: () => {}, pzCheckTxt: '', pzPista: () => {}, teoVis: false, teo: { lineas: [], compVis: false, comps: [] } }; }
+  vacios() { return { ov: { ico: '', kick: '', tit: '', teoBtnVis: false, teoBtn: '', teoTog: () => {}, cerrable: true }, v: {}, pr: { lista: [], selVis: false, obj: '', confirmar: () => {} }, ac: { cat: '', cont: '', q: '', visVis: false, vis: '', gridVis: false, grid: [], keypad: false, inpTxt: '', teclas: [], optsVis: false, opts: [], fbVis: false, fbBg: '', fbBd: '', fbT: '', fbEx: '', pista: () => {}, pistaTxt: '' }, pz: { obj: '', lugar: '', hist: '' }, cp: { cards: [] }, ub: { filas: [] }, cn: { svg: null, info: '', quitarVis: false, quitar: () => {} }, fl: { bloques: [] }, pg: { paso0: false, paso1: false, slots: [], prev: '', ayuda: '', lines: [], consola: [], conCol: '' }, pb: { filas: [], sit: '', lect: '', outs: [], fallaVis: false, fSin: '', fPreg: '', fOps: [] }, fi: { campos: [], word: () => this.descargar() }, fn: { quien: '', proy: '', nota: '', np: '', nl: '', filas: [] }, bk: { p1: 0, p2: 0, t1: '', t2: '', turno: '', pos: '0%', msg: '', otra: () => {}, otraTxt: '' }, ex: { barVis: false, revVis: false, planVis: false, cat: '', sub: '', cont: '', q: '', lectVis: false, lect: '', visVis: false, vis: '', gridVis: false, grid: [], opts: [], dots: [], avisoVis: false, aviso: '', tVis: false, tTxt: '', tCol: '#0a1a3a', entVis: false, entTxt: '', entregar: () => {}, fbVis: false, fbBg: '', fbBd: '', fbT: '', fbEx: '', sigVis: false, sigTxt: '', sig: () => {}, pistaVis: false, pistaTxt: '', pista: () => {}, meta: '', score: '', areas: [], debiles: '', errores: [], errVis: false, tiempo: '', aPlan: () => {}, campos: [], enviar: () => {}, pfVis: false, pfT: '', pfL: [] }, fa: { quien: '', nota: '', nt: '', nl: '', ns: '', sOk: '', np: '', areas: [] }, pzFb: { vis: false, bg: '', bd: '', col: '', t: '', lista: [] }, pzBtns: false, pzCheck: () => {}, pzCheckTxt: '', pzPista: () => {}, teoVis: false, teo: { lineas: [], compVis: false, comps: [] } }; }
   vistaOv(out, st, p) {
-    const s = this.state, ui = s.ui, R = RD().ROOMS, D = X(), C = D.COMP, est = Math.min(st.est, 7), ov = s.ov; out.vOv = true;
+    const s = this.state, ui = s.ui, R = this.RM(), D = X(), C = D.COMP, est = Math.min(st.est, 7), ov = s.ov; out.vOv = true;
     const pzv = ov === 'pieza' ? est : 0; out.v = { proyecto: ov === 'proyecto', llave: ov === 'llave', comp: pzv === 1, ubi: pzv === 2, con: pzv === 3, flujo: pzv === 4, prog: pzv === 5, prueba: pzv === 6, ficha: pzv === 7, fin: ov === 'fin', cancha: ov === 'cancha' };
-    const conTeo = ov === 'llave' || ov === 'pieza';
+    const conTeo = ov === 'llave' || ov === 'pieza' || ov === 'examen'; out.v.examen = ov === 'examen'; out.v.finAdm = ov === 'fin' && this.adm(); if (out.v.finAdm) out.v.fin = false;
     out.ov = { ico: ov === 'proyecto' ? '📋' : ov === 'llave' ? '🔒' : ov === 'fin' ? '⚡' : ov === 'cancha' ? '🏀' : R[est].ico, kick: ov === 'proyecto' ? 'VESTÍBULO · ELIJAN SU MISIÓN' : ov === 'fin' ? 'MISIÓN CUMPLIDA' : ov === 'cancha' ? 'CANCHA · MINIJUEGO' : R[est].n + ' · SALA ' + est + ' DE 7', tit: ov === 'proyecto' ? 'Elijan su proyecto' : ov === 'llave' ? 'Candado de la sala · ' + (ui.r ? ui.r.length > 1 ? 'doble candado' : 'acertijo' : '') : ov === 'fin' ? '¡El colegio vuelve a la vida!' : ov === 'cancha' ? 'Básquet de precisión' : 'Pieza: ' + R[est].pieza, teoBtnVis: conTeo, teoBtn: s.teo ? 'Ocultar teoría' : '📖 Aprende', teoTog: () => this.setState({ teo: !s.teo }), cerrable: !(ov === 'proyecto' && !st.proy) };
     if (p) { out.pz = { obj: p.objetivo, lugar: p.lugar, hist: p.historia }; }
-    if (conTeo && s.teo) { out.teoVis = true; out.teo.lineas = ov === 'llave' ? ['Lean la pregunta completa dos veces.', PISTAC[(ui.r && ui.r[ui.k] && ui.r[ui.k].cat) || 'Lógica'] || '', 'Escriban sus cálculos o ideas en una hoja antes de responder.', 'Cada error resta un poco a la llave de esta sala; la explicación aparece después del segundo intento.'] : (RD().TEO[est] || []);
+    if (conTeo && s.teo) { out.teoVis = true; out.teo.lineas = ov === 'llave' ? ['Lean la pregunta completa dos veces.', PISTAC[(ui.r && ui.r[ui.k] && ui.r[ui.k].cat) || 'Lógica'] || '', 'Escriban sus cálculos o ideas en una hoja antes de responder.', 'Cada error resta un poco a la llave de esta sala; la explicación aparece después del segundo intento.'] : ((ov === 'examen' ? window.RUTA_ADM.TEO : RD().TEO)[est] || []);
       if (ov === 'pieza' && p && est <= 3) { out.teo.compVis = true; const cs = est === 1 ? (ui.cards || []) : [...new Set(p.inst.map(i => i.c))]; out.teo.comps = (est === 1 ? cs.filter(c => (ui.sel || {})[c]) : cs).map(c => { const F = RD().FICHA[RD().FK(c)]; return { svg: svgEl(RD().svgComp(c), 34), n: C[c].n, t: F ? F[3] : C[c].q }; }); if (!out.teo.comps.length) out.teo.comps = [{ svg: svgEl(RD().svgComp('led_r'), 34), n: 'Toquen un componente', t: 'Al seleccionarlo, aquí aparecen sus datos técnicos.' }]; } }
     if (ov === 'proyecto') { const sel = ui.sel; out.pr.lista = D.P.map(q => ({ ico: q.ico, n: q.n, lugar: q.lugar.toUpperCase(), h: q.historia.length > 120 ? q.historia.slice(0, 118) + '…' : q.historia, go: () => this.setUi({ sel: q.id }), bd: sel === q.id ? '#f0c419' : '#d3dbe8', bg: sel === q.id ? '#fff8dc' : '#fff' }));
       const q = sel && D.P.find(x => x.id === sel); out.pr.selVis = !!q; out.pr.obj = q ? q.objetivo : ''; out.pr.confirmar = () => { this.upd({ proy: sel, abiertas: 1, est: 1, fase: 'llave', keySpot: Math.floor(rngS(st.id + 'k1')() * 4) }, () => { this.cerrarOv(); this.toast('Proyecto: ' + q.n + '. Crucen la puerta verde hacia el LABORATORIO y busquen la primera llave 🔑.', 6500); }); }; }
@@ -552,6 +700,8 @@ class Component extends DCLogic {
           out.pb.fOps = mez(lista, st.id + paso).map(t => ({ t, go: () => { if (t !== ok) return this.fallo('Esa no es la respuesta', ['Lean el síntoma otra vez: ¿qué parte del sistema no responde como debería?']); if (!paso) { this.sfx(true); return this.setUi({ fstep: 1, fb: { ok: true, t: 'Correcto: esa es la causa. ¿Cómo lo reparan?' } }); } this.completar({ falla: FD.t }); } })); } }
       if (est === 7) { const m = RD().MINTXT[st.curso] || [50, 60, 40], camp = (k, n, ay, ph, mn) => { const l = String(ui.fi[k] || '').trim().length; return { n, ay, ph, v: ui.fi[k] || '', set: e => this.setUi({ fi: Object.assign({}, this.state.ui.fi, { [k]: e.target.value }) }), cnt: l + ' / ' + mn + ' letras', cc: l >= mn ? '#1f9d55' : '#a8650a', bd: ui.fb && !ui.fb.ok && l < mn ? '#e57368' : '#dde3f0' }; };
         out.fi.campos = [camp('imp', '1 · ¿Por qué es importante para el colegio?', 'A quién ayuda y qué problema resuelve.', 'Este sistema ayuda a…', m[0]), camp('con', '2 · Conclusiones', '¿Funcionó? ¿Qué aprendieron? ¿Qué fue lo más difícil y cómo lo resolvieron?', 'Concluimos que…', m[1]), camp('mej', '3 · Mejoras para una versión 2', '¿Qué le agregarían o cambiarían?', 'Le agregaríamos…', m[2])]; } }
+    if (ov === 'examen') this.vistaEx(out, st, est);
+    if (ov === 'fin' && this.adm()) { let a = 0, b = 0; for (let i = 1; i <= 6; i++) a += this.pzPts(i); for (let i = 1; i <= 7; i++) b += this.llPts(i); const Z7 = st.pz[7] || {}; out.fa = { quien: st.integrantes, nota: this.nota().toFixed(2), nt: r2(a * 4 / 6).toFixed(2), nl: r2(b / 7).toFixed(2), ns: r2((Z7.simOk || 0) / 5).toFixed(2), sOk: (Z7.simOk || 0) + '/20', np: (st.d || {}).plan ? '1.00' : '0.00', areas: this.areasVis() }; }
     if (ov === 'fin' && p) { let a = 0, b = 0; for (let i = 1; i <= 7; i++) { a += this.pzPts(i); b += this.llPts(i); } out.fn = { quien: st.integrantes, proy: p.n, nota: this.nota().toFixed(2), np: r2(a).toFixed(2), nl: r2(b * 3 / 7).toFixed(2), filas: [1, 2, 3, 4, 5, 6, 7].map(i => ({ sala: R[i].n, pieza: R[i].ico + ' ' + R[i].pieza, ll: Math.round(this.llPts(i) * 100) + ' %', pz: Math.round(this.pzPts(i) * 100) + ' %' })) }; }
     if (ov === 'cancha' && s.bk) { const b = s.bk; out.bk = { p1: b.pts[0], p2: b.pts[1], t1: b.n[0] + ' / 5 tiros', t2: b.n[1] + ' / 5 tiros', turno: b.fin ? (b.pts[0] === b.pts[1] ? '¡EMPATE!' : '¡GANA ' + (b.pts[0] > b.pts[1] ? 'J1' : 'J2') + '!') : 'Turno de ' + (b.turno ? 'J2 (ENTER)' : 'J1 (E)'), pos: 'calc(' + (b.pos * 100) + '% - 4px)', msg: b.msg, otra: () => this.nuevoBasket(), otraTxt: b.fin ? 'Jugar otra vez' : 'Reiniciar' }; }
   }
